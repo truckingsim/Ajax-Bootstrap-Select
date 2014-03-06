@@ -1,7 +1,7 @@
 Ajax-Bootstrap-Select
 =====================
 
-This plugin adds ajax search as you type support to any select box that [bootstrap-select](http://silviomoreto.github.io/bootstrap-select/) has instantiated.  Just make sure bootstrap-select runs first and then attach `.ajaxSelectPicker(options)` and it will add ajax support.
+This plugin adds ajax search as you type support to any select box that [bootstrap-select](https://github.com/silviomoreto/bootstrap-select) has instantiated.  Just make sure bootstrap-select runs first and then attach `.ajaxSelectPicker(options)` and it will add ajax support.
 
 ## JSON results from ajax request ##
 

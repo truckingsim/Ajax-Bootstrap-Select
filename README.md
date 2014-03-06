@@ -58,23 +58,23 @@ A string of the url to send the ajax request
 ###ajaxOptions###
 For changing the data, dataType, or type parameters in an ajax request:
 
-**dataType**
+1\. **dataType**
 
 * Type: `string`
 * Values: `xml|json|script|html`
 
 ***
 
-**type**
+2\. **type**
 
 * Type: `string`
 * Values: `GET|POST`
 
 *** 
 
-**data**
+3\. **data**
 
-The data value has 2 special properties.  First off it can be a function that will be run each time the ajax request is made.  The second is if any of the values of the object returned are equal to: `{{{q}}}` the plugin will auto replace that with input box value.
+The data property has 2 special abilities.  First off it can be a function, that returns an object, that will be run each time the ajax request is made.  The second is if any of the values of the object returned are equal to: `{{{q}}}` the plugin will auto replace that with input box value.  The processed object is passed as is to the `data` property in `$.ajax`.
 
 * Type: *Object|Function*
 * Object Example: `{q: $('#searchBox').val()}`

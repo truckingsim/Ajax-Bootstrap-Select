@@ -143,7 +143,8 @@ $('.select-picker').ajaxSelectPicker({
 });
 ```
 
-Copyright and license
+## Copyright and license
+
 Copyright (C) 2014 ajax-bootstrap-select
 
 Licensed under the MIT license.

@@ -158,15 +158,6 @@
                     }, 300);
                 });
             }
-
-            $element.on('change', function(){
-                $element.html('');
-                if(typeof plugin.ajaxOptions.placeHolderOption === 'string'){
-                    $element.html('<option data-hidden="true">' + plugin.ajaxOptions.placeHolderOption + '</option>');
-                }
-                plugin.$searchbox.val('');
-                plugin.refresh();
-            });
         };
 
         //We need for selectpicker to be attached first.  Putting the init in a setTimeout is the easiest way to ensure this.

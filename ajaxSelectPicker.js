@@ -10,6 +10,21 @@
 
 !(function($, window){
     $.ajaxSelectPicker = function(element, options){
+        var specialKeyCodeMap = {
+            9: "tab",
+            13: "enter",
+            16: "shift",
+            17: "ctrl",
+            18: "alt",
+            27: "esc",
+            37: "left",
+            39: "right",
+            13: "enter",
+            38: "up",
+            40: "down",
+            229: "unknown"  //Returned if it can't get the virtual key number per w3 spec: http://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
+        };
+
         var defaults = {
             ajaxResultsPreHook: null,  //If you need to parse the data you receive from server so the selectpicker can handle it here is where it happens
             ajaxSearchUrl: null,
@@ -39,7 +54,12 @@
                 var timeout = 0;  // store timeout id
                 $.extend(plugin, $element.data().selectpicker);  //Get the current selectpicker values
                 plugin.$searchbox.off('input');  // remove default selectpicker keypresses
-                plugin.$searchbox.on('keydown', function(){
+                plugin.$searchbox.on('keydown', function(e){
+
+                    if(specialKeyCodeMap[e.keyCode]){
+                        return true;
+                    }
+                    console.log(e.keyCode);
                     clearTimeout(timeout);
                     timeout = setTimeout(function(){
                         //Old options

@@ -72,7 +72,7 @@
 
                                     for(var i = 0; i < dataLen; i++){
                                         var currentData = data[i];
-                                        var hasData = currentData.hasOwnProperty(data);
+                                        var hasData = currentData.hasOwnProperty('data');
                                         if(!currentData.hasOwnProperty('value') && (currentData.hasOwnProperty('data') && currentData.data.hasOwnProperty('divider'))){
                                             console.error('currentData must have a property of value');
                                             break;

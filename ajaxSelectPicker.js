@@ -59,7 +59,7 @@
                     if(specialKeyCodeMap[e.keyCode]){
                         return true;
                     }
-                    console.log(e.keyCode);
+                    
                     clearTimeout(timeout);
                     timeout = setTimeout(function(){
                         //Old options

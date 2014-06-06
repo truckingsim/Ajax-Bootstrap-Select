@@ -97,6 +97,12 @@ If this is set as a string the plugin will add a `data-hidden="true"` field with
 * Type: `string`
 * Example: `'Some string to show instead of the first option'`
 
+###debug###
+If you want to get error information, set this to true.
+
+* Type: `boolean`
+* Values: `true|false`
+* Default: `false`
 
 ##Full example of plugin:
 

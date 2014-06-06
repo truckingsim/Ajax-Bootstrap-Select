@@ -48,9 +48,9 @@
 
         plugin.init = function(){
             if(!$element.data().hasOwnProperty('selectpicker')){
-                console.error('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!');
+                this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);
             } else if(plugin.ajaxOptions.ajaxSearchUrl == null){
-                console.error('ajaxSelectPicker: ajaxSearchUrl must be set!')
+                this.log('ajaxSelectPicker: ajaxSearchUrl must be set!', true)
             } else {
                 var timeout = 0;  // store timeout id
                 $.extend(plugin, $element.data().selectpicker);  //Get the current selectpicker values
@@ -95,7 +95,7 @@
                                         var currentData = data[i];
                                         var hasData = currentData.hasOwnProperty('data');
                                         if(!currentData.hasOwnProperty('value') && (currentData.hasOwnProperty('data') && currentData.data.hasOwnProperty('divider'))){
-                                            console.error('currentData must have a property of value');
+                                            this.log('currentData must have a property of value', true);
                                             break;
                                         }
                                         if(hasData && currentData.data.divider){
@@ -136,7 +136,7 @@
 
                         //If there is an error be sure to put in the previous options
                         ajaxParams.error = function(xhr){
-                            console.error('ajaxSelectPicker:', xhr);
+                            this.log(['ajaxSelectPicker:', xhr], true);
                             plugin.$element.html(oldOptions);
                         };
 

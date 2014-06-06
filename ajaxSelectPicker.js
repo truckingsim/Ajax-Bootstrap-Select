@@ -29,7 +29,8 @@
             ajaxResultsPreHook: null,  //If you need to parse the data you receive from server so the selectpicker can handle it here is where it happens
             ajaxSearchUrl: null,
             ajaxOptions: {},  //if you want to change the dataType, data, or request type set it here. default  [json, {q: searchBoxVal}, POST],
-            placeHolderOption: null // string with text to show
+            placeHolderOption: null, // string with text to show
+            debug: false //If you want console output, set this to true
         };
 
         var plugin = this,
@@ -47,9 +48,9 @@
 
         plugin.init = function(){
             if(!$element.data().hasOwnProperty('selectpicker')){
-                console.error('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!');
+                this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);
             } else if(plugin.ajaxOptions.ajaxSearchUrl == null){
-                console.error('ajaxSelectPicker: ajaxSearchUrl must be set!')
+                this.log('ajaxSelectPicker: ajaxSearchUrl must be set!', true)
             } else {
                 var timeout = 0;  // store timeout id
                 $.extend(plugin, $element.data().selectpicker);  //Get the current selectpicker values
@@ -94,7 +95,7 @@
                                         var currentData = data[i];
                                         var hasData = currentData.hasOwnProperty('data');
                                         if(!currentData.hasOwnProperty('value') && (currentData.hasOwnProperty('data') && currentData.data.hasOwnProperty('divider'))){
-                                            console.error('currentData must have a property of value');
+                                            this.log('currentData must have a property of value', true);
                                             break;
                                         }
                                         if(hasData && currentData.data.divider){
@@ -135,7 +136,7 @@
 
                         //If there is an error be sure to put in the previous options
                         ajaxParams.error = function(xhr){
-                            console.error('ajaxSelectPicker:', xhr);
+                            this.log(['ajaxSelectPicker:', xhr], true);
                             plugin.$element.html(oldOptions);
                         };
 
@@ -179,6 +180,17 @@
                 });
             }
         };
+
+        /**
+         * Wrapper function for console.log / console.error
+         * @param  {mixed} message The contents to log.
+         * @param  {boolean} error Whether to use console.error or not.
+         * @return {void}
+         */
+        plugin.log = function(message, error){
+            message = message instanceof Array ? message : [message];
+            window.console && this.ajaxOptions.debug && (error ? console.error : console.log).apply(console, message);
+        }
 
         //We need for selectpicker to be attached first.  Putting the init in a setTimeout is the easiest way to ensure this.
         setTimeout(function(){

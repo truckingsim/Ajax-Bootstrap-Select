@@ -1,11 +1,11 @@
 /*!
- * ajax-bootstrap-select v1.0.3
+ * ajax-bootstrap-select v1.0.4
  * https://github.com/truckingsim/Ajax-Bootstrap-Select
  *
  * @author Adam Heim originally for CROSCON
  * @copyright 2014 ajax-bootstrap-select
  * @license Licensed under the MIT license
- * @version 1.0.3
+ * @version 1.0.4
  */
 
 !(function($, window){

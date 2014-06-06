@@ -29,7 +29,8 @@
             ajaxResultsPreHook: null,  //If you need to parse the data you receive from server so the selectpicker can handle it here is where it happens
             ajaxSearchUrl: null,
             ajaxOptions: {},  //if you want to change the dataType, data, or request type set it here. default  [json, {q: searchBoxVal}, POST],
-            placeHolderOption: null // string with text to show
+            placeHolderOption: null, // string with text to show
+            debug: false //If you want console output, set this to true
         };
 
         var plugin = this,

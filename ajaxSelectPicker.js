@@ -181,6 +181,17 @@
             }
         };
 
+        /**
+         * Wrapper function for console.log / console.error
+         * @param  {mixed} message The contents to log.
+         * @param  {boolean} error Whether to use console.error or not.
+         * @return {void}
+         */
+        plugin.log = function(message, error){
+            message = message instanceof Array ? message : [message];
+            window.console && this.ajaxOptions.debug && (error ? console.error : console.log).apply(console, message);
+        }
+
         //We need for selectpicker to be attached first.  Putting the init in a setTimeout is the easiest way to ensure this.
         setTimeout(function(){
             plugin.init();

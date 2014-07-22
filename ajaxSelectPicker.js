@@ -47,11 +47,9 @@
         plugin.ajaxOptions = $.extend(defaults, options, {});
 
         plugin.init = function(){
-             /**
-            /*added by @danielmariz | danielcsmariz@gmail.com 
-            */
-            if($element.attr("data-search-url"))
+            if($element.attr("data-search-url")){
                 plugin.ajaxOptions.ajaxSearchUrl = $element.attr("data-search-url");
+            }
 
             if(!$element.data().hasOwnProperty('selectpicker')){
                 this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);

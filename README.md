@@ -53,7 +53,8 @@ A string of the url to send the ajax request
 
 * Type: `string`
 * Example: `'/path/to/file/method'`
-
+ 
+ or add data-search-url attribute on dom element
 
 ###ajaxOptions###
 For changing the data, dataType, or type parameters in an ajax request:

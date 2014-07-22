@@ -1,11 +1,11 @@
 /*!
- * ajax-bootstrap-select v1.0.4
+ * ajax-bootstrap-select v1.0.5
  * https://github.com/truckingsim/Ajax-Bootstrap-Select
  *
  * @author Adam Heim originally for CROSCON
  * @copyright 2014 ajax-bootstrap-select
  * @license Licensed under the MIT license
- * @version 1.0.4
+ * @version 1.0.5
  */
 
 !(function($, window){
@@ -47,6 +47,10 @@
         plugin.ajaxOptions = $.extend(defaults, options, {});
 
         plugin.init = function(){
+            if($element.attr("data-search-url")){
+                plugin.ajaxOptions.ajaxSearchUrl = $element.attr("data-search-url");
+            }
+
             if(!$element.data().hasOwnProperty('selectpicker')){
                 this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);
             } else if(plugin.ajaxOptions.ajaxSearchUrl == null){

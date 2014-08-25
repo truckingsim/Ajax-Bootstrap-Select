@@ -31,7 +31,7 @@
             ajaxOptions: {},  //if you want to change the dataType, data, or request type set it here. default  [json, {q: searchBoxVal}, POST],
             placeHolderOption: null, // string with text to show
             debug: false, //If you want console output, set this to true
-            mixWithCurrents: true // If you want to mix results with currently selected results to avoid losing them
+            mixWithCurrents: false // If you want to mix results with currently selected results to avoid losing them
         };
 
         var plugin = this,
@@ -71,10 +71,9 @@
                         //Old options
                         var oldOptions = $element.html(),currentOptions = "";
 						
-						if(plugin.ajaxOptions.mixWithCurrents == true){
-							currentOptions = $(element).find("option:selected");
-							console.log(currentOptions);
-						}
+			if(plugin.ajaxOptions.mixWithCurrents == true){
+				currentOptions = $(element).find("option:selected");
+			}
 						
                         //Remove options
                         $element.find('options').remove();

@@ -5,7 +5,7 @@
  * @author Adam Heim originally for CROSCON
  * @copyright 2014 ajax-bootstrap-select
  * @license Licensed under the MIT license
- * @version 1.0.6
+ * @version 1.1.0
  */
 
 !(function ($, window) {

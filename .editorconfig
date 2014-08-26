@@ -1,0 +1,25 @@
+; http://editorconfig.org/
+;   Initial file copied from Symfony's .editorconfig found here:
+;     https://github.com/symfony/symfony/blob/master/.editorconfig
+
+; top-most EditorConfig file
+root = true
+
+; Unix-style newlines and files end in a new line.
+; Also the generic indent styles
+[*]
+end_of_line = LF
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+; PHP is set explicitly because I care about it more than anything else in the
+;   entire project.
+[*.php]
+indent_style = space
+indent_size = 4
+
+; You're special
+[*.less]
+indent_style = space
+indent_size = 2

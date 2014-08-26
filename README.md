@@ -105,6 +105,13 @@ If you want to get error information, set this to true.
 * Values: `true|false`
 * Default: `false`
 
+###mixWithCurrents###
+If this is set to true the plugin will keep previously selected options in between ajax searches.  This changes the default behavior which resets the selected options with every sort.
+
+* Type: `boolean`
+* Values: `true|false`
+* Default: `false`
+
 ##Full example of plugin:
 
 ```js
@@ -146,7 +153,8 @@ $('.select-picker').ajaxSelectPicker({
             return params;
         }
     },
-    placeHolderOption: 'Click and start typing'
+    placeHolderOption: 'Click and start typing',
+    mixWithCurrents: false
 });
 ```
 

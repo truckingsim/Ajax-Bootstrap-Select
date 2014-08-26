@@ -174,14 +174,14 @@
 
                         //If there is an error be sure to put in the previous options
                         ajaxParams.error = function (xhr) {
-                            this.log(['ajaxSelectPicker:', xhr], true);
+                            plugin.log(['ajaxSelectPicker:', xhr], true);
                             plugin.$element.html(oldOptions);
                         };
 
                         //Always refresh the list and remove the loading menu
                         ajaxParams.complete = function () {
                             $('.menu-loading').remove();
-                            plugin.refresh();
+                            plugin.$element.selectpicker('refresh');
                         };
 
                         var userParams = $.extend(true, {}, plugin.ajaxOptions.ajaxOptions);

@@ -30,7 +30,8 @@
             ajaxSearchUrl: null,
             ajaxOptions: {},  //if you want to change the dataType, data, or request type set it here. default  [json, {q: searchBoxVal}, POST],
             placeHolderOption: null, // string with text to show
-            debug: false //If you want console output, set this to true
+            debug: false, //If you want console output, set this to true
+            mixWithCurrents: false // If you want to mix results with currently selected results to avoid losing them
         };
 
         var plugin = this,
@@ -68,8 +69,12 @@
                     clearTimeout(timeout);
                     timeout = setTimeout(function(){
                         //Old options
-                        var oldOptions = $element.html();
-
+                        var oldOptions = $element.html(),currentOptions = "";
+						
+			if(plugin.ajaxOptions.mixWithCurrents == true){
+				currentOptions = $(element).find("option:selected");
+			}
+						
                         //Remove options
                         $element.find('options').remove();
 
@@ -132,6 +137,15 @@
                                         }
                                     }
                                 }
+                                
+                                // mixWithCurrents merge into options
+                                if(plugin.ajaxOptions.mixWithCurrents == true && currentOptions.length){
+                                	$.each(currentOptions,function(i,e){
+                                		html = e.outerHTML.replace(/\>/, ' selected="selected">');
+                                		options += html;
+                                	});
+                                }
+                                
                                 plugin.$element.html(options);
                             } else {
                                 plugin.$element.html(oldOptions);
@@ -210,4 +224,3 @@
         });
     }
 })(jQuery, window);
-

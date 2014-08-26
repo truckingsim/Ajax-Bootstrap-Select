@@ -69,10 +69,16 @@
                     clearTimeout(timeout);
                     timeout = setTimeout(function () {
                         //Old options
-                        var oldOptions = $element.html(), currentOptions = "";
+                        var oldOptions = $element.html(), currentOptions = [];
 
                         if (plugin.ajaxOptions.mixWithCurrents == true) {
-                            currentOptions = $(element).find("option:selected");
+                            $(element).find("option:selected").each(function(){
+                                currentOptions.push({
+                                    value: $(this).val(),
+                                    text: $(this).text(),
+                                    html: this
+                                })
+                            });
                         }
 
                         //Remove options
@@ -100,6 +106,9 @@
                                         options += '<option data-hidden="true">' + plugin.ajaxOptions.placeHolderOption + '</option>';
                                     }
 
+                                    // Store a key (value), value (text) object of each option returned for easy
+                                    //    comparison when adding back currently selected options
+                                    var optionsObject = {};
                                     for (var i = 0; i < dataLen; i++) {
                                         var currentData = data[i];
                                         var hasData = currentData.hasOwnProperty('data');
@@ -132,21 +141,32 @@
                                         options += ' value="' + currentData.value + '">';
                                         if (currentData.hasOwnProperty('text')) {
                                             options += currentData.text + '</option>';
+
+                                            // Add to optionsObject
+                                            optionsObject[currentData.value] = currentData.text;
                                         } else {
                                             options += currentData.value + '</option>';
+
+                                            // Add to optionsObject
+                                            optionsObject[currentData.value] = currentData.value;
                                         }
                                     }
                                 }
 
+                                plugin.$element.html(options);
+
+                                options = '';
                                 // mixWithCurrents merge into options
                                 if (plugin.ajaxOptions.mixWithCurrents == true && currentOptions.length) {
                                     $.each(currentOptions, function (i, e) {
-                                        html = e.outerHTML.replace(/\>/, ' selected="selected">');
-                                        options += html;
+                                        if(!optionsObject[e.value] || optionsObject[e.value] !== e.text){
+                                            options += e.html.outerHTML.replace(/\>/, ' selected="selected">');
+                                        } else {
+                                            plugin.$element.find('option[value="' + e.value + '"]').attr('selected', 'selected');
+                                        }
                                     });
                                 }
-
-                                plugin.$element.html(options);
+                                plugin.$element.append(options);
                             } else {
                                 plugin.$element.html(oldOptions);
                             }
@@ -208,7 +228,7 @@
         plugin.log = function (message, error) {
             message = message instanceof Array ? message : [message];
             window.console && this.ajaxOptions.debug && (error ? console.error : console.log).apply(console, message);
-        }
+        };
 
         //We need for selectpicker to be attached first.  Putting the init in a setTimeout is the easiest way to ensure this.
         setTimeout(function () {

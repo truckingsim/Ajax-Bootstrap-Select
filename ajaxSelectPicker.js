@@ -8,8 +8,8 @@
  * @version 1.0.6
  */
 
-!(function($, window){
-    $.ajaxSelectPicker = function(element, options){
+!(function ($, window) {
+    $.ajaxSelectPicker = function (element, options) {
         var specialKeyCodeMap = {
             9: "tab",
             13: "enter",
@@ -38,7 +38,7 @@
             $element = $(element);
 
         var selectPickerFunctions = {
-            destroyLi: function(){
+            destroyLi: function () {
                 this.$menu.find('li').remove();
             }
         };
@@ -47,34 +47,34 @@
 
         plugin.ajaxOptions = $.extend(defaults, options, {});
 
-        plugin.init = function(){
-            if($element.attr("data-search-url")){
+        plugin.init = function () {
+            if ($element.attr("data-search-url")) {
                 plugin.ajaxOptions.ajaxSearchUrl = $element.attr("data-search-url");
             }
 
-            if(!$element.data().hasOwnProperty('selectpicker')){
+            if (!$element.data().hasOwnProperty('selectpicker')) {
                 this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);
-            } else if(plugin.ajaxOptions.ajaxSearchUrl == null){
+            } else if (plugin.ajaxOptions.ajaxSearchUrl == null) {
                 this.log('ajaxSelectPicker: ajaxSearchUrl must be set!', true)
             } else {
                 var timeout = 0;  // store timeout id
                 $.extend(plugin, $element.data().selectpicker);  //Get the current selectpicker values
                 plugin.$searchbox.off('input');  // remove default selectpicker keypresses
-                plugin.$searchbox.on('keydown', function(e){
+                plugin.$searchbox.on('keydown', function (e) {
 
-                    if(specialKeyCodeMap[e.keyCode]){
+                    if (specialKeyCodeMap[e.keyCode]) {
                         return true;
                     }
-                    
+
                     clearTimeout(timeout);
-                    timeout = setTimeout(function(){
+                    timeout = setTimeout(function () {
                         //Old options
-                        var oldOptions = $element.html(),currentOptions = "";
-						
-			if(plugin.ajaxOptions.mixWithCurrents == true){
-				currentOptions = $(element).find("option:selected");
-			}
-						
+                        var oldOptions = $element.html(), currentOptions = "";
+
+                        if (plugin.ajaxOptions.mixWithCurrents == true) {
+                            currentOptions = $(element).find("option:selected");
+                        }
+
                         //Remove options
                         $element.find('options').remove();
 
@@ -88,64 +88,64 @@
                         ajaxParams.url = plugin.ajaxOptions.ajaxSearchUrl;
 
                         //Success function, this builds the options to put in the select
-                        ajaxParams.success = function(data){
-                            if(typeof plugin.ajaxOptions.ajaxResultsPreHook === 'function'){
+                        ajaxParams.success = function (data) {
+                            if (typeof plugin.ajaxOptions.ajaxResultsPreHook === 'function') {
                                 data = plugin.ajaxOptions.ajaxResultsPreHook(data);
                             }
                             //When we build the options we will be able to build any data properties that select picker takes.
-                            if(Array.isArray(data)){
+                            if (Array.isArray(data)) {
                                 var options = '', dataLen = data.length;
-                                if(data.length){
-                                    if(typeof plugin.ajaxOptions.placeHolderOption === 'string'){
+                                if (data.length) {
+                                    if (typeof plugin.ajaxOptions.placeHolderOption === 'string') {
                                         options += '<option data-hidden="true">' + plugin.ajaxOptions.placeHolderOption + '</option>';
                                     }
 
-                                    for(var i = 0; i < dataLen; i++){
+                                    for (var i = 0; i < dataLen; i++) {
                                         var currentData = data[i];
                                         var hasData = currentData.hasOwnProperty('data');
-                                        if(!currentData.hasOwnProperty('value') && (currentData.hasOwnProperty('data') && currentData.data.hasOwnProperty('divider'))){
+                                        if (!currentData.hasOwnProperty('value') && (currentData.hasOwnProperty('data') && currentData.data.hasOwnProperty('divider'))) {
                                             this.log('currentData must have a property of value', true);
                                             break;
                                         }
-                                        if(hasData && currentData.data.divider){
+                                        if (hasData && currentData.data.divider) {
                                             options += ' data-divider="true"></option>';
                                             break;
                                         }
                                         options += '<option';
-                                        if(currentData.hasOwnProperty('disable') && currentData.disable){
+                                        if (currentData.hasOwnProperty('disable') && currentData.disable) {
                                             options += ' disabled="disabled"';
                                         }
-                                        if(currentData.hasOwnProperty('class')){
+                                        if (currentData.hasOwnProperty('class')) {
                                             options += ' class="' + currentData.class + '"';
                                         }
-                                        if(hasData){
-                                            if(currentData.data.hasOwnProperty('subtext')){
+                                        if (hasData) {
+                                            if (currentData.data.hasOwnProperty('subtext')) {
                                                 options += ' data-subtext="' + currentData.data.subtext + '"';
                                             }
-                                            if(currentData.data.hasOwnProperty('icon')){
+                                            if (currentData.data.hasOwnProperty('icon')) {
                                                 options += ' data-icon="' + currentData.data.icon + '"';
                                             }
-                                            if(currentData.data.hasOwnProperty('content')){
+                                            if (currentData.data.hasOwnProperty('content')) {
                                                 options += ' data-content="' + currentData.data.content + '"';
                                             }
                                         }
                                         options += ' value="' + currentData.value + '">';
-                                        if(currentData.hasOwnProperty('text')){
+                                        if (currentData.hasOwnProperty('text')) {
                                             options += currentData.text + '</option>';
                                         } else {
                                             options += currentData.value + '</option>';
                                         }
                                     }
                                 }
-                                
+
                                 // mixWithCurrents merge into options
-                                if(plugin.ajaxOptions.mixWithCurrents == true && currentOptions.length){
-                                	$.each(currentOptions,function(i,e){
-                                		html = e.outerHTML.replace(/\>/, ' selected="selected">');
-                                		options += html;
-                                	});
+                                if (plugin.ajaxOptions.mixWithCurrents == true && currentOptions.length) {
+                                    $.each(currentOptions, function (i, e) {
+                                        html = e.outerHTML.replace(/\>/, ' selected="selected">');
+                                        options += html;
+                                    });
                                 }
-                                
+
                                 plugin.$element.html(options);
                             } else {
                                 plugin.$element.html(oldOptions);
@@ -153,13 +153,13 @@
                         };
 
                         //If there is an error be sure to put in the previous options
-                        ajaxParams.error = function(xhr){
+                        ajaxParams.error = function (xhr) {
                             this.log(['ajaxSelectPicker:', xhr], true);
                             plugin.$element.html(oldOptions);
                         };
 
                         //Always refresh the list and remove the loading menu
-                        ajaxParams.complete = function(){
+                        ajaxParams.complete = function () {
                             $('.menu-loading').remove();
                             plugin.refresh();
                         };
@@ -169,9 +169,9 @@
                         ajaxParams.dataType = userParams.hasOwnProperty('dataType') ? userParams.dataType : 'json';
                         ajaxParams.type = userParams.hasOwnProperty('type') ? userParams.type : 'POST';
 
-                        if(userParams.hasOwnProperty('data')){
+                        if (userParams.hasOwnProperty('data')) {
                             userParams.processedData = userParams.data;
-                            if(typeof userParams.data === 'function'){
+                            if (typeof userParams.data === 'function') {
                                 userParams.processedData = userParams.data();
                             }
                             ajaxParams.data = userParams.processedData;
@@ -181,11 +181,11 @@
 
 
                         var inputVal = plugin.$searchbox.val();
-                        if(Object.keys(ajaxParams.data).length){
-                            for(var dataKey in ajaxParams.data){
-                                if(ajaxParams.data.hasOwnProperty(dataKey)){
+                        if (Object.keys(ajaxParams.data).length) {
+                            for (var dataKey in ajaxParams.data) {
+                                if (ajaxParams.data.hasOwnProperty(dataKey)) {
                                     //use {{{q}}} to mark you want the input val
-                                    if(ajaxParams.data[dataKey] === '{{{q}}}'){
+                                    if (ajaxParams.data[dataKey] === '{{{q}}}') {
                                         //Replace {{{q}}} with the input val
                                         ajaxParams.data[dataKey] = inputVal;
                                     }
@@ -205,20 +205,20 @@
          * @param  {boolean} error Whether to use console.error or not.
          * @return {void}
          */
-        plugin.log = function(message, error){
+        plugin.log = function (message, error) {
             message = message instanceof Array ? message : [message];
             window.console && this.ajaxOptions.debug && (error ? console.error : console.log).apply(console, message);
         }
 
         //We need for selectpicker to be attached first.  Putting the init in a setTimeout is the easiest way to ensure this.
-        setTimeout(function(){
+        setTimeout(function () {
             plugin.init();
         }, 500);
     };
 
-    $.fn.ajaxSelectPicker = function(options){
-        return this.each(function() {
-            if($(this).data('ajaxSelectPicker') == undefined){
+    $.fn.ajaxSelectPicker = function (options) {
+        return this.each(function () {
+            if ($(this).data('ajaxSelectPicker') == undefined) {
                 $(this).data('ajaxSelectPicker', new $.ajaxSelectPicker(this, options));
             }
         });

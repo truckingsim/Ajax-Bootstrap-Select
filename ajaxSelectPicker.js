@@ -172,7 +172,7 @@
         } else {
             return this.each(function() {
                 if($(this).data('ajaxSelectPicker') == undefined){
-                    $(this).data('ajaxSelectPicker', new $.SteelSelect(this, options));
+                    $(this).data('ajaxSelectPicker', new $.ajaxSelectPicker(this, options));
                 }
             });
         }

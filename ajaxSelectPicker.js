@@ -10,7 +10,15 @@
 
 !(function ($, window) {
     $.ajaxSelectPicker = function (element, options) {
-        var defaults = {
+        var
+          plugin = this,
+          $element = $(element),
+          selectPickerFunctions = {
+            destroyLi: function () {
+              this.$menu.find('li').remove();
+            }
+          },
+          defaults = {
             ajaxResultsPreHook: null,
             ajaxSearchUrl: null,
 
@@ -56,16 +64,10 @@
             mixWithCurrents: false,
 
             // The template used when a request is being sent.
-            loadingTemplate: '<div class="menu-loading">Loading...</div>'
-        };
+            loadingTemplate: '<div class="menu-loading">Loading...</div>',
 
-        var plugin = this,
-            $element = $(element);
-
-        var selectPickerFunctions = {
-            destroyLi: function () {
-                this.$menu.find('li').remove();
-            }
+            // The placeholder text to use inside the search input.
+            searchPlaceholder: null
         };
 
         $.extend(plugin, selectPickerFunctions);
@@ -82,10 +84,22 @@
             } else if (plugin.ajaxOptions.ajaxSearchUrl == null) {
                 this.log('ajaxSelectPicker: ajaxSearchUrl must be set!', true)
             } else {
-                var timeout = 0;  // store timeout id
-                $.extend(plugin, $element.data().selectpicker);  //Get the current selectpicker values
-                plugin.$searchbox.off('input');  // remove default selectpicker keypresses
-                plugin.$searchbox.on(plugin.ajaxOptions.bindEvent, function (e) {
+                // Instantiate the timer.
+                var timeout;
+
+                // Merge the selectpicker data into this plugin.
+                $.extend(plugin, $element.data().selectpicker);
+
+                // Process the search input.
+                plugin.$searchbox
+                  // Add placeholder text.
+                  .attr('placeholder', plugin.ajaxOptions.searchPlaceholder)
+
+                  // Remove selectpicker events.
+                  .off('input propertychange')
+
+                  // Bind this plugin event.
+                  .on(plugin.ajaxOptions.bindEvent, function (e) {
                     var inputVal = plugin.$searchbox.val();
 
                     // Don't process ignored keys.

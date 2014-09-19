@@ -60,8 +60,7 @@
                 $.extend(plugin, $element.data().selectpicker);  //Get the current selectpicker values
                 plugin.$searchbox.off('input');  // remove default selectpicker keypresses
                 plugin.$searchbox.on('keydown', function (e) {
-
-                    if (specialKeyCodeMap[e.keyCode]) {
+                    if (e.metaKey || specialKeyCodeMap[e.keyCode]) {
                         return true;
                     }
 

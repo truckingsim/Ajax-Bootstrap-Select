@@ -30,7 +30,8 @@
             ajaxOptions: {},  //if you want to change the dataType, data, or request type set it here. default  [json, {q: searchBoxVal}, POST],
             placeHolderOption: null, // string with text to show
             debug: false, //If you want console output, set this to true
-            mixWithCurrents: false // If you want to mix results with currently selected results to avoid losing them
+            mixWithCurrents: false, // If you want to mix results with currently selected results to avoid losing them
+            loadingTemplate: '<div class="menu-loading">Loading...</div>' // If you need to override the template used for when the loading text is shown.
         };
 
         var plugin = this,
@@ -86,7 +87,7 @@
                         plugin.destroyLi();
 
                         //show loading message
-                        plugin.$menu.append('<div class="menu-loading">loading...</div>');
+                        plugin.$menu.append(plugin.ajaxOptions.loadingTemplate);
 
                         var ajaxParams = {};
                         ajaxParams.url = plugin.ajaxOptions.ajaxSearchUrl;

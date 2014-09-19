@@ -1,5 +1,5 @@
 /*!
- * ajax-bootstrap-select v1.0.6
+ * ajax-bootstrap-select
  * https://github.com/truckingsim/Ajax-Bootstrap-Select
  *
  * @author Adam Heim originally for CROSCON
@@ -19,7 +19,6 @@
             27: "esc",
             37: "left",
             39: "right",
-            13: "enter",
             38: "up",
             40: "down",
             229: "unknown"  //Returned if it can't get the virtual key number per w3 spec: http://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html

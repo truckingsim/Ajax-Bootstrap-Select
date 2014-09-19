@@ -10,28 +10,53 @@
 
 !(function ($, window) {
     $.ajaxSelectPicker = function (element, options) {
-        var specialKeyCodeMap = {
-            9: "tab",
-            13: "enter",
-            16: "shift",
-            17: "ctrl",
-            18: "alt",
-            27: "esc",
-            37: "left",
-            39: "right",
-            38: "up",
-            40: "down",
-            229: "unknown"  //Returned if it can't get the virtual key number per w3 spec: http://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
-        };
-
         var defaults = {
-            ajaxResultsPreHook: null,  //If you need to parse the data you receive from server so the selectpicker can handle it here is where it happens
+            ajaxResultsPreHook: null,
             ajaxSearchUrl: null,
-            ajaxOptions: {},  //if you want to change the dataType, data, or request type set it here. default  [json, {q: searchBoxVal}, POST],
-            placeHolderOption: null, // string with text to show
-            debug: false, //If you want console output, set this to true
-            mixWithCurrents: false, // If you want to mix results with currently selected results to avoid losing them
-            loadingTemplate: '<div class="menu-loading">Loading...</div>' // If you need to override the template used for when the loading text is shown.
+
+            // If you want to change the dataType, data, or request type set it
+            // here. default  [json, {q: searchBoxVal}, POST],
+            ajaxOptions: {},
+
+            // The event to bind on the search input element to fire a request.
+            bindEvent: 'keyup',
+
+            // Clear the select list when there is no search value.
+            emptyClear: true,
+
+            // Invoke a request for an empty search value.
+            emptyRequest: false,
+
+            // Key codes to ignore so a request is not invoked with bindEvent.
+            ignoredKeys: {
+              9: "tab",
+              13: "enter",
+              16: "shift",
+              17: "ctrl",
+              18: "alt",
+              27: "esc",
+              37: "left",
+              39: "right",
+              38: "up",
+              40: "down",
+              91: "meta", // Windows or Command (Mac).
+
+              // Returned if it can't get the virtual key number per w3 spec:
+              // http://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
+              229: "unknown"
+            },
+
+            // String with text to show.
+            placeHolderOption: null,
+
+            // If you want console output, set this to true.
+            debug: false,
+
+            // If you want to mix results with currently selected results to avoid losing them.
+            mixWithCurrents: false,
+
+            // The template used when a request is being sent.
+            loadingTemplate: '<div class="menu-loading">Loading...</div>'
         };
 
         var plugin = this,
@@ -60,9 +85,25 @@
                 var timeout = 0;  // store timeout id
                 $.extend(plugin, $element.data().selectpicker);  //Get the current selectpicker values
                 plugin.$searchbox.off('input');  // remove default selectpicker keypresses
-                plugin.$searchbox.on('keydown', function (e) {
-                    if (e.metaKey || specialKeyCodeMap[e.keyCode]) {
+                plugin.$searchbox.on(plugin.ajaxOptions.bindEvent, function (e) {
+                    var inputVal = plugin.$searchbox.val();
+
+                    // Don't process ignored keys.
+                    if (plugin.ajaxOptions.ignoredKeys[e.keyCode]) {
                         return true;
+                    }
+
+                    // Process empty search value.
+                    if (!inputVal.length) {
+                      // Clear the select list.
+                      if (!plugin.ajaxOptions.emptyClear) {
+                        plugin.destroyLi();
+                      }
+
+                      // Don't invoke a request.
+                      if (!plugin.ajaxOptions.emptyRequest) {
+                        return true;
+                      }
                     }
 
                     clearTimeout(timeout);
@@ -195,11 +236,9 @@
                             }
                             ajaxParams.data = userParams.processedData;
                         } else {
-                            userParams.data = {'q': plugin.$searchbox.val()};
+                            userParams.data = {'q': inputVal};
                         }
 
-
-                        var inputVal = plugin.$searchbox.val();
                         if (Object.keys(ajaxParams.data).length) {
                             for (var dataKey in ajaxParams.data) {
                                 if (ajaxParams.data.hasOwnProperty(dataKey)) {

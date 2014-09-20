@@ -32,7 +32,7 @@ The plugin expects a certain result structure, an array of objects with the obje
 
 ##Options##
 
-###ajaxResultPreHook###
+###ajaxResultsPreHook###
 
 A function that is run after the ajax request is made but before the options are built.  If you set this option it will pass a single parameter with the results of the ajax request.  You can do any processing you need to get the json results the plugin expects (example of this above).
 

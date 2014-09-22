@@ -39,11 +39,11 @@ module.exports = function (grunt) {
             options: {
                 jshintrc: '.jshintrc'
             },
-            main: {
+            plugin: {
                 src: [
                     'package.json',
                     'Gruntfile.js',
-                    'src/**/*.js'
+                    'src/plugin/**/*.js'
                 ]
             }
         },
@@ -53,7 +53,7 @@ module.exports = function (grunt) {
                 footer: '\n})(jQuery, window);\n'
             },
             build: {
-                src: 'src/**/*.js',
+                src: 'src/plugin/**/*.js',
                 dest: 'dist/<%= pkg.name %>.js'
             }
         },
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
             plugin: {
                 path: 'dist',
                 pattern: '%DEFAULT_OPTIONS%',
-                replacement: grunt.file.read('defaultOptions.js'),
+                replacement: grunt.file.read('src/defaultOptions.js'),
                 recursive: true
             }
         },
@@ -79,7 +79,6 @@ module.exports = function (grunt) {
                 files: [
                     'package.json',
                     'Gruntfile.js',
-                    'defaultOptions.js',
                     'src/**/*.js'
                 ],
                 tasks: ['default'],
@@ -91,7 +90,7 @@ module.exports = function (grunt) {
         dss: {
             docs: {
                 files: {
-                    docs: 'defaultOptions.js'
+                    docs: 'src/defaultOptions.js'
                 },
                 options: {
                     template: 'docs/templates/',

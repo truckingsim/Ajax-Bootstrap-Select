@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-22 6:23:18 AM CDT
+ * Last build: 2014-09-22 6:33:15 AM CDT
  */
 !(function ($, window) {
 
@@ -289,15 +289,15 @@ AjaxBootstrapSelect.prototype.init = function () {
                 plugin.destroyLi();
 
                 // Remove unnecessary "min-height" from selectpicker.
-                plugin.$menu.css('minHeight', 0);
-                plugin.$menu.find('> .inner').css('minHeight', 0);
+                plugin.selectpicker.$menu.css('minHeight', 0);
+                plugin.selectpicker.$menu.find('> .inner').css('minHeight', 0);
 
                 // Remove the existing loading template.
                 plugin.$loading.remove();
 
                 // Show the loading template.
                 plugin.$loading = $(plugin.options.loadingTemplate);
-                plugin.$menu.append(plugin.$loading);
+                plugin.selectpicker.$menu.append(plugin.$loading);
 
                 plugin.$element.selectpicker('refresh');
 

@@ -271,15 +271,15 @@ AjaxBootstrapSelect.prototype.init = function () {
                 plugin.destroyLi();
 
                 // Remove unnecessary "min-height" from selectpicker.
-                plugin.$menu.css('minHeight', 0);
-                plugin.$menu.find('> .inner').css('minHeight', 0);
+                plugin.selectpicker.$menu.css('minHeight', 0);
+                plugin.selectpicker.$menu.find('> .inner').css('minHeight', 0);
 
                 // Remove the existing loading template.
                 plugin.$loading.remove();
 
                 // Show the loading template.
                 plugin.$loading = $(plugin.options.loadingTemplate);
-                plugin.$menu.append(plugin.$loading);
+                plugin.selectpicker.$menu.append(plugin.$loading);
 
                 plugin.$element.selectpicker('refresh');
 

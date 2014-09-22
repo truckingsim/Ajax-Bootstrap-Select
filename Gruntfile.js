@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     // Project configuration.
     grunt.initConfig({
@@ -9,7 +9,7 @@ module.exports = function(grunt) {
         ' * @author <%= pkg.author.name %> - <%= pkg.author.url %>\n' +
         '<%= pkg.homepage ? " * @link " + pkg.homepage + "\\n" : "" %>' +
         ' * @copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
-        ' * @license Licensed under <%= pkg.license %>\n *\n' +
+        ' * @license Released under the <%= _.pluck(pkg.licenses, "type").join(", ") %> license.\n *\n' +
         ' * Contributors:' +
         '<% _.forEach(pkg.contributors, function(contributor) {%>\n *   <%= contributor.name %> - <%= contributor.url %><% }); %>\n *\n' +
         ' * Last build: <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT Z") %>\n' +
@@ -24,7 +24,7 @@ module.exports = function(grunt) {
                     'package.json',
                     'Gruntfile.js',
                     'src/**/*.js'
-                    ]
+                ]
             }
         },
         concat: {
@@ -52,8 +52,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-verb');
 
     // Default task(s).
-    grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'verb']);
 
 };

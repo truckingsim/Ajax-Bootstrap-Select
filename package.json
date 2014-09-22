@@ -1,25 +1,36 @@
 {
     "name": "ajax-bootstrap-select",
     "title": "Ajax Bootstrap Select",
-    "version": "1.1.0",
     "description": "Extends the bootstrap-select plugin so it can use a remote source for searching. Originally for CROSCON.",
-    "homepage": "https://github.com/truckingsim/Ajax-Bootstrap-Select",
-    "bugs": "https://github.com/truckingsim/Ajax-Bootstrap-Select/issues",
-    "license": "MIT",
+    "version": "1.1.0",
     "author": {
         "name": "Adam Heim",
         "url": "https://github.com/truckingsim"
     },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/truckingsim/Ajax-Bootstrap-Select/blob/master/LICENSE-MIT"
+        }
+    ],
     "contributors": [
         {
             "name": "Mark Carver",
+            "email": "mark.carver@me.com",
             "url": "https://github.com/markcarver"
         }
     ],
+    "homepage": "https://github.com/truckingsim/Ajax-Bootstrap-Select",
+    "bugs": "https://github.com/truckingsim/Ajax-Bootstrap-Select/issues",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/truckingsim/Ajax-Bootstrap-Select.git"
+    },
     "devDependencies": {
         "grunt": "^0.4.5",
         "grunt-contrib-concat": "^0.5.0",
         "grunt-contrib-jshint": "^0.10.0",
-        "grunt-contrib-uglify": "~0.5.0"
+        "grunt-contrib-uglify": "~0.5.0",
+        "grunt-verb": "^0.2.4"
     }
 }

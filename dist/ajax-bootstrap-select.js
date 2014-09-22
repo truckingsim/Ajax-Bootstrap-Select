@@ -7,12 +7,12 @@
  * @author Adam Heim - https://github.com/truckingsim
  * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
  * @copyright 2014 Adam Heim
- * @license Licensed under MIT
+ * @license Released under the MIT license.
  *
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-22 2:48:26 AM CDT
+ * Last build: 2014-09-22 4:29:50 AM CDT
  */
 !(function ($, window) {
 

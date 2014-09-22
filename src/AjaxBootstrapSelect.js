@@ -19,12 +19,15 @@ var AjaxBootstrapSelect = function (element, options) {
      */
     this.$loading = $();
 
-    //
     /**
      * Instantiate a relationship with the parent plugin: selectpicker.
      * @type {$.fn.selectpicker}
      */
     this.selectpicker = this.$element.data('selectpicker');
+    if (!this.selectpicker) {
+        this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);
+        return;
+    }
 
     /**
      * Container for cached results.
@@ -171,6 +174,17 @@ var AjaxBootstrapSelect = function (element, options) {
     // Merge the options into the plugin.
     this.options = $.extend(true, {}, defaults, options);
 
+    // Override any provided option with the data attribute value.
+    if (this.$element.data('searchUrl')) {
+        this.options.ajaxOptions.url = this.$element.data('searchUrl');
+    }
+
+    // Ensure there is a URL.
+    if (!this.options.ajaxOptions.url) {
+        this.log('ajaxSelectPicker: ajaxOptions.url must be set!', true);
+        return;
+    }
+
     // We need for selectpicker to be attached first. Putting the init in a
     // setTimeout is the easiest way to ensure this.
     // @todo Figure out a better way to do this (hopefully listen for an event).
@@ -185,172 +199,158 @@ var AjaxBootstrapSelect = function (element, options) {
 AjaxBootstrapSelect.prototype.init = function () {
     var plugin = this;
 
-    if (this.$element.attr("data-search-url")) {
-        plugin.options.ajaxOptions.url = this.$element.attr("data-search-url");
-    }
+    // Instantiate the timer.
+    var timeout;
 
-    if (!this.$element.data().hasOwnProperty('selectpicker')) {
-        this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);
-    }
-    else {
-        if (plugin.options.ajaxOptions.url == null) {
-            this.log('ajaxSelectPicker: ajaxOptions.url must be set!', true);
-        }
-        else {
-            // Instantiate the timer.
-            var timeout;
+    // Process the search input.
+    this.selectpicker.$searchbox
+        // Add placeholder text.
+        .attr('placeholder', this.options.searchPlaceholder)
 
-            // Process the search input.
-            plugin.selectpicker.$searchbox
-                // Add placeholder text.
-                .attr('placeholder', plugin.options.searchPlaceholder)
+        // Remove selectpicker events.
+        .off('input propertychange')
 
-                // Remove selectpicker events.
-                .off('input propertychange')
+        // Bind this plugin event.
+        .on(this.options.bindEvent, function (e) {
+            plugin.query = plugin.selectpicker.$searchbox.val();
 
-                // Bind this plugin event.
-                .on(plugin.options.bindEvent, function (e) {
-                    plugin.query = plugin.selectpicker.$searchbox.val();
+            // Dynamically ignore the "enter" key (13) so it doesn't
+            // create an additional request if the "cache" option has
+            // been disabled.
+            if (!plugin.options.cache) {
+                plugin.options.ignoredKeys[13] = 'enter';
+            }
 
-                    // Dynamically ignore the "enter" key (13) so it doesn't
-                    // create an additional request if the "cache" option has
-                    // been disabled.
-                    if (!plugin.options.cache) {
-                        plugin.options.ignoredKeys[13] = 'enter';
-                    }
+            // Don't process ignored keys.
+            if (plugin.options.ignoredKeys[e.keyCode]) {
+                return true;
+            }
 
-                    // Don't process ignored keys.
-                    if (plugin.options.ignoredKeys[e.keyCode]) {
-                        return true;
-                    }
+            // Process empty search value.
+            if (!plugin.query.length) {
+                // Clear the select list.
+                if (!plugin.options.emptyClear) {
+                    plugin.destroyLi();
+                }
 
-                    // Process empty search value.
-                    if (!plugin.query.length) {
-                        // Clear the select list.
-                        if (!plugin.options.emptyClear) {
-                            plugin.destroyLi();
-                        }
+                // Don't invoke a request.
+                if (!plugin.options.emptyRequest) {
+                    return true;
+                }
+            }
 
-                        // Don't invoke a request.
-                        if (!plugin.options.emptyRequest) {
-                            return true;
-                        }
-                    }
+            // Clear any existing timer.
+            clearTimeout(timeout);
 
-                    // Clear any existing timer.
-                    clearTimeout(timeout);
+            // Return the cached results, if any.
+            if (plugin.options.cache && plugin.cachedData[plugin.query] && e.keyCode !== 13) {
+                var output = plugin.buildOptions(plugin.cachedData[plugin.query]);
+                // Build the option output.
+                if (output.length) {
+                    plugin.$element.html(output);
+                    plugin.$element.selectpicker('refresh');
+                    return true;
+                }
+                plugin.log([
+                    'ajaxSelectPicker: Unable to build the options from cached data.',
+                    plugin.query,
+                    plugin.cachedData[plugin.query]
+                ], true);
+                plugin.restoreState();
+                return;
+            }
 
-                    // Return the cached results, if any.
-                    if (plugin.options.cache && plugin.cachedData[plugin.query] && e.keyCode !== 13) {
-                        var output = plugin.buildOptions(plugin.cachedData[plugin.query]);
+            timeout = setTimeout(function () {
+                // Save the current state of the plugin.
+                plugin.saveState();
+
+                // Destroy the select options currently there.
+                plugin.$element.find('option').remove();
+
+                // Destroy the list currently there.
+                plugin.destroyLi();
+
+                // Remove unnecessary "min-height" from selectpicker.
+                plugin.$menu.css('minHeight', 0);
+                plugin.$menu.find('> .inner').css('minHeight', 0);
+
+                // Remove the existing loading template.
+                plugin.$loading.remove();
+
+                // Show the loading template.
+                plugin.$loading = $(plugin.options.loadingTemplate);
+                plugin.$menu.append(plugin.$loading);
+
+                plugin.$element.selectpicker('refresh');
+
+                var ajaxParams = {};
+                ajaxParams.url = plugin.options.ajaxOptions.url;
+
+                //Success function, this builds the options to put in the select
+                ajaxParams.success = function (data) {
+                    // Process the data.
+                    var processedData = plugin.processData(data, plugin.query);
+                    if (processedData) {
+                        var output = plugin.buildOptions(processedData);
                         // Build the option output.
                         if (output.length) {
                             plugin.$element.html(output);
-                            plugin.$element.selectpicker('refresh');
-                            return true;
+                            return;
                         }
                         plugin.log([
-                            'ajaxSelectPicker: Unable to build the options from cached data.',
-                            plugin.query,
-                            plugin.cachedData[plugin.query]
+                            'ajaxSelectPicker: Unable to build the options from data.',
+                            data,
+                            output
                         ], true);
-                        plugin.restoreState();
-                        return;
                     }
+                    else {
+                        plugin.log([
+                            'ajaxSelectPicker: Unable to process data.',
+                            data
+                        ], true);
+                    }
+                    plugin.restoreState();
+                };
 
-                    timeout = setTimeout(function () {
-                        // Save the current state of the plugin.
-                        plugin.saveState();
+                //If there is an error be sure to put in the previous options
+                ajaxParams.error = function (xhr) {
+                    plugin.log([
+                        'ajaxSelectPicker:',
+                        xhr
+                    ], true);
+                    plugin.restoreState();
+                };
 
-                        // Destroy the select options currently there.
-                        plugin.$element.find('option').remove();
+                //Always refresh the list and remove the loading menu
+                ajaxParams.complete = function () {
+                    plugin.$loading.remove();
+                    plugin.$element.selectpicker('refresh');
+                };
 
-                        // Destroy the list currently there.
-                        plugin.destroyLi();
+                var userParams = $.extend(true, {}, plugin.options.ajaxOptions);
 
-                        // Remove unnecessary "min-height" from selectpicker.
-                        plugin.$menu.css('minHeight', 0);
-                        plugin.$menu.find('> .inner').css('minHeight', 0);
+                ajaxParams.dataType = userParams.hasOwnProperty('dataType') ? userParams.dataType : 'json';
+                ajaxParams.type = userParams.hasOwnProperty('type') ? userParams.type : 'POST';
 
-                        // Remove the existing loading template.
-                        plugin.$loading.remove();
+                if (userParams.hasOwnProperty('data')) {
+                    userParams.processedData = userParams.data;
+                    if (typeof userParams.data === 'function') {
+                        userParams.processedData = userParams.data();
+                    }
+                    ajaxParams.data = userParams.processedData;
+                }
+                else {
+                    userParams.data = {'q': plugin.query};
+                }
 
-                        // Show the loading template.
-                        plugin.$loading = $(plugin.options.loadingTemplate);
-                        plugin.$menu.append(plugin.$loading);
+                // Replace any data values containing "{{{q}}}" with
+                // the value of the current query.
+                plugin.replaceValue(ajaxParams.data, '{{{q}}}', plugin.query);
 
-                        plugin.$element.selectpicker('refresh');
-
-                        var ajaxParams = {};
-                        ajaxParams.url = plugin.options.ajaxOptions.url;
-
-                        //Success function, this builds the options to put in the select
-                        ajaxParams.success = function (data) {
-                            // Process the data.
-                            var processedData = plugin.processData(data, plugin.query);
-                            if (processedData) {
-                                var output = plugin.buildOptions(processedData);
-                                // Build the option output.
-                                if (output.length) {
-                                    plugin.$element.html(output);
-                                    return;
-                                }
-                                plugin.log([
-                                    'ajaxSelectPicker: Unable to build the options from data.',
-                                    data,
-                                    output
-                                ], true);
-                            }
-                            else {
-                                plugin.log([
-                                    'ajaxSelectPicker: Unable to process data.',
-                                    data
-                                ], true);
-                            }
-                            plugin.restoreState();
-                        };
-
-                        //If there is an error be sure to put in the previous options
-                        ajaxParams.error = function (xhr) {
-                            plugin.log([
-                                'ajaxSelectPicker:',
-                                xhr
-                            ], true);
-                            plugin.restoreState();
-                        };
-
-                        //Always refresh the list and remove the loading menu
-                        ajaxParams.complete = function () {
-                            plugin.$loading.remove();
-                            plugin.$element.selectpicker('refresh');
-                        };
-
-                        var userParams = $.extend(true, {}, plugin.options.ajaxOptions);
-
-                        ajaxParams.dataType = userParams.hasOwnProperty('dataType') ? userParams.dataType : 'json';
-                        ajaxParams.type = userParams.hasOwnProperty('type') ? userParams.type : 'POST';
-
-                        if (userParams.hasOwnProperty('data')) {
-                            userParams.processedData = userParams.data;
-                            if (typeof userParams.data === 'function') {
-                                userParams.processedData = userParams.data();
-                            }
-                            ajaxParams.data = userParams.processedData;
-                        }
-                        else {
-                            userParams.data = {'q': plugin.query};
-                        }
-
-                        // Replace any data values containing "{{{q}}}" with
-                        // the value of the current query.
-                        plugin.replaceValue(ajaxParams.data, '{{{q}}}', plugin.query);
-
-                        // Invoke the AJAX request.
-                        $.ajax(ajaxParams);
-                    }, 300);
-                });
-        }
-    }
+                // Invoke the AJAX request.
+                $.ajax(ajaxParams);
+            }, 300);
+        });
 };
 
 /**

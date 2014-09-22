@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-22 7:05:24 AM CDT
+ * Last build: 2014-09-22 7:08:24 AM CDT
  */
 !(function ($, window) {
 
@@ -547,19 +547,6 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
 
 /**
  * @todo document this.
- * @param options
- * @returns {*}
- */
-$.fn.ajaxSelectPicker = function (options) {
-    return this.each(function () {
-        if (!$(this).data('ajaxSelectPicker')) {
-            $(this).data('ajaxSelectPicker', new AjaxBootstrapSelect(this, options));
-        }
-    });
-};
-
-/**
- * @todo document this.
  * @param {AjaxBootstrapSelect} plugin
  * @constructor
  */
@@ -740,6 +727,19 @@ AjaxBootstrapSelectList.prototype.save = function (keepPreviousStates) {
     this.states.push({
         selected: selected,
         html: this.$element.html()
+    });
+};
+
+/**
+ * @todo document this.
+ * @param options
+ * @returns {*}
+ */
+$.fn.ajaxSelectPicker = function (options) {
+    return this.each(function () {
+        if (!$(this).data('ajaxSelectPicker')) {
+            $(this).data('ajaxSelectPicker', new AjaxBootstrapSelect(this, options));
+        }
     });
 };
 

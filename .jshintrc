@@ -15,6 +15,7 @@
         "$": true,
         "jQuery": true,
         "module": true,
+        "AjaxBootstrapSelect": true,
         "AjaxBootstrapSelectList": true
     }
 }

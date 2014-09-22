@@ -1,0 +1,171 @@
+    defaultOptions = {
+        /**
+         * @name ajaxOptions
+         * @description The options to pass to the jQuery AJAX request.
+         *
+         * @type Object
+         * @default `{}`
+         *
+         * @example ```js
+         * ajaxOptions: {
+         *     url: "/path/to/server/request", // Required.
+         *     type: "json",
+         *     type: "POST"
+         *     data: {
+         *         q: "{{{q}}}"
+         *     }
+         * }
+         * ```
+         */
+        ajaxOptions: {},
+
+        /**
+         * @name bindEvent
+         * @description The event to bind on the search input element to fire a request.
+         * @optional
+         *
+         * @type String
+         * @default `'keyup'`
+         */
+        bindEvent: 'keyup',
+
+        /**
+         * @name cache
+         * @description Cache previous requests. If enabled, the "enter" key (13) is enabled to allow users to force a refresh of the request.
+         * @optional
+         *
+         * @type Boolean
+         * @default `true`
+         */
+        cache: true,
+
+        /**
+         * @name debug
+         * @description Display helpful console output when a warning or error occurs in the plugin.
+         * @optional
+         *
+         * @type Boolean
+         * @default `true`
+         */
+        debug: false,
+
+        /**
+         * @name emptyClear
+         * @description Clear the select list when there is no search value.
+         * @optional
+         *
+         * @type Boolean
+         * @default `true`
+         */
+        emptyClear: true,
+
+        /**
+         * @name emptyRequest
+         * @description Invoke a request for empty search values.
+         * @optional
+         *
+         * @type Boolean
+         * @default `false`
+         */
+        emptyRequest: false,
+
+        /**
+         * @name ignoredKeys
+         * @description Key codes to ignore so a request is not invoked with bindEvent. The "enter" key (13) will always be dynamically added to any list provided unless the "cache" option above is set to "true".
+         * @optional
+         *
+         * @type Object
+         * @default
+         * ```js
+         * {
+         *     9: "tab",
+         *     16: "shift",
+         *     17: "ctrl",
+         *     18: "alt",
+         *     27: "esc",
+         *     37: "left",
+         *     39: "right",
+         *     38: "up",
+         *     40: "down",
+         *     91: "meta",
+         *     229: "unknown"
+         * }
+         * ```
+         */
+        ignoredKeys: {
+            9: "tab",
+            16: "shift",
+            17: "ctrl",
+            18: "alt",
+            27: "esc",
+            37: "left",
+            39: "right",
+            38: "up",
+            40: "down",
+            91: "meta",
+            229: "unknown"
+        },
+
+        /**
+         * @name loadingTemplate
+         * @description The template used when a request is being sent.
+         * @optional
+         *
+         * @type String|jQuery
+         * @default `'<div class="menu-loading">Loading...</div>'`
+         */
+        loadingTemplate: '<div class="menu-loading">Loading...</div>',
+
+        /**
+         * @name placeHolderOption
+         * @description String with text to show.
+         * @optional
+         *
+         * @type String
+         * @default `null`
+         */
+        placeHolderOption: null,
+
+        /**
+         * @name preprocessData
+         * @description Process the data returned before this plugin.
+         * @optional
+         *
+         * @type Function|null
+         * @default `null`
+         */
+        preprocessData: null,
+
+        /**
+         * @name preserveSelected
+         * @description Preserve selected options. There are 3 possible values:
+         * * __'auto':__ will automatically determine whether or not this option should be enabled based on if the select element can have "multiple" selections.
+         * * __true:__ will always preserve the selected options.
+         * * __false:__ will never preserve the selected options.
+         * @optional
+         *
+         * @type String|Boolean
+         * @default `'auto'`
+         */
+        preserveSelected: 'auto',
+
+        /**
+         * @name processData
+         * @description Process the data returned after this plugin, but before the list is built.
+         * @optional
+         *
+         * @type Function|null
+         * @default `null`
+         */
+        processData: null,
+
+        /**
+         * @name searchPlaceholder
+         * @description The placeholder text to use inside the search input.
+         * @optional
+         *
+         * @type String|null
+         * @default `null`
+         */
+        searchPlaceholder: null
+    };

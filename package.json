@@ -32,6 +32,9 @@
         "grunt-contrib-jshint": "^0.10.0",
         "grunt-contrib-uglify": "~0.5.0",
         "grunt-contrib-watch": "^0.6.1",
+        "grunt-dss": "^1.0.8",
+        "grunt-html2md": "^0.1.2",
+        "grunt-sed": "^0.1.1",
         "grunt-verb": "^0.2.4"
     }
 }

@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-22 7:08:24 AM CDT
+ * Last build: 2014-09-22 10:48:33 AM CDT
  */
 !(function ($, window) {
 
@@ -23,6 +23,7 @@
  * @constructor
  */
 var AjaxBootstrapSelect = function (element, options) {
+    var defaultOptions;
     options = options || {};
 
     /**
@@ -65,31 +66,101 @@ var AjaxBootstrapSelect = function (element, options) {
      */
     this.query = '';
 
-    // @todo figure out if this can be moved to a separate file and included
-    // here. It would also be included and parsed automatically by the README.
-    var defaults = {
-        ajaxSearchUrl: null,
-
-        // If you want to change the dataType, data, or request type set it
-        // here. default  [json, {q: searchBoxVal}, POST],
+/* jshint ignore:start */
+    defaultOptions = {
+        /**
+         * @name ajaxOptions
+         * @description The options to pass to the jQuery AJAX request.
+         *
+         * @type Object
+         * @default `{}`
+         *
+         * @example ```js
+         * ajaxOptions: {
+         *     url: "/path/to/server/request", // Required.
+         *     type: "json",
+         *     type: "POST"
+         *     data: {
+         *         q: "{{{q}}}"
+         *     }
+         * }
+         * ```
+         */
         ajaxOptions: {},
 
-        // The event to bind on the search input element to fire a request.
+        /**
+         * @name bindEvent
+         * @description The event to bind on the search input element to fire a request.
+         * @optional
+         *
+         * @type String
+         * @default `'keyup'`
+         */
         bindEvent: 'keyup',
 
-        // Cache previous requests. If enabled, the "enter" key (13) is
-        // enabled to allow users to force a refresh of the request.
+        /**
+         * @name cache
+         * @description Cache previous requests. If enabled, the "enter" key (13) is enabled to allow users to force a refresh of the request.
+         * @optional
+         *
+         * @type Boolean
+         * @default `true`
+         */
         cache: true,
 
-        // Clear the select list when there is no search value.
+        /**
+         * @name debug
+         * @description Display helpful console output when a warning or error occurs in the plugin.
+         * @optional
+         *
+         * @type Boolean
+         * @default `true`
+         */
+        debug: false,
+
+        /**
+         * @name emptyClear
+         * @description Clear the select list when there is no search value.
+         * @optional
+         *
+         * @type Boolean
+         * @default `true`
+         */
         emptyClear: true,
 
-        // Invoke a request for an empty search value.
+        /**
+         * @name emptyRequest
+         * @description Invoke a request for empty search values.
+         * @optional
+         *
+         * @type Boolean
+         * @default `false`
+         */
         emptyRequest: false,
 
-        // Key codes to ignore so a request is not invoked with bindEvent.
-        // The "enter" key (13) will always be dynamically added to any list
-        // provided unless the "cache" option above is set to "true".
+        /**
+         * @name ignoredKeys
+         * @description Key codes to ignore so a request is not invoked with bindEvent. The "enter" key (13) will always be dynamically added to any list provided unless the "cache" option above is set to "true".
+         * @optional
+         *
+         * @type Object
+         * @default
+         * ```js
+         * {
+         *     9: "tab",
+         *     16: "shift",
+         *     17: "ctrl",
+         *     18: "alt",
+         *     27: "esc",
+         *     37: "left",
+         *     39: "right",
+         *     38: "up",
+         *     40: "down",
+         *     91: "meta",
+         *     229: "unknown"
+         * }
+         * ```
+         */
         ignoredKeys: {
             9: "tab",
             16: "shift",
@@ -100,40 +171,75 @@ var AjaxBootstrapSelect = function (element, options) {
             39: "right",
             38: "up",
             40: "down",
-            91: "meta", // Windows or Command (Mac).
-
-            // Returned if it can't get the virtual key number per w3 spec:
-            // http://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
+            91: "meta",
             229: "unknown"
         },
 
-        // String with text to show.
-        placeHolderOption: null,
-
-        // Process the data returned before this plugin.
-        preprocessData: null,
-
-        // Process the data returned after this plugin, but before the list
-        // is built.
-        processData: null,
-
-        // If you want console output, set this to true.
-        debug: false,
-
-        // Preserve selected options. There are 3 possible values:
-        //   - "auto": will automatically determine whether or not this
-        //     option should be enabled based on if the select element can
-        //     have "multiple" selections.
-        //   - true: will always preserve the selected options.
-        //   - false: will never preserve the selected options.
-        preserveSelected: 'auto',
-
-        // The template used when a request is being sent.
+        /**
+         * @name loadingTemplate
+         * @description The template used when a request is being sent.
+         * @optional
+         *
+         * @type String|jQuery
+         * @default `'<div class="menu-loading">Loading...</div>'`
+         */
         loadingTemplate: '<div class="menu-loading">Loading...</div>',
 
-        // The placeholder text to use inside the search input.
+        /**
+         * @name placeHolderOption
+         * @description String with text to show.
+         * @optional
+         *
+         * @type String
+         * @default `null`
+         */
+        placeHolderOption: null,
+
+        /**
+         * @name preprocessData
+         * @description Process the data returned before this plugin.
+         * @optional
+         *
+         * @type Function|null
+         * @default `null`
+         */
+        preprocessData: null,
+
+        /**
+         * @name preserveSelected
+         * @description Preserve selected options. There are 3 possible values:
+         * * __'auto':__ will automatically determine whether or not this option should be enabled based on if the select element can have "multiple" selections.
+         * * __true:__ will always preserve the selected options.
+         * * __false:__ will never preserve the selected options.
+         * @optional
+         *
+         * @type String|Boolean
+         * @default `'auto'`
+         */
+        preserveSelected: 'auto',
+
+        /**
+         * @name processData
+         * @description Process the data returned after this plugin, but before the list is built.
+         * @optional
+         *
+         * @type Function|null
+         * @default `null`
+         */
+        processData: null,
+
+        /**
+         * @name searchPlaceholder
+         * @description The placeholder text to use inside the search input.
+         * @optional
+         *
+         * @type String|null
+         * @default `null`
+         */
         searchPlaceholder: null
     };
+
+/* jshint ignore:end */
 
     /**
      * Maps deprecated options to new ones between releases.
@@ -184,7 +290,7 @@ var AjaxBootstrapSelect = function (element, options) {
     }
 
     // Merge the options into the plugin.
-    this.options = $.extend(true, {}, defaults, options);
+    this.options = $.extend(true, {}, defaultOptions, options);
 
     // Override any provided option with the data attribute value.
     if (this.$element.data('searchUrl')) {

@@ -17,86 +17,128 @@ The [bootstrap-select](https://github.com/silviomoreto/bootstrap-select) must be
 
 
 ### Options
+##### ajaxOptions
+> The options to pass to the jQuery AJAX request.
+>
+> __Type:__ `Object`
+> __Default:__ `{}`
+>
+> __Example usage:__
+> ```js
+>  ajaxOptions: {
+>      url: "/path/to/server/request", // Required.
+>      type: "json",
+>      type: "POST"
+>      data: {
+>          q: "{{{q}}}"
+>      }
+>  }
+>  ```
 
-####ajaxResultsPreHook###
+***
+##### bindEvent (optional)
+> The event to bind on the search input element to fire a request.
+>
+> __Type:__ `String`
+> __Default:__ `'keyup'`
 
-A function that is run after the ajax request is made but before the options are built.  If you set this option it will pass a single parameter with the results of the ajax request.  You can do any processing you need to get the json results the plugin expects (example of this above).
+***
+##### cache (optional)
+> Cache previous requests. If enabled, the "enter" key (13) is enabled to allow users to force a refresh of the request.
+>
+> __Type:__ `Boolean`
+> __Default:__ `true`
 
-* Type: `function`|`null`
-* Example:
+***
+##### debug (optional)
+> Display helpful console output when a warning or error occurs in the plugin.
+>
+> __Type:__ `Boolean`
+> __Default:__ `true`
 
-```js
-function(data){
-    var newData = data;
-    //do some stuff with the new data
-    return newData;
-}
-```
+***
+##### emptyClear (optional)
+> Clear the select list when there is no search value.
+>
+> __Type:__ `Boolean`
+> __Default:__ `true`
 
-####ajaxSearchUrl###
+***
+##### emptyRequest (optional)
+> Invoke a request for empty search values.
+>
+> __Type:__ `Boolean`
+> __Default:__ `false`
 
-A string of the url to send the ajax request
+***
+##### ignoredKeys (optional)
+> Key codes to ignore so a request is not invoked with bindEvent. The "enter" key (13) will always be dynamically added to any list provided unless the "cache" option above is set to "true".
+>
+> __Type:__ `Object`
+> __Default:__ 
+>  ```js
+>  {
+>      9: "tab",
+>      16: "shift",
+>      17: "ctrl",
+>      18: "alt",
+>      27: "esc",
+>      37: "left",
+>      39: "right",
+>      38: "up",
+>      40: "down",
+>      91: "meta",
+>      229: "unknown"
+>  }
+>  ```
 
-* Type: `string`
-* Example: `'/path/to/file/method'`
+***
+##### loadingTemplate (optional)
+> The template used when a request is being sent.
+>
+> __Type:__ `String|jQuery`
+> __Default:__ `'<div class="menu-loading">Loading...</div>'`
 
- or add data-search-url attribute on dom element
+***
+##### placeHolderOption (optional)
+> String with text to show.
+>
+> __Type:__ `String`
+> __Default:__ `null`
 
-####ajaxOptions###
-For changing the data, dataType, or type parameters in an ajax request:
+***
+##### preprocessData (optional)
+> Process the data returned before this plugin.
+>
+> __Type:__ `Function|null`
+> __Default:__ `null`
 
-1\. **dataType**
+***
+##### preserveSelected (optional)
+> Preserve selected options. There are 3 possible values:
+>  * __'auto':__ will automatically determine whether or not this option should be enabled based on if the select element can have "multiple" selections.
+>  * __true:__ will always preserve the selected options.
+>  * __false:__ will never preserve the selected options.
+>
+> __Type:__ `String|Boolean`
+> __Default:__ `'auto'`
 
-* Type: `string`
-* Values: `xml|json|script|html`
+***
+##### processData (optional)
+> Process the data returned after this plugin, but before the list is built.
+>
+> __Type:__ `Function|null`
+> __Default:__ `null`
+
+***
+##### searchPlaceholder (optional)
+> The placeholder text to use inside the search input.
+>
+> __Type:__ `String|null`
+> __Default:__ `null`
 
 ***
 
-2\. **type**
-
-* Type: `string`
-* Values: `GET|POST`
-
-***
-
-3\. **data**
-
-The data property has 2 special abilities.  First off it can be a function, that returns an object, that will be run each time the ajax request is made.  The second is if any of the values of the object returned are equal to: `{{{q}}}` the plugin will auto replace that with input box value.  The processed object is passed as is to the `data` property in `$.ajax`.
-
-* Type: *Object|Function*
-* Object Example: `{q: $('#searchBox').val()}`
-* Function Example:
-
-```js
-function(){
-    var params = {
-        q: '{{{q}}}'
-    };
-    if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
-        params.GroupID = gModel.selectedGroup().ContactGroupID;
-    }
-    return params;
-}
-```
-####placeHolderOption###
-If this is set as a string the plugin will add a `data-hidden="true"` field with this value as the text before any other options are added from the ajax request
-
-* Type: `string`
-* Example: `'Some string to show instead of the first option'`
-
-####debug###
-If you want to get error information, set this to true.
-
-* Type: `boolean`
-* Values: `true|false`
-* Default: `false`
-
-####mixWithCurrents###
-If this is set to true the plugin will keep previously selected options in between ajax searches.  This changes the default behavior which resets the selected options with every sort.
-
-* Type: `boolean`
-* Values: `true|false`
-* Default: `false`
 
 
 ### JSON Results

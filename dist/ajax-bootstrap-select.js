@@ -3,7 +3,7 @@
  *
  * Extends the bootstrap-select plugin so it can use a remote source for searching. Originally for CROSCON.
  *
- * @version 1.1.0
+ * @version 1.2.0
  * @author Adam Heim - https://github.com/truckingsim
  * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
  * @copyright 2014 Adam Heim
@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-22 1:22:44 PM CDT
+ * Last build: 2014-09-22 2:29:24 PM CDT
  */
 !(function ($, window) {
 
@@ -78,6 +78,13 @@ var AjaxBootstrapSelect = function (element, options) {
 /* jshint ignore:start */
     defaultOptions = {
         /**
+         * @name ajaxResultsPreHook
+         * @deprecated Since version `1.2.0`.
+         * @see {preprocessData}
+         */
+        ajaxResultsPreHook: null,
+
+        /**
          * @name ajaxOptions
          * @description The options to pass to the jQuery AJAX request.
          *
@@ -96,6 +103,13 @@ var AjaxBootstrapSelect = function (element, options) {
          * ```
          */
         ajaxOptions: {},
+
+        /**
+         * @name ajaxSearchUrl
+         * @deprecated Since version `1.2.0`.
+         * @see {ajaxOptions}
+         */
+        ajaxSearchUrl: null,
 
         /**
          * @name bindEvent
@@ -185,6 +199,20 @@ var AjaxBootstrapSelect = function (element, options) {
         },
 
         /**
+         * @name mixWithCurrents
+         * @deprecated Since version `1.2.0`.
+         * @see {preserveSelected}
+         */
+        mixWithCurrents: null,
+
+        /**
+         * @name placeHolderOption
+         * @deprecated Since version `1.2.0`.
+         * @see {templates}
+         */
+        placeHolderOption: null,
+
+        /**
          * @name preprocessData
          * @description Process the data returned before this plugin.
          * @optional
@@ -262,16 +290,16 @@ var AjaxBootstrapSelect = function (element, options) {
             to: 'preprocessData'
         },
         {
-            from: 'mixWithCurrents',
-            to: 'preserveSelected'
-        },
-        {
             from: 'ajaxSearchUrl',
             to: {
                 ajaxOptions: {
                     url: '{{{value}}}'
                 }
             }
+        },
+        {
+            from: 'mixWithCurrents',
+            to: 'preserveSelected'
         },
         {
             from: 'placeHolderOption',

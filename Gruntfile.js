@@ -1,5 +1,11 @@
 module.exports = function (grunt) {
 
+    var pkg = grunt.file.readJSON('package.json');
+
+    var optionAnchor = function (option) {
+      return option.toLowerCase().replace(/[^a-z0-9]/, '-');
+    };
+
     var multiLineParser = function (type, i, line, block) {
         // find the next instance of a parser (if there is one based on the @ symbol)
         // in order to isolate the current multi-line parser
@@ -34,7 +40,7 @@ module.exports = function (grunt) {
         '<% _.forEach(pkg.contributors, function(contributor) {%>\n *   <%= contributor.name %> - <%= contributor.url %><% }); %>\n *\n' +
         ' * Last build: <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT Z") %>\n' +
         ' */\n',
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: pkg,
         clean: ['dist/*'],
         jshint: {
             options: {
@@ -98,10 +104,20 @@ module.exports = function (grunt) {
                     template_index: 'jsdoc2md.handlebars',
                     output_index: '/options.md',
                     parsers: {
-                        "default": function(i, line, block) { return multiLineParser('default', i, line, block); },
+                        'default': function(i, line, block) { return multiLineParser('default', i, line, block); },
                         example: function (i, line, block) { return multiLineParser('example', i, line, block); },
+                        deprecated: function (i, line) { return line; },
                         description: function (i, line, block) { return multiLineParser('description', i, line, block); },
                         optional: function () { return true; },
+                        see: function (i, line) {
+                            var pattern = new RegExp('{([a-z0-9_-]+)}$', 'ig');
+                            if (line.match(pattern)) {
+                                var option = line.replace(pattern, '$1');
+                                return '[' + option + '](#' + optionAnchor(option) + ')';
+                            }
+                            return line;
+
+                        },
                         type: function (i, line) { return line; }
                     }
                 }

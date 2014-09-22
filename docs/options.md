@@ -1,3 +1,10 @@
+#### ~~ajaxResultsPreHook~~
+> __Deprecated:__ Since version `1.2.0`.
+>
+> __See:__ [preprocessData](#preprocessdata)
+>
+
+***
 #### ajaxOptions
 > The options to pass to the jQuery AJAX request.
 >
@@ -16,6 +23,13 @@
 >      }
 >  }
 >  ```
+
+***
+#### ~~ajaxSearchUrl~~
+> __Deprecated:__ Since version `1.2.0`.
+>
+> __See:__ [ajaxOptions](#ajaxoptions)
+>
 
 ***
 #### bindEvent (optional)
@@ -84,6 +98,20 @@
 >      229: "unknown"
 >  }
 >  ```
+>
+
+***
+#### ~~mixWithCurrents~~
+> __Deprecated:__ Since version `1.2.0`.
+>
+> __See:__ [preserveSelected](#preserveselected)
+>
+
+***
+#### ~~placeHolderOption~~
+> __Deprecated:__ Since version `1.2.0`.
+>
+> __See:__ [templates](#templates)
 >
 
 ***

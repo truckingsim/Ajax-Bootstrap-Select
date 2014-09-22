@@ -72,16 +72,16 @@ var AjaxBootstrapSelect = function (element, options) {
             to: 'preprocessData'
         },
         {
-            from: 'mixWithCurrents',
-            to: 'preserveSelected'
-        },
-        {
             from: 'ajaxSearchUrl',
             to: {
                 ajaxOptions: {
                     url: '{{{value}}}'
                 }
             }
+        },
+        {
+            from: 'mixWithCurrents',
+            to: 'preserveSelected'
         },
         {
             from: 'placeHolderOption',

@@ -1,4 +1,8 @@
-{{#files}}{{#blocks}}#### {{name}}{{#if optional}} (optional){{/if}}{{#if description}}
+{{#files}}{{#blocks}}#### {{#if deprecated}}~~{{/if}}{{name}}{{#if optional}} (optional){{/if}}{{#if deprecated}}~~
+> __Deprecated:__ {{{deprecated}}}
+>{{/if}}{{#if see}}
+> __See:__ {{{see}}}
+>{{/if}}{{#if description}}
 > {{{description}}}
 >{{/if}}{{#if type}}
 > __Type:__ `{{{type}}}`

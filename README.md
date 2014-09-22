@@ -17,6 +17,13 @@ The [bootstrap-select](https://github.com/silviomoreto/bootstrap-select) must be
 
 
 ### Options
+##### ~~ajaxResultsPreHook~~
+> __Deprecated:__ Since version `1.2.0`.
+>
+> __See:__ [preprocessData](#preprocessdata)
+>
+
+***
 ##### ajaxOptions
 > The options to pass to the jQuery AJAX request.
 >
@@ -35,6 +42,13 @@ The [bootstrap-select](https://github.com/silviomoreto/bootstrap-select) must be
 >      }
 >  }
 >  ```
+
+***
+##### ~~ajaxSearchUrl~~
+> __Deprecated:__ Since version `1.2.0`.
+>
+> __See:__ [ajaxOptions](#ajaxoptions)
+>
 
 ***
 ##### bindEvent (optional)
@@ -103,6 +117,20 @@ The [bootstrap-select](https://github.com/silviomoreto/bootstrap-select) must be
 >      229: "unknown"
 >  }
 >  ```
+>
+
+***
+##### ~~mixWithCurrents~~
+> __Deprecated:__ Since version `1.2.0`.
+>
+> __See:__ [preserveSelected](#preserveselected)
+>
+
+***
+##### ~~placeHolderOption~~
+> __Deprecated:__ Since version `1.2.0`.
+>
+> __See:__ [templates](#templates)
 >
 
 ***

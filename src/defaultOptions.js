@@ -1,5 +1,12 @@
     defaultOptions = {
         /**
+         * @name ajaxResultsPreHook
+         * @deprecated Since version `1.2.0`.
+         * @see {preprocessData}
+         */
+        ajaxResultsPreHook: null,
+
+        /**
          * @name ajaxOptions
          * @description The options to pass to the jQuery AJAX request.
          *
@@ -18,6 +25,13 @@
          * ```
          */
         ajaxOptions: {},
+
+        /**
+         * @name ajaxSearchUrl
+         * @deprecated Since version `1.2.0`.
+         * @see {ajaxOptions}
+         */
+        ajaxSearchUrl: null,
 
         /**
          * @name bindEvent
@@ -105,6 +119,20 @@
             91: "meta",
             229: "unknown"
         },
+
+        /**
+         * @name mixWithCurrents
+         * @deprecated Since version `1.2.0`.
+         * @see {preserveSelected}
+         */
+        mixWithCurrents: null,
+
+        /**
+         * @name placeHolderOption
+         * @deprecated Since version `1.2.0`.
+         * @see {templates}
+         */
+        placeHolderOption: null,
 
         /**
          * @name preprocessData

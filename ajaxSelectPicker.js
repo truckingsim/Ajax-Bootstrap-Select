@@ -110,7 +110,7 @@
 
         $.extend(plugin, selectPickerFunctions);
 
-        plugin.ajaxOptions = $.extend(defaults, options, {});
+        plugin.options = $.extend(defaults, options, {});
 
         // Initialize the plugin.
         plugin.init = function () {
@@ -129,39 +129,39 @@
 
             // Map depreciated options into their newer counterparts.
             $.map(depreciatedMap, function (map) {
-                if ($.isPlainObject(map.to) && plugin.ajaxOptions[map.from]) {
+                if ($.isPlainObject(map.to) && plugin.options[map.from]) {
                     plugin.replaceValue(map.to, '{{{value}}}', options[map.from]);
-                    plugin.ajaxOptions = $.extend(true, {}, plugin.ajaxOptions, map.to);
+                    plugin.options = $.extend(true, {}, plugin.options, map.to);
                     plugin.log([
                         '[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use:',
                         map.to
                     ]);
-                    delete plugin.ajaxOptions[map.from];
+                    delete plugin.options[map.from];
                 }
                 else {
-                    if (plugin.ajaxOptions[map.from]) {
-                        plugin.ajaxOptions[map.to] = options[map.from];
+                    if (plugin.options[map.from]) {
+                        plugin.options[map.to] = options[map.from];
                         plugin.log(['[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use: "' + map.to + '"']);
-                        delete plugin.ajaxOptions[map.from];
+                        delete plugin.options[map.from];
                     }
                 }
             });
 
             // Determine if the plugin should preserve selections based on
             // whether or not the select element can multi-select.
-            if (plugin.ajaxOptions.preserveSelected === 'auto') {
-                plugin.ajaxOptions.preserveSelected = plugin.multiple;
+            if (plugin.options.preserveSelected === 'auto') {
+                plugin.options.preserveSelected = plugin.multiple;
             }
 
             if ($element.attr("data-search-url")) {
-                plugin.ajaxOptions.ajaxSearchUrl = $element.attr("data-search-url");
+                plugin.options.ajaxSearchUrl = $element.attr("data-search-url");
             }
 
             if (!$element.data().hasOwnProperty('selectpicker')) {
                 this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);
             }
             else {
-                if (plugin.ajaxOptions.ajaxOptions.url == null) {
+                if (plugin.options.ajaxOptions.url == null) {
                     this.log('ajaxSelectPicker: ajaxOptions.url must be set!', true)
                 }
                 else {
@@ -174,36 +174,36 @@
                     // Process the search input.
                     plugin.$searchbox
                         // Add placeholder text.
-                        .attr('placeholder', plugin.ajaxOptions.searchPlaceholder)
+                        .attr('placeholder', plugin.options.searchPlaceholder)
 
                         // Remove selectpicker events.
                         .off('input propertychange')
 
                         // Bind this plugin event.
-                        .on(plugin.ajaxOptions.bindEvent, function (e) {
+                        .on(plugin.options.bindEvent, function (e) {
                             plugin.query = plugin.$searchbox.val();
 
                             // Dynamically ignore the "enter" key (13) so it doesn't
                             // create an additional request if the "cache" option has
                             // been disabled.
-                            if (!plugin.ajaxOptions.cache) {
-                                plugin.ajaxOptions.ignoredKeys[13] = 'enter';
+                            if (!plugin.options.cache) {
+                                plugin.options.ignoredKeys[13] = 'enter';
                             }
 
                             // Don't process ignored keys.
-                            if (plugin.ajaxOptions.ignoredKeys[e.keyCode]) {
+                            if (plugin.options.ignoredKeys[e.keyCode]) {
                                 return true;
                             }
 
                             // Process empty search value.
                             if (!plugin.query.length) {
                                 // Clear the select list.
-                                if (!plugin.ajaxOptions.emptyClear) {
+                                if (!plugin.options.emptyClear) {
                                     plugin.destroyLi();
                                 }
 
                                 // Don't invoke a request.
-                                if (!plugin.ajaxOptions.emptyRequest) {
+                                if (!plugin.options.emptyRequest) {
                                     return true;
                                 }
                             }
@@ -212,7 +212,7 @@
                             clearTimeout(timeout);
 
                             // Return the cached results, if any.
-                            if (plugin.ajaxOptions.cache && plugin.cachedData[plugin.query] && e.keyCode !== 13) {
+                            if (plugin.options.cache && plugin.cachedData[plugin.query] && e.keyCode !== 13) {
                                 var output = plugin.buildOptions(plugin.cachedData[plugin.query]);
                                 // Build the option output.
                                 if (output.length) {
@@ -247,13 +247,13 @@
                                 plugin.$loading.remove();
 
                                 // Show the loading template.
-                                plugin.$loading = $(plugin.ajaxOptions.loadingTemplate);
+                                plugin.$loading = $(plugin.options.loadingTemplate);
                                 plugin.$menu.append(plugin.$loading);
 
                                 plugin.$element.selectpicker('refresh');
 
                                 var ajaxParams = {};
-                                ajaxParams.url = plugin.ajaxOptions.ajaxOptions.url;
+                                ajaxParams.url = plugin.options.ajaxOptions.url;
 
                                 //Success function, this builds the options to put in the select
                                 ajaxParams.success = function (data) {
@@ -296,7 +296,7 @@
                                     plugin.$element.selectpicker('refresh');
                                 };
 
-                                var userParams = $.extend(true, {}, plugin.ajaxOptions.ajaxOptions);
+                                var userParams = $.extend(true, {}, plugin.options.ajaxOptions);
 
                                 ajaxParams.dataType = userParams.hasOwnProperty('dataType') ? userParams.dataType : 'json';
                                 ajaxParams.type = userParams.hasOwnProperty('type') ? userParams.type : 'POST';
@@ -391,7 +391,7 @@
             }
 
             // Preserve the selected options.
-            if (plugin.ajaxOptions.preserveSelected) {
+            if (plugin.options.preserveSelected) {
                 var selectedOptions = plugin.$element.find(':selected');
                 // If select does not have multiple selection, ensure that only the
                 // last selected option is preserved.
@@ -472,7 +472,7 @@
             var filteredData = [], seenValues = [], selected = [];
 
             // Merge in the selected options from the previous state.
-            if (plugin.ajaxOptions.preserveSelected && (lastState = plugin.getLastState()) && lastState) {
+            if (plugin.options.preserveSelected && (lastState = plugin.getLastState()) && lastState) {
                 selected = selected.concat(lastState.selected);
             }
 
@@ -499,8 +499,8 @@
             // clone so it doesn't intentionally modify the array. Only use the
             // returned value.
             preprocessedData = [].concat(clone);
-            if ($.isFunction(plugin.ajaxOptions.preprocessData)) {
-                preprocessedData = plugin.ajaxOptions.preprocessData(preprocessedData);
+            if ($.isFunction(plugin.options.preprocessData)) {
+                preprocessedData = plugin.options.preprocessData(preprocessedData);
                 if (!$.isArray(preprocessedData) || !preprocessedData.length) {
                     plugin.log([
                         'ajaxSelectPicker: The preprocessData callback did not return an array or was empty.',
@@ -558,8 +558,8 @@
             // processedData so it doesn't intentionally modify the array. Only
             // use the returned value.
             processedData = [].concat(filteredData);
-            if ($.isFunction(plugin.ajaxOptions.processData)) {
-                processedData = plugin.ajaxOptions.processData(processedData);
+            if ($.isFunction(plugin.options.processData)) {
+                processedData = plugin.options.processData(processedData);
                 if (!$.isArray(processedData) || !processedData.length) {
                     plugin.log([
                         'ajaxSelectPicker: The processedData callback did not return an array or was empty.',
@@ -572,7 +572,7 @@
             }
 
             // Cache the data, if possible.
-            if (plugin.ajaxOptions.cache && query) {
+            if (plugin.options.cache && query) {
                 plugin.cachedData[query] = processedData;
             }
 
@@ -654,8 +654,8 @@
             }
 
             // Prepend the placeHolderOption.
-            if ($wrapper.find('option').length && typeof plugin.ajaxOptions.placeHolderOption === 'string' && plugin.ajaxOptions.placeHolderOption.length) {
-                $wrapper.prepend('<option data-hidden="true">' + plugin.ajaxOptions.placeHolderOption + '</option>');
+            if ($wrapper.find('option').length && typeof plugin.options.placeHolderOption === 'string' && plugin.options.placeHolderOption.length) {
+                $wrapper.prepend('<option data-hidden="true">' + plugin.options.placeHolderOption + '</option>');
             }
 
             return $wrapper.html();
@@ -669,7 +669,7 @@
          */
         plugin.log = function (message, error) {
             message = message instanceof Array ? message : [message];
-            window.console && this.ajaxOptions.debug && (error ? console.error : console.log).apply(console, message);
+            window.console && plugin.options.debug && (error ? console.error : console.log).apply(console, message);
         };
 
         //We need for selectpicker to be attached first.  Putting the init in a setTimeout is the easiest way to ensure this.

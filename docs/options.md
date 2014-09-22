@@ -32,52 +32,62 @@
 >
 
 ***
-#### bindEvent (optional)
+#### bindEvent
 > The event to bind on the search input element to fire a request.
 >
 > __Type:__ `String`
 >
 > __Default:__ `'keyup'`
 >
+>_Optional_
+>
 
 ***
-#### cache (optional)
+#### cache
 > Cache previous requests. If enabled, the "enter" key (13) is enabled to allow users to force a refresh of the request.
 >
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
 >
+>_Optional_
+>
 
 ***
-#### clearOnEmpty (optional)
+#### clearOnEmpty
 > Clears the previous results when the search input has no value.
 >
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
 >
+>_Optional_
+>
 
 ***
-#### debug (optional)
+#### debug
 > Display helpful console output when a warning or error occurs in the plugin.
 >
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
 >
+>_Optional_
+>
 
 ***
-#### emptyRequest (optional)
+#### emptyRequest
 > Invoke a request for empty search values.
 >
 > __Type:__ `Boolean`
 >
 > __Default:__ `false`
 >
+>_Optional_
+>
 
 ***
-#### ignoredKeys (optional)
+#### ignoredKeys
 > Key codes to ignore so a request is not invoked with bindEvent. The "enter" key (13) will always be dynamically added to any list provided unless the "cache" option above is set to "true".
 >
 > __Type:__ `Object`
@@ -99,6 +109,8 @@
 >  }
 >  ```
 >
+>_Optional_
+>
 
 ***
 #### ~~mixWithCurrents~~
@@ -115,16 +127,18 @@
 >
 
 ***
-#### preprocessData (optional)
+#### preprocessData
 > Process the data returned before this plugin.
 >
 > __Type:__ `Function|null`
 >
 > __Default:__ `null`
 >
+>_Optional_
+>
 
 ***
-#### preserveSelected (optional)
+#### preserveSelected
 > Preserve selected options. There are 3 possible values:
 >  * __'auto':__ will automatically determine whether or not this option should be enabled based on if the select element can have "multiple" selections.
 >  * __true:__ will always preserve the selected options.
@@ -134,23 +148,29 @@
 >
 > __Default:__ `'auto'`
 >
+>_Optional_
+>
 
 ***
-#### processData (optional)
+#### processData
 > Process the data returned after this plugin, but before the list is built.
 >
 > __Type:__ `Function|null`
 >
 > __Default:__ `null`
 >
+>_Optional_
+>
 
 ***
-#### searchPlaceholder (optional)
+#### searchPlaceholder
 > The placeholder text to use inside the search input.
 >
 > __Type:__ `String|null`
 >
 > __Default:__ `'Search...'`
+>
+>_Optional_
 >
 
 ***

@@ -3,6 +3,13 @@
 
 > Extends the bootstrap-select plugin so it can use a remote source for searching. Originally for CROSCON.
 
+* [Getting Started](#getting-started)
+  * [Options](#options)
+  * [JSON Results](#json-results)
+  * [Usage Examples](#usage-examples)
+* [License](#license)
+
+
 ## Getting Started
 This plugin extends existing [bootstrap-select](https://github.com/silviomoreto/bootstrap-select) implementations by adding the ability to search via AJAX requests as you type. To get this plugin running ensure the following:
 

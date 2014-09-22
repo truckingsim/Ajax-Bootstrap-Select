@@ -8,6 +8,9 @@ var AjaxBootstrapSelect = function (element, options) {
     var defaultOptions;
     options = options || {};
 
+    // The log method needs to know about this ASAP.
+    this.debug = Boolean(options.debug);
+
     /**
      * The <select> element this plugin is being attached to.
      * @type {jQuery}
@@ -19,6 +22,12 @@ var AjaxBootstrapSelect = function (element, options) {
      * @type {jQuery}
      */
     this.$loading = $();
+
+    /**
+     * The "noResults" DOM element placeholder.
+     * @type {jQuery}
+     */
+    this.$noResults = $();
 
     /**
      * Instantiate a relationship with the parent plugin: selectpicker.
@@ -73,6 +82,19 @@ var AjaxBootstrapSelect = function (element, options) {
                     url: '{{{value}}}'
                 }
             }
+        },
+        {
+            from: 'placeHolderOption',
+            to: function (options, map) {
+                var _options = {
+                    templates: {
+                        noResults: '<div class="no-results">' + options[map.from] + '</div>'
+                    }
+                };
+                $.extend(options, _options);
+                delete options[map.from];
+                plugin.log(['[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use:', _options]);
+            }
         }
     ];
 
@@ -80,16 +102,27 @@ var AjaxBootstrapSelect = function (element, options) {
     if (depreciatedMap.length) {
         var plugin = this;
         $.map(depreciatedMap, function (map) {
-            if ($.isPlainObject(map.to) && options[map.from]) {
-                plugin.replaceValue(map.to, '{{{value}}}', options[map.from]);
-                options = $.extend(true, {}, options, map.to);
-                plugin.log(['[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use:', map.to]);
-                delete options[map.from];
-            }
-            else if (options[map.from]) {
-                options[map.to] = options[map.from];
-                plugin.log(['[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use: "' + map.to + '"']);
-                delete options[map.from];
+            // Depreciated option detected.
+            if (options[map.from]) {
+                // Map with an object. Use "{{{value}}}" anywhere in the object to
+                // replace it with the passed value.
+                if ($.isPlainObject(map.to)) {
+                    plugin.replaceValue(map.to, '{{{value}}}', options[map.from]);
+                    options = $.extend(true, {}, options, map.to);
+                    plugin.log(['[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use:', map.to]);
+                    delete options[map.from];
+                }
+                // Map with a function. Functions are silos. They are responsible
+                // for deleting the original option and displaying debug info.
+                else if ($.isFunction(map.to)) {
+                    map.to.apply(plugin, [options, map]);
+                }
+                // Map normally.
+                else {
+                        options[map.to] = options[map.from];
+                        plugin.log(['[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use: "' + map.to + '"']);
+                        delete options[map.from];
+                    }
             }
         });
     }
@@ -198,57 +231,61 @@ AjaxBootstrapSelect.prototype.init = function () {
                 // Destroy the list currently there.
                 plugin.list.destroy();
 
-                // Remove the existing loading template.
+                // Remove any existing templates.
                 plugin.$loading.remove();
+                plugin.$noResults.remove();
 
                 // Show the loading template.
-                plugin.$loading = $(plugin.options.loadingTemplate);
-                plugin.selectpicker.$menu.append(plugin.$loading);
-
-                plugin.$element.selectpicker('refresh');
+                if (plugin.options.templates.loading) {
+                    plugin.$loading = $(plugin.options.templates.loading).appendTo(plugin.selectpicker.$menu);
+                    plugin.list.refresh();
+                }
 
                 var ajaxParams = {};
                 ajaxParams.url = plugin.options.ajaxOptions.url;
 
                 //Success function, this builds the options to put in the select
                 ajaxParams.success = function (data) {
+                    // Only process data if an Array or Object.
+                    if (!$.isArray(data) && !$.isObject(data)) {
+                        plugin.log(['ajaxSelectPicker: Request did not return a JSON Array or Object.', data], true);
+                        plugin.list.destroy();
+                        return;
+                    }
+
+                    // Only continue if actual results.
+                    if (!Object.keys(data).length) {
+                        plugin.list.destroy();
+                        if (plugin.options.templates.noResults) {
+                            // Show the "no results" template.
+                            plugin.$noResults = $(plugin.options.templates.noResults).appendTo(plugin.selectpicker.$menu);
+                        }
+                        return;
+                    }
+
                     // Process the data.
                     var processedData = plugin.processData(data, plugin.query);
-                    if (processedData) {
-                        var output = plugin.list.build(processedData);
+                    if (processedData && processedData.length) {
                         // Build the option output.
-                        if (output.length) {
-                            plugin.$element.html(output);
+                        var output = plugin.list.build(processedData);
+                        if (!output.length) {
+                            plugin.log(['ajaxSelectPicker: Unable to build the options from data.', data, output], true);
                             return;
                         }
-                        plugin.log([
-                            'ajaxSelectPicker: Unable to build the options from data.',
-                            data,
-                            output
-                        ], true);
+                        plugin.$element.html(output);
                     }
-                    else {
-                        plugin.log([
-                            'ajaxSelectPicker: Unable to process data.',
-                            data
-                        ], true);
-                    }
-                    plugin.list.restore();
                 };
 
                 //If there is an error be sure to put in the previous options
                 ajaxParams.error = function (xhr) {
-                    plugin.log([
-                        'ajaxSelectPicker:',
-                        xhr
-                    ], true);
+                    plugin.log(['ajaxSelectPicker:', xhr], true);
                     plugin.list.restore();
                 };
 
                 //Always refresh the list and remove the loading menu
                 ajaxParams.complete = function () {
                     plugin.$loading.remove();
-                    plugin.$element.selectpicker('refresh');
+                    plugin.list.refresh();
                 };
 
                 var userParams = $.extend(true, {}, plugin.options.ajaxOptions);
@@ -284,7 +321,7 @@ AjaxBootstrapSelect.prototype.init = function () {
  * @return {void}
  */
 AjaxBootstrapSelect.prototype.log = function (message, error) {
-    if (window.console && this.options.debug) {
+    if (window.console && this.debug) {
         message = message instanceof Array ? message : [message];
         window.console[error ? 'error' : 'log'].apply(window.console, message);
     }

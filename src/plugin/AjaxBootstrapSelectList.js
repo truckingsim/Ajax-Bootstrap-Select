@@ -88,11 +88,6 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
         $wrapper.append($option);
     }
 
-    // Prepend the placeHolderOption.
-    if ($wrapper.find('option').length && typeof this.options.placeHolderOption === 'string' && this.options.placeHolderOption.length) {
-        $wrapper.prepend('<option data-hidden="true">' + this.options.placeHolderOption + '</option>');
-    }
-
     return $wrapper.html();
 };
 

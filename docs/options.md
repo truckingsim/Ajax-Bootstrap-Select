@@ -87,24 +87,6 @@
 >
 
 ***
-#### loadingTemplate (optional)
-> The template used when a request is being sent.
->
-> __Type:__ `String|jQuery`
->
-> __Default:__ `'<div class="menu-loading">Loading...</div>'`
->
-
-***
-#### placeHolderOption (optional)
-> String with text to show.
->
-> __Type:__ `String`
->
-> __Default:__ `null`
->
-
-***
 #### preprocessData (optional)
 > Process the data returned before this plugin.
 >
@@ -140,7 +122,24 @@
 >
 > __Type:__ `String|null`
 >
-> __Default:__ `null`
+> __Default:__ `'Search...'`
+>
+
+***
+#### templates
+> The templates used in this plugin.
+>
+> __Type:__ `Object`
+>
+> __Default:__ 
+>  ```js
+>  templates: {
+>      // The template used when a request is being sent.
+>      loading: '<div class="menu-loading">Loading...</div>',
+>      // The template used when there are no results to display.
+>      noResults: '<div class="no-results">No Results</div>'
+>  }
+>  ```
 >
 
 ***

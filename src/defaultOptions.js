@@ -107,26 +107,6 @@
         },
 
         /**
-         * @name loadingTemplate
-         * @description The template used when a request is being sent.
-         * @optional
-         *
-         * @type String|jQuery
-         * @default `'<div class="menu-loading">Loading...</div>'`
-         */
-        loadingTemplate: '<div class="menu-loading">Loading...</div>',
-
-        /**
-         * @name placeHolderOption
-         * @description String with text to show.
-         * @optional
-         *
-         * @type String
-         * @default `null`
-         */
-        placeHolderOption: null,
-
-        /**
          * @name preprocessData
          * @description Process the data returned before this plugin.
          * @optional
@@ -165,7 +145,28 @@
          * @optional
          *
          * @type String|null
-         * @default `null`
+         * @default `'Search...'`
          */
-        searchPlaceholder: null
+        searchPlaceholder: 'Search...',
+
+        /**
+         * @name templates
+         * @description The templates used in this plugin.
+         * @type Object
+         * @default
+         * ```js
+         * templates: {
+         *     // The template used when a request is being sent.
+         *     loading: '<div class="menu-loading">Loading...</div>',
+         *
+         *     // The template used when there are no results to display.
+         *     noResults: '<div class="no-results">No Results</div>'
+         * }
+         * ```
+         */
+        templates: {
+            loading: '<div class="menu-loading">Loading...</div>',
+            noResults: '<div class="no-results">No Results</div>'
+        }
+
     };

@@ -45,6 +45,19 @@ module.exports = function (grunt) {
                 src: 'dist/<%= pkg.name %>.js',
                 dest: 'dist/<%= pkg.name %>.min.js'
             }
+        },
+        watch: {
+            source: {
+                files: [
+                    'package.json',
+                    'Gruntfile.js',
+                    'src/**/*.js'
+                ],
+                tasks: ['default'],
+                options: {
+                    spawn: false
+                }
+            }
         }
     });
 
@@ -52,6 +65,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-verb');
 
     // Default task(s).

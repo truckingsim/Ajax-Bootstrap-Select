@@ -1,18 +1,5 @@
 /**
  * @todo document this.
- * @param options
- * @returns {*}
- */
-$.fn.ajaxSelectPicker = function (options) {
-    return this.each(function () {
-        if (!$(this).data('ajaxSelectPicker')) {
-            $(this).data('ajaxSelectPicker', new AjaxBootstrapSelect(this, options));
-        }
-    });
-};
-
-/**
- * @todo document this.
  * @param element
  * @param {Object} [options]
  * @constructor
@@ -198,11 +185,11 @@ var AjaxBootstrapSelect = function (element, options) {
 AjaxBootstrapSelect.prototype.init = function () {
     var plugin = this;
 
-    if ($element.attr("data-search-url")) {
-        plugin.options.ajaxSearchUrl = $element.attr("data-search-url");
+    if (this.$element.attr("data-search-url")) {
+        plugin.options.ajaxOptions.url = this.$element.attr("data-search-url");
     }
 
-    if (!$element.data().hasOwnProperty('selectpicker')) {
+    if (!this.$element.data().hasOwnProperty('selectpicker')) {
         this.log('ajaxSelectPicker: Cannot attach ajax without selectpicker being run first!', true);
     }
     else {
@@ -213,11 +200,8 @@ AjaxBootstrapSelect.prototype.init = function () {
             // Instantiate the timer.
             var timeout;
 
-            // Merge the selectpicker data into this plugin.
-            $.extend(plugin, $element.data().selectpicker);
-
             // Process the search input.
-            plugin.$searchbox
+            plugin.selectpicker.$searchbox
                 // Add placeholder text.
                 .attr('placeholder', plugin.options.searchPlaceholder)
 
@@ -226,7 +210,7 @@ AjaxBootstrapSelect.prototype.init = function () {
 
                 // Bind this plugin event.
                 .on(plugin.options.bindEvent, function (e) {
-                    plugin.query = plugin.$searchbox.val();
+                    plugin.query = plugin.selectpicker.$searchbox.val();
 
                     // Dynamically ignore the "enter" key (13) so it doesn't
                     // create an additional request if the "cache" option has
@@ -425,7 +409,7 @@ AjaxBootstrapSelect.prototype.buildOptions = function (data) {
             .prop('disabled', item.disabled);
 
         // Remove previous selections, if necessary.
-        if (item.selected && !plugin.multiple) {
+        if (item.selected && !this.selectpicker.multiple) {
             $wrapper.find(':selected').prop('selected', false);
         }
 
@@ -444,8 +428,8 @@ AjaxBootstrapSelect.prototype.buildOptions = function (data) {
     }
 
     // Prepend the placeHolderOption.
-    if ($wrapper.find('option').length && typeof plugin.options.placeHolderOption === 'string' && plugin.options.placeHolderOption.length) {
-        $wrapper.prepend('<option data-hidden="true">' + plugin.options.placeHolderOption + '</option>');
+    if ($wrapper.find('option').length && typeof this.options.placeHolderOption === 'string' && this.options.placeHolderOption.length) {
+        $wrapper.prepend('<option data-hidden="true">' + this.options.placeHolderOption + '</option>');
     }
 
     return $wrapper.html();
@@ -469,8 +453,8 @@ AjaxBootstrapSelect.prototype.destroyLi = function () {
  *     - html: the raw HTML of the select list.
  */
 AjaxBootstrapSelect.prototype.getLastState = function () {
-    if (plugin.states.length) {
-        return plugin.states[plugin.states.length - 1];
+    if (this.states.length) {
+        return this.states[this.states.length - 1];
     }
     return false;
 };
@@ -482,7 +466,7 @@ AjaxBootstrapSelect.prototype.getLastState = function () {
  * @return {void}
  */
 AjaxBootstrapSelect.prototype.log = function (message, error) {
-    if (window.console && plugin.options.debug) {
+    if (window.console && this.options.debug) {
         message = message instanceof Array ? message : [message];
         window.console[error ? 'error' : 'log'].apply(window.console, message);
     }
@@ -511,7 +495,7 @@ AjaxBootstrapSelect.prototype.processData = function (data, query) {
     var filteredData = [], seenValues = [], selected = [];
 
     // Merge in the selected options from the previous state.
-    if (plugin.options.preserveSelected && (lastState = plugin.getLastState()) && lastState) {
+    if (this.options.preserveSelected && (lastState = this.getLastState()) && lastState) {
         selected = selected.concat(lastState.selected);
     }
 
@@ -526,10 +510,7 @@ AjaxBootstrapSelect.prototype.processData = function (data, query) {
             clone = selected.concat(data);
         }
         else {
-            plugin.log([
-                'ajaxSelectPicker: The data type passed was not an Array or Object.',
-                data
-            ], true);
+            this.log(['ajaxSelectPicker: The data type passed was not an Array or Object.', data], true);
             return false;
         }
     }
@@ -538,14 +519,10 @@ AjaxBootstrapSelect.prototype.processData = function (data, query) {
     // clone so it doesn't intentionally modify the array. Only use the
     // returned value.
     preprocessedData = [].concat(clone);
-    if ($.isFunction(plugin.options.preprocessData)) {
-        preprocessedData = plugin.options.preprocessData(preprocessedData);
+    if ($.isFunction(this.options.preprocessData)) {
+        preprocessedData = this.options.preprocessData(preprocessedData);
         if (!$.isArray(preprocessedData) || !preprocessedData.length) {
-            plugin.log([
-                'ajaxSelectPicker: The preprocessData callback did not return an array or was empty.',
-                data,
-                preprocessedData
-            ], true);
+            this.log(['ajaxSelectPicker: The preprocessData callback did not return an array or was empty.', data, preprocessedData], true);
             return false;
         }
     }
@@ -597,22 +574,17 @@ AjaxBootstrapSelect.prototype.processData = function (data, query) {
     // processedData so it doesn't intentionally modify the array. Only
     // use the returned value.
     processedData = [].concat(filteredData);
-    if ($.isFunction(plugin.options.processData)) {
-        processedData = plugin.options.processData(processedData);
+    if ($.isFunction(this.options.processData)) {
+        processedData = this.options.processData(processedData);
         if (!$.isArray(processedData) || !processedData.length) {
-            plugin.log([
-                'ajaxSelectPicker: The processedData callback did not return an array or was empty.',
-                data,
-                filteredData,
-                processedData
-            ], true);
+            this.log(['ajaxSelectPicker: The processedData callback did not return an array or was empty.', data, filteredData, processedData], true);
             return false;
         }
     }
 
     // Cache the data, if possible.
-    if (plugin.options.cache && query) {
-        plugin.cachedData[query] = processedData;
+    if (this.options.cache && query) {
+        this.cachedData[query] = processedData;
     }
 
     return processedData;
@@ -675,8 +647,8 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
  *   Return true if successful or false if no states are present.
  */
 AjaxBootstrapSelect.prototype.restoreState = function () {
-    if (plugin.states.length) {
-        plugin.$element.html(plugin.states.pop().html);
+    if (this.states.length) {
+        this.$element.html(this.states.pop().html);
         return true;
     }
     return false;
@@ -696,15 +668,15 @@ AjaxBootstrapSelect.prototype.saveState = function (keepPreviousStates) {
 
     // Clear out previous history.
     if (!keepPreviousStates) {
-        plugin.states = [];
+        this.states = [];
     }
 
     // Preserve the selected options.
-    if (plugin.options.preserveSelected) {
-        var selectedOptions = plugin.$element.find(':selected');
+    if (this.options.preserveSelected) {
+        var selectedOptions = this.$element.find(':selected');
         // If select does not have multiple selection, ensure that only the
         // last selected option is preserved.
-        if (!plugin.multiple) {
+        if (!this.selectpicker.multiple) {
             selectedOptions = selectedOptions.last();
         }
         selectedOptions.each(function () {
@@ -721,8 +693,21 @@ AjaxBootstrapSelect.prototype.saveState = function (keepPreviousStates) {
     }
 
     // Save the current state of the list.
-    plugin.states.push({
+    this.states.push({
         selected: selected,
-        html: plugin.$element.html()
+        html: this.$element.html()
+    });
+};
+
+/**
+ * @todo document this.
+ * @param options
+ * @returns {*}
+ */
+$.fn.ajaxSelectPicker = function (options) {
+    return this.each(function () {
+        if (!$(this).data('ajaxSelectPicker')) {
+            $(this).data('ajaxSelectPicker', new AjaxBootstrapSelect(this, options));
+        }
     });
 };

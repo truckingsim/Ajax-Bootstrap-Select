@@ -36,8 +36,8 @@
 >
 
 ***
-#### debug (optional)
-> Display helpful console output when a warning or error occurs in the plugin.
+#### clearOnEmpty (optional)
+> Clears the previous results when the search input has no value.
 >
 > __Type:__ `Boolean`
 >
@@ -45,8 +45,8 @@
 >
 
 ***
-#### emptyClear (optional)
-> Clear the select list when there is no search value.
+#### debug (optional)
+> Display helpful console output when a warning or error occurs in the plugin.
 >
 > __Type:__ `Boolean`
 >

@@ -35,6 +35,7 @@ module.exports = function (grunt) {
         ' * Last build: <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT Z") %>\n' +
         ' */\n',
         pkg: grunt.file.readJSON('package.json'),
+        clean: ['dist/*'],
         jshint: {
             options: {
                 jshintrc: '.jshintrc'
@@ -109,6 +110,7 @@ module.exports = function (grunt) {
     });
 
     // Load the grunt plugins.
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -118,6 +120,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-verb');
 
     // Default task(s).
-    grunt.registerTask('default', ['jshint', 'concat', 'sed', 'uglify', 'dss', 'verb']);
+    grunt.registerTask('default', ['clean', 'jshint', 'concat', 'sed', 'uglify', 'dss', 'verb']);
 
 };

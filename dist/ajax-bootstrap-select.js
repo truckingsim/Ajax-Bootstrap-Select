@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-22 11:14:59 AM CDT
+ * Last build: 2014-09-22 11:54:23 AM CDT
  */
 !(function ($, window) {
 
@@ -109,6 +109,16 @@ var AjaxBootstrapSelect = function (element, options) {
         cache: true,
 
         /**
+         * @name clearOnEmpty
+         * @description Clears the previous results when the search input has no value.
+         * @optional
+         *
+         * @type Boolean
+         * @default `true`
+         */
+        clearOnEmpty: true,
+
+        /**
          * @name debug
          * @description Display helpful console output when a warning or error occurs in the plugin.
          * @optional
@@ -117,16 +127,6 @@ var AjaxBootstrapSelect = function (element, options) {
          * @default `true`
          */
         debug: false,
-
-        /**
-         * @name emptyClear
-         * @description Clear the select list when there is no search value.
-         * @optional
-         *
-         * @type Boolean
-         * @default `true`
-         */
-        emptyClear: true,
 
         /**
          * @name emptyRequest
@@ -353,7 +353,7 @@ AjaxBootstrapSelect.prototype.init = function () {
             // Process empty search value.
             if (!plugin.query.length) {
                 // Clear the select list.
-                if (!plugin.options.emptyClear) {
+                if (plugin.options.clearOnEmpty) {
                     plugin.list.destroy();
                 }
 
@@ -386,10 +386,6 @@ AjaxBootstrapSelect.prototype.init = function () {
 
                 // Destroy the list currently there.
                 plugin.list.destroy();
-
-                // Remove unnecessary "min-height" from selectpicker.
-                plugin.selectpicker.$menu.css('minHeight', 0);
-                plugin.selectpicker.$menu.find('> .inner').css('minHeight', 0);
 
                 // Remove the existing loading template.
                 plugin.$loading.remove();
@@ -754,10 +750,8 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
  * @todo document this, make method better.
  */
 AjaxBootstrapSelectList.prototype.destroy = function () {
-    // Destroy the select options currently there.
     this.$element.find('option').remove();
-    // Remove the dropdown list elements currently there.
-    this.selectpicker.$menu.find('li').remove();
+    this.refresh();
 };
 
 /**
@@ -775,6 +769,16 @@ AjaxBootstrapSelectList.prototype.last = function () {
         return this.states[this.states.length - 1];
     }
     return false;
+};
+
+/**
+ * Refreshes the select list.
+ */
+AjaxBootstrapSelectList.prototype.refresh = function () {
+    // Remove unnecessary "min-height" from selectpicker.
+    this.selectpicker.$menu.css('minHeight', 0);
+    this.selectpicker.$menu.find('> .inner').css('minHeight', 0);
+    this.$element.selectpicker('refresh');
 };
 
 /**

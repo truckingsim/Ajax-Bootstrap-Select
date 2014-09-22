@@ -101,10 +101,8 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
  * @todo document this, make method better.
  */
 AjaxBootstrapSelectList.prototype.destroy = function () {
-    // Destroy the select options currently there.
     this.$element.find('option').remove();
-    // Remove the dropdown list elements currently there.
-    this.selectpicker.$menu.find('li').remove();
+    this.refresh();
 };
 
 /**
@@ -122,6 +120,16 @@ AjaxBootstrapSelectList.prototype.last = function () {
         return this.states[this.states.length - 1];
     }
     return false;
+};
+
+/**
+ * Refreshes the select list.
+ */
+AjaxBootstrapSelectList.prototype.refresh = function () {
+    // Remove unnecessary "min-height" from selectpicker.
+    this.selectpicker.$menu.css('minHeight', 0);
+    this.selectpicker.$menu.find('> .inner').css('minHeight', 0);
+    this.$element.selectpicker('refresh');
 };
 
 /**

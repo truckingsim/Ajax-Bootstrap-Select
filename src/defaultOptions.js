@@ -40,6 +40,16 @@
         cache: true,
 
         /**
+         * @name clearOnEmpty
+         * @description Clears the previous results when the search input has no value.
+         * @optional
+         *
+         * @type Boolean
+         * @default `true`
+         */
+        clearOnEmpty: true,
+
+        /**
          * @name debug
          * @description Display helpful console output when a warning or error occurs in the plugin.
          * @optional
@@ -48,16 +58,6 @@
          * @default `true`
          */
         debug: false,
-
-        /**
-         * @name emptyClear
-         * @description Clear the select list when there is no search value.
-         * @optional
-         *
-         * @type Boolean
-         * @default `true`
-         */
-        emptyClear: true,
 
         /**
          * @name emptyRequest

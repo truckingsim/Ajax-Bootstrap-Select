@@ -164,7 +164,7 @@ AjaxBootstrapSelect.prototype.init = function () {
             // Process empty search value.
             if (!plugin.query.length) {
                 // Clear the select list.
-                if (!plugin.options.emptyClear) {
+                if (plugin.options.clearOnEmpty) {
                     plugin.list.destroy();
                 }
 
@@ -197,10 +197,6 @@ AjaxBootstrapSelect.prototype.init = function () {
 
                 // Destroy the list currently there.
                 plugin.list.destroy();
-
-                // Remove unnecessary "min-height" from selectpicker.
-                plugin.selectpicker.$menu.css('minHeight', 0);
-                plugin.selectpicker.$menu.find('> .inner').css('minHeight', 0);
 
                 // Remove the existing loading template.
                 plugin.$loading.remove();

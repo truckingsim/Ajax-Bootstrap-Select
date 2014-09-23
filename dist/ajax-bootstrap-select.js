@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-23 4:25:59 PM CDT
+ * Last build: 2014-09-23 6:40:14 PM CDT
  */
 !(function ($, window) {
 
@@ -424,6 +424,7 @@ var AjaxBootstrapSelect = function (element, options) {
         plugin.init();
     }, 500);
 };
+window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
 
 /**
  * @todo document this.
@@ -814,6 +815,7 @@ var AjaxBootstrapSelectList = function (plugin) {
     // Merge in the AjaxBootstrapSelect properties and methods.
     $.extend(this, plugin);
 };
+window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrapSelectList;
 
 /**
  * Builds the options for placing into the element.
@@ -1018,8 +1020,8 @@ AjaxBootstrapSelectList.prototype.save = function (keepPreviousStates) {
  */
 $.fn.ajaxSelectPicker = function (options) {
     return this.each(function () {
-        if (!$(this).data('ajaxSelectPicker')) {
-            $(this).data('ajaxSelectPicker', new AjaxBootstrapSelect(this, options));
+        if (!$(this).data('AjaxBootstrapSelect')) {
+            $(this).data('AjaxBootstrapSelect', new window.AjaxBootstrapSelect(this, options));
         }
     });
 };

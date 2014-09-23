@@ -199,6 +199,7 @@ var AjaxBootstrapSelect = function (element, options) {
         plugin.init();
     }, 500);
 };
+window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
 
 /**
  * @todo document this.

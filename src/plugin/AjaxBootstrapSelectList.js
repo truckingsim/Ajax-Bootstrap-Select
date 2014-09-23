@@ -13,6 +13,7 @@ var AjaxBootstrapSelectList = function (plugin) {
     // Merge in the AjaxBootstrapSelect properties and methods.
     $.extend(this, plugin);
 };
+window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrapSelectList;
 
 /**
  * Builds the options for placing into the element.

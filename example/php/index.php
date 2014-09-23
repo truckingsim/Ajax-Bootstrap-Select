@@ -13,8 +13,8 @@ $data = json_decode($file_contents, true);
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css"/>
-	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.css"/>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>
     <style>h3 { text-align: center; } .bootstrap-select { width: 100% !important; }</style>
 </head>
 <body>
@@ -49,41 +49,44 @@ $data = json_decode($file_contents, true);
 </div>
 
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.js"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.js"></script>
-<script type="text/javascript" src="../../ajaxSelectPicker.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="../../dist/ajax-bootstrap-select.js"></script>
 <script>
-    var commenSettings = {
-        ajaxResultsPreHook: function(data){
-            var arr = [];
-            if(data.length){
+    var options = {
+        ajaxOptions: {
+            url: 'ajax.php',
+            type: 'POST',
+            dataType: 'json',
+            // Use "{{{q}}}" as a placeholder and Ajax Bootstrap Select will
+            // automatically replace it with the value of the search query.
+            data: {
+                q: '{{{q}}}'
+            }
+        },
+        log: 2,
+        preprocessData: function (data) {
+            var array = [];
+            if (data.length) {
                 for(var i = 0; i < data.length; i++){
-                    arr.push({
+                    array.push({
                         text: data[i].Name,
-                        value: data[i].Email
+                        value: data[i].Email,
+                        data: {
+                            subtext: data[i].Email
+                        }
                     });
                 }
             }
-
-            return arr;
-        },
-        ajaxSearchUrl: 'ajax.php',
-        ajaxOptions: {
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                q: '{{{q}}}' //We use {{{q}}} as a placeholder to specific I want the value from the textbox used
-            }
+            // You must always return a valid array when processing data. The
+            // data argument passed is a clone and cannot be modified directly.
+            return array;
         },
         placeHolderOption: 'Select and Begin Typing'
     };
 
-	$('.selectpicker').selectpicker();
-	$('#ajax-select').ajaxSelectPicker(commenSettings);
-
-    var multipleSettings = $.extend({}, commenSettings, {mixWithCurrents: true});
-    $('#ajax-select-multiple').ajaxSelectPicker(multipleSettings)
+	$('.selectpicker').selectpicker().ajaxSelectPicker(options);
 </script>
 </body>
 </html>

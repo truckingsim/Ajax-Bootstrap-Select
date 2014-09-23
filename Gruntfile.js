@@ -84,8 +84,11 @@ module.exports = function (grunt) {
         watch: {
             source: {
                 files: [
+                    '.verbrc.md',
                     'package.json',
                     'Gruntfile.js',
+                    'docs/**/*.md',
+                    'docs/**/*.handlebars',
                     'src/**/*.js'
                 ],
                 tasks: ['default'],

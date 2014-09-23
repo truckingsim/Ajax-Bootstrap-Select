@@ -4,16 +4,29 @@
 > Extends the bootstrap-select plugin so it can use a remote source for searching. Originally for CROSCON.
 
 * [Getting Started](#getting-started)
+  * [Requirements](#requirements)
   * [Options](#options)
   * [JSON Results](#json-results)
-  * [Usage Examples](#usage-examples)
+  * [Usage Example](#usage-example)
 * [License](#license)
 
 
 ## Getting Started
-This plugin extends existing [bootstrap-select](https://github.com/silviomoreto/bootstrap-select) implementations by adding the ability to search via AJAX requests as you type. To get this plugin running ensure the following:
+This plugin extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type.
 
-The [bootstrap-select](https://github.com/silviomoreto/bootstrap-select) must be initialized first with the `liveSearch` option enabled before this plugin can be initialized.
+
+### Requirements
+__Suggested Minimum Requirements:__
+* [Bootstrap 3.2.0+]
+* [jQuery 1.9+] ([Bootstrap prerequisite])
+
+__Minimum Requirements:__
+* [Bootstrap Select 1.6.2+]
+* A server that can process AJAX requests and send back appropriate JSON data.
+
+[Bootstrap Select] must either be be initialized with `liveSearch` enabled in the passed options or the `select` element must have the `data-live-search="true"` attribute.
+
+This plugin must be initialized __after__ [Bootstrap Select] has been initialized. For a more detailed explanation on implementation, see [usage example](#usage-example).
 
 
 ### Options
@@ -252,7 +265,7 @@ The plugin expects a certain result structure, an array of objects with the obje
 ```
 
 
-### Usage Examples
+### Usage Example
 
 ```js
 $('.select-picker')
@@ -308,3 +321,14 @@ $('.select-picker')
 ## License
 Copyright (c) 2014 Adam Heim, contributors.  
 Released under the MIT license
+
+[Bootstrap 3.2.0+]: http://getbootstrap.com/getting-started/#download
+[Bootstrap prerequisite]: http://getbootstrap.com/getting-started/#whats-included
+[Bootstrap]: http://getbootstrap.com
+
+[Bootstrap Select 1.6.2+]: https://github.com/silviomoreto/bootstrap-select/releases/tag/v1.6.2
+[Bootstrap Select]: https://github.com/silviomoreto/bootstrap-select
+
+[jQuery 1.9+](http://jquery.com/download/)
+[jQuery]: http://jquery.com
+

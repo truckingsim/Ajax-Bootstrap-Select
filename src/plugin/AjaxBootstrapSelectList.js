@@ -41,8 +41,9 @@ var AjaxBootstrapSelectList = function (plugin) {
  *   HTML containing the <option> elements to place in the element.
  */
 AjaxBootstrapSelectList.prototype.build = function (data) {
-    var a, i, l = data.length;
-    var $wrapper = $('<select/>');
+    var a, i, l = data.length, $wrapper = $('<select/>');
+
+    this.log(this.LOG_DEBUG, 'Building the select list options from data:', data);
 
     // Sort the data so preserved items (from a previous state) are
     // always last (needs work).
@@ -88,7 +89,9 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
         $wrapper.append($option);
     }
 
-    return $wrapper.html();
+    var options = $wrapper.html();
+    this.log(this.LOG_DEBUG, options);
+    return options;
 };
 
 
@@ -97,6 +100,7 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
  */
 AjaxBootstrapSelectList.prototype.destroy = function () {
     this.$element.find('option').remove();
+    this.log(this.LOG_DEBUG, 'Destroyed select list.');
     this.refresh();
 };
 
@@ -112,8 +116,11 @@ AjaxBootstrapSelectList.prototype.destroy = function () {
  */
 AjaxBootstrapSelectList.prototype.last = function () {
     if (this.states.length) {
-        return this.states[this.states.length - 1];
+        var state = this.states[this.states.length - 1];
+        this.log(this.LOG_DEBUG, 'Retrieved the last saved state of the select list:', state);
+        return state;
     }
+    this.log(this.LOG_DEBUG, 'Unable to retrieve the last saved state of the select list.');
     return false;
 };
 
@@ -124,7 +131,9 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
     // Remove unnecessary "min-height" from selectpicker.
     this.selectpicker.$menu.css('minHeight', 0);
     this.selectpicker.$menu.find('> .inner').css('minHeight', 0);
-    this.$element.selectpicker('refresh');
+    this.selectpicker.refresh();
+    this.selectpicker.findLis();
+    this.log(this.LOG_DEBUG, 'Refreshed select list.');
 };
 
 /**
@@ -135,9 +144,12 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
  */
 AjaxBootstrapSelectList.prototype.restore = function () {
     if (this.states.length) {
-        this.$element.html(this.states.pop().html);
+        var state = this.states.pop();
+        this.$element.html(state.html);
+        this.log(this.LOG_DEBUG, 'Restored select list to a previous state:', state);
         return true;
     }
+    this.log(this.LOG_DEBUG, 'Unable to restore select list to a previous state.');
     return false;
 };
 
@@ -180,8 +192,10 @@ AjaxBootstrapSelectList.prototype.save = function (keepPreviousStates) {
     }
 
     // Save the current state of the list.
-    this.states.push({
+    var state = {
         selected: selected,
         html: this.$element.html()
-    });
+    };
+    this.states.push(state);
+    this.log(this.LOG_DEBUG, 'Saved the current state of the select list:', state);
 };

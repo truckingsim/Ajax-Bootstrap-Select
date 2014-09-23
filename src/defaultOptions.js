@@ -4,7 +4,6 @@
          * @deprecated Since version `1.2.0`.
          * @see {preprocessData}
          */
-        ajaxResultsPreHook: null,
 
         /**
          * @name ajaxOptions
@@ -31,7 +30,6 @@
          * @deprecated Since version `1.2.0`.
          * @see {ajaxOptions}
          */
-        ajaxSearchUrl: null,
 
         /**
          * @name bindEvent
@@ -65,13 +63,9 @@
 
         /**
          * @name debug
-         * @description Display helpful console output when a warning or error occurs in the plugin.
-         * @optional
-         *
-         * @type Boolean
-         * @default `true`
+         * @deprecated Since version `1.2.0`.
+         * @see {log}
          */
-        debug: false,
 
         /**
          * @name emptyRequest
@@ -121,18 +115,31 @@
         },
 
         /**
+         * @name log
+         * @description The level at which certain logging is displayed:
+         * * __0|false:__ Display no information from the plugin.
+         * * __1|'error':__ Fatal errors that prevent the plugin from working.
+         * * __2|'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
+         * * __3|'info':__ Provides additional information, generally regarding the from request data and callbacks.
+         * * __4|true|'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
+         * @optional
+         *
+         * @type Number|Boolean|String
+         * @default `1`,
+         */
+        log: 1,
+
+        /**
          * @name mixWithCurrents
          * @deprecated Since version `1.2.0`.
          * @see {preserveSelected}
          */
-        mixWithCurrents: null,
 
         /**
          * @name placeHolderOption
          * @deprecated Since version `1.2.0`.
          * @see {templates}
          */
-        placeHolderOption: null,
 
         /**
          * @name preprocessData

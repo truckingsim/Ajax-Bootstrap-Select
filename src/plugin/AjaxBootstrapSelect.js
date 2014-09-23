@@ -65,7 +65,7 @@ var AjaxBootstrapSelect = function (element, options) {
      * Maps deprecated options to new ones between releases.
      * @type {Array}
      */
-    var depreciatedMap = [
+    var deprecatedOptionsMap = [
         // @todo Remove these options in next minor release.
         {
             from: 'ajaxResultsPreHook',
@@ -99,9 +99,9 @@ var AjaxBootstrapSelect = function (element, options) {
     ];
 
     // Map depreciated options into their newer counterparts.
-    if (depreciatedMap.length) {
+    if (deprecatedOptionsMap.length) {
         var plugin = this;
-        $.map(depreciatedMap, function (map) {
+        $.map(deprecatedOptionsMap, function (map) {
             // Depreciated option detected.
             if (options[map.from]) {
                 // Map with an object. Use "{{{value}}}" anywhere in the object to
@@ -109,7 +109,7 @@ var AjaxBootstrapSelect = function (element, options) {
                 if ($.isPlainObject(map.to)) {
                     plugin.replaceValue(map.to, '{{{value}}}', options[map.from]);
                     options = $.extend(true, {}, options, map.to);
-                    plugin.log(['[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use:', map.to]);
+                    plugin.log(['[WARNING] ajaxSelectPicker: Deprecated option "' + map.from + '". Update code to use:', map.to]);
                     delete options[map.from];
                 }
                 // Map with a function. Functions are silos. They are responsible
@@ -120,7 +120,7 @@ var AjaxBootstrapSelect = function (element, options) {
                 // Map normally.
                 else {
                         options[map.to] = options[map.from];
-                        plugin.log(['[WARNING] ajaxSelectPicker: Depreciated option "' + map.from + '". Update code to use: "' + map.to + '"']);
+                        plugin.log(['[WARNING] ajaxSelectPicker: Deprecated option "' + map.from + '". Update code to use: "' + map.to + '"']);
                         delete options[map.from];
                     }
             }

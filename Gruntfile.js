@@ -82,19 +82,24 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            source: {
+            options: {
+                spawn: false
+            },
+            js: {
                 files: [
-                    '.verbrc.md',
                     'package.json',
                     'Gruntfile.js',
-                    'docs/**/*.md',
-                    'docs/**/*.handlebars',
                     'src/**/*.js'
                 ],
-                tasks: ['default'],
-                options: {
-                    spawn: false
-                }
+                tasks: ['js']
+            },
+            docs: {
+                files: [
+                    '.verbrc.md',
+                    'docs/**/*.md',
+                    'docs/**/*.handlebars'
+                ],
+                tasks: ['docs']
             }
         },
         dss: {
@@ -140,6 +145,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-verb');
 
     // Default task(s).
-    grunt.registerTask('default', ['clean', 'jshint', 'concat', 'sed', 'uglify', 'dss', 'verb']);
+    grunt.registerTask('js', ['clean', 'jshint', 'concat', 'sed', 'uglify']);
+    grunt.registerTask('docs', ['dss', 'verb']);
+    grunt.registerTask('default', ['js', 'docs']);
 
 };

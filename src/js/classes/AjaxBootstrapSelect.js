@@ -100,15 +100,10 @@ var AjaxBootstrapSelect = function (element, options) {
         },
         {
             from: 'placeHolderOption',
-            to: function (map) {
-                var _options = {
-                    templates: {
-                        noResults: '<div class="no-results">' + options[map.from] + '</div>'
-                    }
-                };
-                $.extend(plugin.options, _options);
-                delete plugin.options[map.from];
-                plugin.log(plugin.LOG_WARNING, 'Deprecated option "' + map.from + '". Update code to use:', _options);
+            to: {
+                locale: {
+                    emptyTitle: '{{{value}}}'
+                }
             }
         }
     ];
@@ -216,6 +211,7 @@ var AjaxBootstrapSelect = function (element, options) {
      * @type {AjaxBootstrapSelectList}
      */
     this.list = new AjaxBootstrapSelectList(this);
+    this.list.refresh();
 
     // We need for selectpicker to be attached first. Putting the init in a
     // setTimeout is the easiest way to ensure this.
@@ -434,7 +430,7 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
  */
 AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     langCode = langCode || this.options.langCode;
-    if (this.locale[langCode] && this.locale[langCode][key]) {
+    if (this.locale[langCode] && this.locale[langCode].hasOwnProperty(key)) {
         return this.locale[langCode][key];
     }
     this.log(this.LOG_WARNING, 'Unknown translation key:', key);

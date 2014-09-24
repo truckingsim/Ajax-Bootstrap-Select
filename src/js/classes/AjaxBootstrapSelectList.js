@@ -25,6 +25,12 @@ var AjaxBootstrapSelectList = function (plugin) {
      */
     this.selected = [];
 
+    /**
+     * Containers for previous titles.
+     */
+    this.title = null;
+    this.selectedTextFormat = plugin.selectpicker.options.selectedTextFormat;
+
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
         plugin.$element.on('change.abs.preserveSelected', function (e) {
@@ -180,6 +186,13 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
     // Remove unnecessary "min-height" from selectpicker.
     this.plugin.selectpicker.$menu.css('minHeight', 0);
     this.plugin.selectpicker.$menu.find('> .inner').css('minHeight', 0);
+    var emptyTitle = this.plugin.t('emptyTitle');
+    if (!this.plugin.$element.find('option').length && emptyTitle && emptyTitle.length) {
+        this.setTitle(emptyTitle);
+    }
+    else if (this.title) {
+        this.restoreTitle();
+    }
     this.plugin.selectpicker.refresh();
     // The "refresh" method will set the $lis property to null, we must rebuild
     // it. Bootstrap Select <= 1.6.2 does not have the "findLis" method, this
@@ -254,4 +267,21 @@ AjaxBootstrapSelectList.prototype.restore = function () {
     }
     this.plugin.log(this.plugin.LOG_DEBUG, 'Unable to restore select list to the previous query:', this.plugin.previousQuery);
     return false;
+};
+
+AjaxBootstrapSelectList.prototype.restoreTitle = function () {
+    this.plugin.selectpicker.options.selectedTextFormat = this.selectedTextFormat;
+    if (this.title) {
+        this.plugin.$element.attr('title', this.title);
+    }
+    else {
+        this.plugin.$element.removeAttr('title');
+    }
+    this.title = null;
+};
+
+AjaxBootstrapSelectList.prototype.setTitle = function (title) {
+    this.title = this.plugin.$element.attr('title');
+    this.plugin.selectpicker.options.selectedTextFormat = 'static';
+    this.plugin.$element.attr('title', title);
 };

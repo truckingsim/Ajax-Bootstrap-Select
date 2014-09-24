@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-24 12:28:18 PM CDT
+ * Last build: 2014-09-24 1:00:25 PM CDT
  */
 !(function ($, window) {
 
@@ -365,15 +365,10 @@ var AjaxBootstrapSelect = function (element, options) {
         },
         {
             from: 'placeHolderOption',
-            to: function (map) {
-                var _options = {
-                    templates: {
-                        noResults: '<div class="no-results">' + options[map.from] + '</div>'
-                    }
-                };
-                $.extend(plugin.options, _options);
-                delete plugin.options[map.from];
-                plugin.log(plugin.LOG_WARNING, 'Deprecated option "' + map.from + '". Update code to use:', _options);
+            to: {
+                locale: {
+                    emptyTitle: '{{{value}}}'
+                }
             }
         }
     ];
@@ -481,6 +476,7 @@ var AjaxBootstrapSelect = function (element, options) {
      * @type {AjaxBootstrapSelectList}
      */
     this.list = new AjaxBootstrapSelectList(this);
+    this.list.refresh();
 
     // We need for selectpicker to be attached first. Putting the init in a
     // setTimeout is the easiest way to ensure this.
@@ -699,7 +695,7 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
  */
 AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     langCode = langCode || this.options.langCode;
-    if (this.locale[langCode] && this.locale[langCode][key]) {
+    if (this.locale[langCode] && this.locale[langCode].hasOwnProperty(key)) {
         return this.locale[langCode][key];
     }
     this.log(this.LOG_WARNING, 'Unknown translation key:', key);
@@ -732,6 +728,12 @@ var AjaxBootstrapSelectList = function (plugin) {
      * @type {Array}
      */
     this.selected = [];
+
+    /**
+     * Containers for previous titles.
+     */
+    this.title = null;
+    this.selectedTextFormat = plugin.selectpicker.options.selectedTextFormat;
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
@@ -888,6 +890,13 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
     // Remove unnecessary "min-height" from selectpicker.
     this.plugin.selectpicker.$menu.css('minHeight', 0);
     this.plugin.selectpicker.$menu.find('> .inner').css('minHeight', 0);
+    var emptyTitle = this.plugin.t('emptyTitle');
+    if (!this.plugin.$element.find('option').length && emptyTitle && emptyTitle.length) {
+        this.setTitle(emptyTitle);
+    }
+    else if (this.title) {
+        this.restoreTitle();
+    }
     this.plugin.selectpicker.refresh();
     // The "refresh" method will set the $lis property to null, we must rebuild
     // it. Bootstrap Select <= 1.6.2 does not have the "findLis" method, this
@@ -962,6 +971,23 @@ AjaxBootstrapSelectList.prototype.restore = function () {
     }
     this.plugin.log(this.plugin.LOG_DEBUG, 'Unable to restore select list to the previous query:', this.plugin.previousQuery);
     return false;
+};
+
+AjaxBootstrapSelectList.prototype.restoreTitle = function () {
+    this.plugin.selectpicker.options.selectedTextFormat = this.selectedTextFormat;
+    if (this.title) {
+        this.plugin.$element.attr('title', this.title);
+    }
+    else {
+        this.plugin.$element.removeAttr('title');
+    }
+    this.title = null;
+};
+
+AjaxBootstrapSelectList.prototype.setTitle = function (title) {
+    this.title = this.plugin.$element.attr('title');
+    this.plugin.selectpicker.options.selectedTextFormat = 'static';
+    this.plugin.$element.attr('title', title);
 };
 
 /**
@@ -1272,6 +1298,7 @@ $.fn.ajaxSelectPicker.locale = {};
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
     currentlySelected: 'Currently Selected',
+    emptyTitle: 'Select and begin typing',
     noResults: 'No Results',
     searchPlaceholder: 'Search...',
     searching: 'Searching...'

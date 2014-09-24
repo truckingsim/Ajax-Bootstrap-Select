@@ -19,6 +19,7 @@
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
     currentlySelected: 'Currently Selected',
+    emptyTitle: 'Select and begin typing',
     noResults: 'No Results',
     searchPlaceholder: 'Search...',
     searching: 'Searching...'

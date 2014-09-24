@@ -67,8 +67,14 @@ module.exports = function (grunt) {
         sed: {
             plugin: {
                 path: 'dist',
-                pattern: '%DEFAULT_OPTIONS%',
+                pattern: /\/\/%DEFAULT_OPTIONS%\n/,
                 replacement: grunt.file.read('src/defaultOptions.js'),
+                recursive: true
+            },
+            jshintIgnore: {
+                path: 'dist',
+                pattern: /\/(\/?|\*+)\s*?jshint ignore:(start|end|line)(\s*\*\/)?\n?$/img,
+                replacement: '',
                 recursive: true
             }
         },

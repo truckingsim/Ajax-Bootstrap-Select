@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-23 9:52:41 PM CDT
+ * Last build: 2014-09-24 1:04:59 AM CDT
  */
 !(function ($, window) {
 
@@ -70,18 +70,15 @@ var AjaxBootstrapSelect = function (element, options) {
     this.cachedData = {};
 
     /**
-     * @todo figure out if this is needed.
-     * @type {string}
-     */
-    this.previousQuery = '';
-
-    /**
      * The current query being requested.
-     * @type {string}
+     * @type {String}
      */
     this.query = '';
 
-/* jshint ignore:start */
+    /**
+     * Provide the default options for the plugin.
+     * @type {Object}
+     */
     defaultOptions = {
         /**
          * @name ajaxResultsPreHook
@@ -266,6 +263,16 @@ var AjaxBootstrapSelect = function (element, options) {
         processData: null,
 
         /**
+         * @name requestDelay
+         * @description The time, in milliseconds, that must pass before a request is made. Each time the bindEvent is fired, it will reset the currently elapsed time and start a new delay.
+         * @optional
+         *
+         * @type Number
+         * @default `300`
+         */
+        requestDelay: 300,
+
+        /**
          * @name searchPlaceholder
          * @description The placeholder text to use inside the search input.
          * @optional
@@ -296,8 +303,6 @@ var AjaxBootstrapSelect = function (element, options) {
         }
 
     };
-//
-/* jshint ignore:end */
 
     // Merge the options into the plugin.
     this.options = $.extend(true, {}, defaultOptions, options);

@@ -52,20 +52,16 @@ var AjaxBootstrapSelect = function (element, options) {
     this.cachedData = {};
 
     /**
-     * @todo figure out if this is needed.
-     * @type {string}
-     */
-    this.previousQuery = '';
-
-    /**
      * The current query being requested.
-     * @type {string}
+     * @type {String}
      */
     this.query = '';
 
-/* jshint ignore:start */
-%DEFAULT_OPTIONS%//
-/* jshint ignore:end */
+    /**
+     * Provide the default options for the plugin.
+     * @type {Object}
+     */
+//%DEFAULT_OPTIONS%
 
     // Merge the options into the plugin.
     this.options = $.extend(true, {}, defaultOptions, options);

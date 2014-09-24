@@ -5,5 +5,5 @@
 [Bootstrap Select 1.6.2+]: https://github.com/silviomoreto/bootstrap-select/releases/tag/v1.6.2
 [Bootstrap Select]: https://github.com/silviomoreto/bootstrap-select
 
-[jQuery 1.9+](http://jquery.com/download/)
+[jQuery 1.9+]: http://jquery.com/download/
 [jQuery]: http://jquery.com

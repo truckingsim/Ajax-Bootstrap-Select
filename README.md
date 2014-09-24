@@ -16,17 +16,17 @@ This plugin extends existing [Bootstrap Select] implementations by adding the ab
 
 
 ### Requirements
-__Suggested Minimum Requirements:__
-* [Bootstrap 3.2.0+]
-* [jQuery 1.9+] ([Bootstrap prerequisite])
-
-__Minimum Requirements:__
+__Minimum requirements:__
 * [Bootstrap Select 1.6.2+]
 * A server that can process AJAX requests and send back appropriate JSON data.
 
 [Bootstrap Select] must either be be initialized with `liveSearch` enabled in the passed options or the `select` element must have the `data-live-search="true"` attribute.
 
 This plugin must be initialized __after__ [Bootstrap Select] has been initialized. For a more detailed explanation on implementation, see [usage example](#usage-example).
+
+__Suggested requirements:__
+* [Bootstrap 3.2.0+]
+* [jQuery 1.9+] - [Bootstrap prerequisite]
 
 
 ### Options
@@ -341,6 +341,6 @@ Released under the MIT license
 [Bootstrap Select 1.6.2+]: https://github.com/silviomoreto/bootstrap-select/releases/tag/v1.6.2
 [Bootstrap Select]: https://github.com/silviomoreto/bootstrap-select
 
-[jQuery 1.9+](http://jquery.com/download/)
+[jQuery 1.9+]: http://jquery.com/download/
 [jQuery]: http://jquery.com
 

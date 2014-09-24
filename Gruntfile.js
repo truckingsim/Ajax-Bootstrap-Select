@@ -112,6 +112,7 @@ module.exports = function (grunt) {
                         deprecated: function (i, line) { return line; },
                         description: function (i, line, block) { return multiLineParser('description', i, line, block); },
                         optional: function () { return true; },
+                        required: function () { return true; },
                         see: function (i, line) {
                             var pattern = new RegExp('{([a-z0-9_-]+)}$', 'ig');
                             if (line.match(pattern)) {

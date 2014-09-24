@@ -38,23 +38,24 @@ This plugin must be initialized __after__ [Bootstrap Select] has been initialize
 
 ***
 ##### ajaxOptions
+> __Required__
+>
 > The options to pass to the jQuery AJAX request.
 >
 > __Type:__ `Object`
 >
-> __Default:__ `{}`
->
-> __Example usage:__
-> ```js
->  ajaxOptions: {
->      url: "/path/to/server/request", // Required.
->      type: "json",
->      type: "POST"
+> __Default:__ 
+>  ```js
+>  {
+>      url: null, // Required.
+>      type: 'POST',
+>      dataType: 'json',
 >      data: {
->          q: "{{{q}}}"
+>          q: '{{{q}}}'
 >      }
 >  }
 >  ```
+>
 
 ***
 ##### ~~ajaxSearchUrl~~
@@ -202,6 +203,17 @@ This plugin must be initialized __after__ [Bootstrap Select] has been initialize
 > __Type:__ `Function|null`
 >
 > __Default:__ `null`
+>
+>_Optional_
+>
+
+***
+##### requestDelay
+> The time, in milliseconds, that must pass before a request is made. Each time the bindEvent is fired, it will reset the currently elapsed time and start a new delay.
+>
+> __Type:__ `Number`
+>
+> __Default:__ `300`
 >
 >_Optional_
 >

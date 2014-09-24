@@ -7,7 +7,7 @@
     "noarg": true,
     "sub": true,
     "undef": true,
-    "unused": true,
+    "unused": false,
     "boss": true,
     "eqnull": true,
     "browser": true,
@@ -16,6 +16,7 @@
         "jQuery": true,
         "module": true,
         "AjaxBootstrapSelect": true,
-        "AjaxBootstrapSelectList": true
+        "AjaxBootstrapSelectList": true,
+        "AjaxBootstrapSelectRequest": true
     }
 }

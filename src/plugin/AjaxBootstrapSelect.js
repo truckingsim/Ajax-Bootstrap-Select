@@ -192,6 +192,12 @@ var AjaxBootstrapSelect = function (element, options) {
         return;
     }
 
+    /**
+     * The select list.
+     * @type {AjaxBootstrapSelectList}
+     */
+    this.list = new AjaxBootstrapSelectList(this);
+
     // We need for selectpicker to be attached first. Putting the init in a
     // setTimeout is the easiest way to ensure this.
     // @todo Figure out a better way to do this (hopefully listen for an event).
@@ -205,164 +211,67 @@ window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
  * @todo document this.
  */
 AjaxBootstrapSelect.prototype.init = function () {
-    var plugin = this;
+    var requestDelayTimer, plugin = this;
 
-    /**
-     * The select list.
-     * @type {AjaxBootstrapSelectList}
-     */
-    this.list = new AjaxBootstrapSelectList(this);
+    // Add placeholder text to the search input.
+    this.selectpicker.$searchbox.attr('placeholder', this.options.searchPlaceholder);
 
-    // Instantiate the timer.
-    var timeout;
+    // Remove selectpicker events on the search input and add our own.
+    this.selectpicker.$searchbox.off().on(this.options.bindEvent, function (e) {
+        var query = plugin.selectpicker.$searchbox.val();
 
-    // Process the search input.
-    this.selectpicker.$searchbox
-        // Add placeholder text.
-        .attr('placeholder', this.options.searchPlaceholder)
+        plugin.log(plugin.LOG_DEBUG, 'Bind event fired: "' + plugin.options.bindEvent + '", keyCode:', e.keyCode, e);
 
-        // Remove selectpicker events.
-        .off('input propertychange')
+        // Dynamically ignore the "enter" key (13) so it doesn't
+        // create an additional request if the "cache" option has
+        // been disabled.
+        if (!plugin.options.cache) {
+            plugin.options.ignoredKeys[13] = 'enter';
+        }
 
-        // Bind this plugin event.
-        .on(this.options.bindEvent, function (e) {
-            plugin.log(plugin.LOG_DEBUG, 'Bind event fired: "' + plugin.options.bindEvent + '", keyCode:', e.keyCode, e);
-            plugin.query = plugin.selectpicker.$searchbox.val();
+        // Don't process ignored keys.
+        if (plugin.options.ignoredKeys[e.keyCode]) {
+            plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
+            return;
+        }
 
-            // Dynamically ignore the "enter" key (13) so it doesn't
-            // create an additional request if the "cache" option has
-            // been disabled.
-            if (!plugin.options.cache) {
-                plugin.options.ignoredKeys[13] = 'enter';
+        // Clear out any existing timer.
+        clearTimeout(requestDelayTimer);
+
+        // Process empty search value.
+        if (!query.length) {
+            // Clear the select list.
+            if (plugin.options.clearOnEmpty) {
+                plugin.list.destroy();
             }
 
-            // Don't process ignored keys.
-            if (plugin.options.ignoredKeys[e.keyCode]) {
-                plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
-                return true;
-            }
-
-            // Process empty search value.
-            if (!plugin.query.length) {
-                // Clear the select list.
-                if (plugin.options.clearOnEmpty) {
-                    plugin.list.destroy();
-                }
-
-                // Don't invoke a request.
-                if (!plugin.options.emptyRequest) {
-                    return true;
-                }
-            }
-
-            // Clear any existing timer.
-            clearTimeout(timeout);
-
-            // Return the cached results, if any.
-            if (plugin.options.cache && plugin.cachedData[plugin.query] && e.keyCode !== 13) {
-                var output = plugin.list.build(plugin.cachedData[plugin.query]);
-                // Build the option output.
-                if (output.length) {
-                    plugin.$element.html(output);
-                    plugin.list.refresh();
-                    return true;
-                }
-                plugin.log(plugin.LOG_WARNING, 'Unable to build the options from cached data.', plugin.query, plugin.cachedData[plugin.query]);
-                plugin.list.restore();
+            // Don't invoke a request.
+            if (!plugin.options.emptyRequest) {
                 return;
             }
+        }
 
-            timeout = setTimeout(function () {
-                // Save the current state of the plugin.
-                plugin.list.save();
+        // Store the query.
+        plugin.query = query;
 
-                // Destroy the list currently there.
-                plugin.list.destroy();
+        // Return the cached results, if any.
+        if (plugin.options.cache && plugin.cachedData[plugin.query] && e.keyCode !== 13) {
+            var output = plugin.list.build(plugin.cachedData[plugin.query]);
+            // Build the option output.
+            if (output.length) {
+                plugin.$element.html(output);
+                plugin.list.refresh();
+                return;
+            }
+            plugin.log(plugin.LOG_WARNING, 'Unable to build the options from cached data.', plugin.query, plugin.cachedData[plugin.query]);
+            plugin.list.restore();
+            return;
+        }
 
-                // Remove any existing templates.
-                plugin.$loading.remove();
-                plugin.$noResults.remove();
-
-                // Show the loading template.
-                if (plugin.options.templates.loading) {
-                    plugin.$loading = $(plugin.options.templates.loading).appendTo(plugin.selectpicker.$menu);
-                    plugin.list.refresh();
-                }
-
-                var ajaxParams = {};
-                ajaxParams.url = plugin.options.ajaxOptions.url;
-
-                //Success function, this builds the options to put in the select
-                ajaxParams.success = function (data, status, jqXHR) {
-                    plugin.log(plugin.LOG_INFO, 'AJAX success event:', data, status, jqXHR);
-                    // Only process data if an Array or Object.
-                    if (!$.isArray(data) && !$.isObject(data)) {
-                        plugin.log(plugin.LOG_ERROR, 'Request did not return a JSON Array or Object.', data);
-                        plugin.list.destroy();
-                        return;
-                    }
-
-                    // Only continue if actual results.
-                    if (!Object.keys(data).length) {
-                        plugin.list.destroy();
-                        if (plugin.options.templates.noResults) {
-                            // Show the "no results" template.
-                            plugin.$noResults = $(plugin.options.templates.noResults).appendTo(plugin.selectpicker.$menu);
-                        }
-                        plugin.log(plugin.LOG_INFO, 'No results were returned.');
-                        return;
-                    }
-
-                    // Process the data.
-                    var processedData = plugin.processData(data, plugin.query);
-                    if (processedData && processedData.length) {
-                        // Build the option output.
-                        var output = plugin.list.build(processedData);
-                        if (!output.length) {
-                            plugin.log(plugin.LOG_WARNING, 'Unable to build the options from data.', data, output);
-                            return;
-                        }
-                        plugin.$element.html(output);
-                    }
-                };
-
-                //If there is an error be sure to put in the previous options
-                ajaxParams.error = function (jqXHR, status, error) {
-                    plugin.log(plugin.LOG_ERROR, 'AJAX error event:', jqXHR, status, error);
-                    plugin.list.restore();
-                };
-
-                //Always refresh the list and remove the loading menu
-                ajaxParams.complete = function (jqXHR, status) {
-                    plugin.log(plugin.LOG_INFO, 'AJAX complete event:', jqXHR, status);
-                    plugin.$loading.remove();
-                    plugin.list.refresh();
-                };
-
-                var userParams = $.extend(true, {}, plugin.options.ajaxOptions);
-
-                ajaxParams.dataType = userParams.hasOwnProperty('dataType') ? userParams.dataType : 'json';
-                ajaxParams.type = userParams.hasOwnProperty('type') ? userParams.type : 'POST';
-
-                if (userParams.hasOwnProperty('data')) {
-                    userParams.processedData = userParams.data;
-                    if (typeof userParams.data === 'function') {
-                        userParams.processedData = userParams.data();
-                    }
-                    ajaxParams.data = userParams.processedData;
-                }
-                else {
-                    userParams.data = {'q': plugin.query};
-                }
-
-                // Replace any data values containing "{{{q}}}" with
-                // the value of the current query.
-                plugin.replaceValue(ajaxParams.data, '{{{q}}}', plugin.query);
-
-                // Invoke the AJAX request.
-                $.ajax(ajaxParams);
-            }, 300);
-        });
+        requestDelayTimer = setTimeout(function () {
+            plugin.lastRequest = new AjaxBootstrapSelectRequest(plugin);
+        }, plugin.options.requestDelay || 300);
+    });
 };
 
 /**
@@ -403,126 +312,6 @@ AjaxBootstrapSelect.prototype.log = function (type, message) {
         // Display the message(s).
         window.console[type].apply(window.console, args);
     }
-};
-
-/**
- * Process incoming data.
- *
- * This method ensures that the incoming data has unique values and
- * is in the proper format that is utilized by this plugin. It also
- * adds in the existing selects if the option is enabled. If the
- * preprocessData and processData functions were defined in the plugin
- * options, they are invoked here.
- *
- * @param {Array|Object} data
- *   The JSON data to process.
- * @param {String} [query]
- *   The current query string. Used to cache data after it has been
- *   processed.
- *
- * @return {Array|boolean}
- *   The processed data array or false if an error occurred.
- */
-AjaxBootstrapSelect.prototype.processData = function (data, query) {
-    var i, l, clone, item, lastState, preprocessedData, processedData;
-    var filteredData = [], seenValues = [], selected = [];
-
-    this.log(this.LOG_INFO, 'Processing raw data for:', query, data);
-
-    // Merge in the selected options from the previous state.
-    if (this.options.preserveSelected && this.list && (lastState = this.list.last()) && lastState) {
-        selected = selected.concat(lastState.selected);
-    }
-
-    // If the data argument is an object, convert it to an array.
-    if ($.isPlainObject(data)) {
-        clone = selected.concat($.map(data, function (value) {
-            return [value];
-        }));
-    }
-    else {
-        if ($.isArray(data)) {
-            clone = selected.concat(data);
-        }
-        else {
-            this.log(this.LOG_ERROR, 'The data type passed was not an Array or Object.', data);
-            return false;
-        }
-    }
-
-    // Invoke the preprocessData option function and pass it another
-    // clone so it doesn't intentionally modify the array. Only use the
-    // returned value.
-    preprocessedData = [].concat(clone);
-    if ($.isFunction(this.options.preprocessData)) {
-        this.log(this.LOG_DEBUG, 'Invoking preprocessData callback:', this.options.processData);
-        preprocessedData = this.options.preprocessData(preprocessedData);
-        if (!$.isArray(preprocessedData) || !preprocessedData.length) {
-            this.log(this.LOG_ERROR, 'The preprocessData callback did not return an array or was empty.', data, preprocessedData);
-            return false;
-        }
-    }
-
-    // Filter preprocessedData.
-    l = preprocessedData.length;
-    for (i = 0; i < l; i++) {
-        item = preprocessedData[i];
-        this.log(this.LOG_DEBUG, 'Processing item:', item);
-        if ($.isPlainObject(item)) {
-            // Check if item is a divider. If so, ignore all other data.
-            // @todo Remove depreciated item.data.divider check in next
-            // minor release.
-            if (item.hasOwnProperty('divider') || (item.hasOwnProperty('data') && $.isPlainObject(item.data) && item.data.divider)) {
-                this.log(this.LOG_DEBUG, 'Item is a divider, ignoring provided data.');
-                filteredData.push({divider: true});
-            }
-            // Ensure item has a "value" and is unique.
-            else {
-                if (item.hasOwnProperty('value')) {
-                    if (seenValues.indexOf(item.value) === -1) {
-                        seenValues.push(item.value);
-                        // Provide default items to ensure expected structure.
-                        item = $.extend({
-                            title: item.value,
-                            class: '',
-                            data: {},
-                            disabled: false,
-                            selected: false
-                        }, item);
-                        filteredData.push(item);
-                    }
-                    else {
-                        this.log(this.LOG_DEBUG, 'Duplicate item found, ignoring.');
-                    }
-                }
-                else {
-                    this.log(this.LOG_DEBUG, 'Data item must have a "value" property, skipping.');
-                }
-            }
-        }
-    }
-
-    // Invoke the processData option function and pass a clone of
-    // processedData so it doesn't intentionally modify the array. Only
-    // use the returned value.
-    processedData = [].concat(filteredData);
-    if ($.isFunction(this.options.processData)) {
-        this.log(this.LOG_DEBUG, 'Invoking processData callback:', this.options.processData);
-        processedData = this.options.processData(processedData);
-        if (!$.isArray(processedData) || !processedData.length) {
-            this.log(this.LOG_ERROR, 'The processedData callback did not return an array or was empty.', data, filteredData, processedData);
-            return false;
-        }
-    }
-
-    // Cache the data, if possible.
-    if (this.options.cache && query) {
-        this.log(this.LOG_DEBUG, 'Caching processed data.');
-        this.cachedData[query] = processedData;
-    }
-
-    this.log(this.LOG_INFO, 'Processed data:', processedData);
-    return processedData;
 };
 
 /**

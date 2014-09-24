@@ -8,22 +8,29 @@
         /**
          * @name ajaxOptions
          * @description The options to pass to the jQuery AJAX request.
+         * @required
          *
          * @type Object
-         * @default `{}`
-         *
-         * @example ```js
-         * ajaxOptions: {
-         *     url: "/path/to/server/request", // Required.
-         *     type: "json",
-         *     type: "POST"
+         * @default
+         * ```js
+         * {
+         *     url: null, // Required.
+         *     type: 'POST',
+         *     dataType: 'json',
          *     data: {
-         *         q: "{{{q}}}"
+         *         q: '{{{q}}}'
          *     }
          * }
          * ```
          */
-        ajaxOptions: {},
+        ajaxOptions: {
+            url: null,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                q: '{{{q}}}'
+            }
+        },
 
         /**
          * @name ajaxSearchUrl
@@ -173,6 +180,16 @@
          * @default `null`
          */
         processData: null,
+
+        /**
+         * @name requestDelay
+         * @description The time, in milliseconds, that must pass before a request is made. Each time the bindEvent is fired, it will reset the currently elapsed time and start a new delay.
+         * @optional
+         *
+         * @type Number
+         * @default `300`
+         */
+        requestDelay: 300,
 
         /**
          * @name searchPlaceholder

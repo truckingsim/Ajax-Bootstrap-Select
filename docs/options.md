@@ -110,17 +110,46 @@
 >
 
 ***
+#### langCode
+> The language code to use for string translation. By default this value is determined by the browser, however it is not entirely reliable. If you encounter inconsistencies, you may need to manually set this option.
+>
+> __Type:__ `String`
+>
+> __Default:__ `null`
+>
+>_Optional_
+>
+
+***
+#### locale
+> Specific overrides for locale translation strings. Any values set here will completely override and ignore any set language code. This is useful for changing only a single value or if being used in a system that provides its own translations (CMS).
+>
+> __Type:__ `Object`
+>
+> __Default:__ `null`
+>
+>_Optional_
+>
+> __Example usage:__
+> 
+>  ```js
+>  locale: {
+>      searchPlaceholder: 'Find...'
+>  }
+>  ```
+
+***
 #### log
 > The level at which certain logging is displayed:
->  * __0|false:__ Display no information from the plugin.
->  * __1|'error':__ Fatal errors that prevent the plugin from working.
->  * __2|'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
->  * __3|'info':__ Provides additional information, generally regarding the from request data and callbacks.
->  * __4|true|'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
+>  * __0, false:__ Display no information from the plugin.
+>  * __1, 'error':__ Fatal errors that prevent the plugin from working.
+>  * __2, 'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
+>  * __3, 'info':__ Provides additional information, generally regarding the from request data and callbacks.
+>  * __4, true, 'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
 >
 > __Type:__ `Number|Boolean|String`
 >
-> __Default:__ `1`,
+> __Default:__ `'error'`,
 >
 >_Optional_
 >
@@ -182,17 +211,6 @@
 > __Type:__ `Number`
 >
 > __Default:__ `300`
->
->_Optional_
->
-
-***
-#### searchPlaceholder
-> The placeholder text to use inside the search input.
->
-> __Type:__ `String|null`
->
-> __Default:__ `'Search...'`
 >
 >_Optional_
 >

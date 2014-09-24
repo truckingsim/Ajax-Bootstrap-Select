@@ -26,6 +26,25 @@ module.exports = function (grunt) {
         return newBlock;
     };
 
+    var parsers = {
+        'default': function(i, line, block) { return multiLineParser('default', i, line, block); },
+        example: function (i, line, block) { return multiLineParser('example', i, line, block); },
+        deprecated: function (i, line) { return line; },
+        description: function (i, line, block) { return multiLineParser('description', i, line, block); },
+        optional: function () { return true; },
+        required: function () { return true; },
+        see: function (i, line) {
+            var pattern = new RegExp('{([a-z0-9_-]+)}$', 'ig');
+            if (line.match(pattern)) {
+                var option = line.replace(pattern, '$1');
+                return '[' + option + '](#' + optionAnchor(option) + ')';
+            }
+            return line;
+
+        },
+        type: function (i, line) { return line; }
+    };
+
     // Project configuration.
     grunt.initConfig({
         banner: '/*!\n' +
@@ -41,34 +60,92 @@ module.exports = function (grunt) {
         ' * Last build: <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT Z") %>\n' +
         ' */\n',
         pkg: pkg,
-        clean: ['dist/*'],
+        clean: {
+            locale: ['dist/js/locale/*'],
+            plugin: [
+                'dist/js/<%= pkg.name %>.js',
+                'dist/js/<%= pkg.name %>.min.js'
+            ],
+            styles: ['dist/css/']
+        },
+        dss: {
+            docs: {
+                files: {
+                    docs: ['src/js/defaultOptions.js']
+                },
+                options: {
+                    template: 'docs/templates/',
+                    template_index: 'jsdoc2md.handlebars',
+                    output_index: '/options.md',
+                    parsers: parsers
+                }
+            }
+        },
+        concat: {
+            plugin: {
+                options: {
+                    banner: '<%= banner %>' + '!(function ($, window) {\n\n',
+                    footer: '\n})(jQuery, window);\n'
+                },
+                src: [
+                    'src/js/classes/**/*.js',
+                    'src/js/jQueryPlugin.js',
+                    'src/js/locale/en-US.js'
+                ],
+                dest: 'dist/js/<%= pkg.name %>.js'
+            }
+        },
+        copy: {
+            locale: {
+                files: [{
+                    expand: true,
+                    cwd: 'src/js/locale/',
+                    src: [
+                        '**/*.js'
+                    ],
+                    dest: 'dist/js/locale/',
+                    rename: function(dest, src) {
+                        return dest + src.replace(/(.*)\.js$/, pkg.name + '.$1.js');
+                    }
+                }],
+                options: {
+                    process: function (content, srcpath) {
+                        return grunt.template.process('<%= banner %>') + '!(function ($) {\n' + content + '})(jQuery);\n';
+                    }
+                }
+            }
+        },
         jshint: {
             options: {
                 jshintrc: '.jshintrc'
+            },
+            locale: {
+                src: [
+                    'src/js/locale/**/*.js'
+                ]
             },
             plugin: {
                 src: [
                     'package.json',
                     'Gruntfile.js',
-                    'src/plugin/**/*.js'
+                    'src/js/classes/**/*.js'
                 ]
             }
         },
-        concat: {
+        less: {
             options: {
-                banner: '<%= banner %>' + '!(function ($, window) {\n\n',
-                footer: '\n})(jQuery, window);\n'
+                banner: '<%= banner %>'
             },
-            build: {
-                src: 'src/plugin/**/*.js',
-                dest: 'dist/<%= pkg.name %>.js'
+            plugin: {
+                src: 'src/less/**/*.less',
+                dest: 'dist/css/<%= pkg.name %>.css'
             }
         },
         sed: {
             plugin: {
                 path: 'dist',
                 pattern: /\/\/%DEFAULT_OPTIONS%\n/,
-                replacement: grunt.file.read('src/defaultOptions.js'),
+                replacement: grunt.file.read('src/js/defaultOptions.js'),
                 recursive: true
             },
             jshintIgnore: {
@@ -80,62 +157,51 @@ module.exports = function (grunt) {
         },
         uglify: {
             options: {
-                banner: '<%= banner %>'
+                preserveComments: 'some'
             },
-            build: {
-                src: 'dist/<%= pkg.name %>.js',
-                dest: 'dist/<%= pkg.name %>.min.js'
+            locale: {
+                files: [{
+                    expand: true,
+                    cwd: 'src/js/locale/',
+                    src: ['**/*.js'],
+                    dest: 'dist/js/locale/',
+                    ext: '.min.js',
+                    rename: function(dest, src) {
+                        return dest + src.replace(/(.*)\.min\.js$/, pkg.name + '.$1.min.js');
+                    }
+                }],
+                options: {
+                    banner: '<%= banner %>' + '!(function ($) {\n',
+                    footer: '})(jQuery);\n'
+                }
+            },
+            plugin: {
+                src: 'dist/js/<%= pkg.name %>.js',
+                dest: 'dist/js/<%= pkg.name %>.min.js'
             }
         },
         watch: {
-            options: {
-                spawn: false
-            },
-            js: {
-                files: [
-                    'package.json',
-                    'Gruntfile.js',
-                    'src/**/*.js'
-                ],
-                tasks: ['js']
-            },
             docs: {
                 files: [
                     '.verbrc.md',
                     'docs/**/*.md',
-                    'docs/**/*.handlebars'
+                    'docs/**/*.handlebars',
+                    'src/js/defaultOptions.js',
+                    'src/js/locale/en-US.js',
                 ],
                 tasks: ['docs']
-            }
-        },
-        dss: {
-            docs: {
-                files: {
-                    docs: 'src/defaultOptions.js'
-                },
-                options: {
-                    template: 'docs/templates/',
-                    template_index: 'jsdoc2md.handlebars',
-                    output_index: '/options.md',
-                    parsers: {
-                        'default': function(i, line, block) { return multiLineParser('default', i, line, block); },
-                        example: function (i, line, block) { return multiLineParser('example', i, line, block); },
-                        deprecated: function (i, line) { return line; },
-                        description: function (i, line, block) { return multiLineParser('description', i, line, block); },
-                        optional: function () { return true; },
-                        required: function () { return true; },
-                        see: function (i, line) {
-                            var pattern = new RegExp('{([a-z0-9_-]+)}$', 'ig');
-                            if (line.match(pattern)) {
-                                var option = line.replace(pattern, '$1');
-                                return '[' + option + '](#' + optionAnchor(option) + ')';
-                            }
-                            return line;
-
-                        },
-                        type: function (i, line) { return line; }
-                    }
-                }
+            },
+            locale: {
+                files: '<%= jshint.locale.src %>',
+                tasks: ['locale']
+            },
+            styles: {
+                files: '<%= less.plugin.src %>',
+                tasks: ['styles']
+            },
+            plugin: {
+                files: '<%= jshint.plugin.src %>',
+                tasks: ['plugin']
             }
         }
     });
@@ -143,16 +209,20 @@ module.exports = function (grunt) {
     // Load the grunt plugins.
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-dss');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-verb');
 
     // Default task(s).
-    grunt.registerTask('js', ['clean', 'jshint', 'concat', 'sed', 'uglify']);
     grunt.registerTask('docs', ['dss', 'verb']);
-    grunt.registerTask('default', ['js', 'docs']);
+    grunt.registerTask('locale', ['jshint:locale', 'clean:locale', 'copy:locale', 'uglify:locale']);
+    grunt.registerTask('plugin', ['jshint:plugin', 'clean:plugin', 'concat:plugin', 'sed', 'uglify:plugin']);
+    grunt.registerTask('styles', ['clean:styles', 'less']);
+    grunt.registerTask('default', ['docs', 'locale', 'plugin', 'styles']);
 
 };

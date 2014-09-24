@@ -1,7 +1,10 @@
 /**
- * @todo document this.
+ * The jQuery plugin function definition.
+ *
  * @param options
- * @returns {*}
+ *   The options to pass to the plugin.
+ *
+ * @returns {jQuery}
  */
 $.fn.ajaxSelectPicker = function (options) {
     return this.each(function () {
@@ -10,3 +13,9 @@ $.fn.ajaxSelectPicker = function (options) {
         }
     });
 };
+
+/**
+ * The locale object containing string translations.
+ * @type {Object}
+ */
+$.fn.ajaxSelectPicker.locale = {};

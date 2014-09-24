@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-24 1:04:59 AM CDT
+ * Last build: 2014-09-24 6:45:53 AM CDT
  */
 !(function ($, window) {
 
@@ -203,6 +203,16 @@ var AjaxBootstrapSelect = function (element, options) {
         },
 
         /**
+         * @name langCode
+         * @description The language code to use for string translation. This can usually determine the correct language to use, however it is not entirely reliable. If you encounter inconsistencies, you may need to manually set this option.
+         * @optional
+         *
+         * @type String
+         * @default `null` (automatically detected from browser)
+         */
+        langCode: null,
+
+        /**
          * @name log
          * @description The level at which certain logging is displayed:
          * * __0|false:__ Display no information from the plugin.
@@ -271,16 +281,6 @@ var AjaxBootstrapSelect = function (element, options) {
          * @default `300`
          */
         requestDelay: 300,
-
-        /**
-         * @name searchPlaceholder
-         * @description The placeholder text to use inside the search input.
-         * @optional
-         *
-         * @type String|null
-         * @default `'Search...'`
-         */
-        searchPlaceholder: 'Search...',
 
         /**
          * @name templates
@@ -429,6 +429,35 @@ var AjaxBootstrapSelect = function (element, options) {
         return;
     }
 
+    // Initialize the locale strings.
+    this.locale = $.extend(true, {}, $.fn.ajaxSelectPicker.locale);
+
+    // Ensure the langCode is properly set.
+    this.options.langCode = this.options.langCode || window.navigator.userLanguage || window.navigator.language || 'en';
+    if (!this.locale[this.options.langCode]) {
+        var langCode = this.options.langCode;
+
+        // Reset the language code.
+        this.options.langCode = 'en';
+
+        // Check for both the two and four character language codes, using
+        // the later first.
+        var langCodeArray = langCode.split('-');
+        var i, length = langCodeArray.length;
+        for (i = 0; i < length; i++) {
+            var code = langCodeArray.join('-');
+            if (code.length && this.locale[code]) {
+                this.options.langCode = code;
+                break;
+            }
+            langCodeArray.pop();
+        }
+        this.log(this.LOG_WARNING, 'Unknown langCode option: "' + langCode + '". Using the following langCode instead: "' + this.options.langCode + '".');
+    }
+
+    // Allow options to override locale specific strings.
+    this.locale[this.options.langCode] = $.extend(true, {}, this.locale[this.options.langCode], this.options.locale);
+
     /**
      * The select list.
      * @type {AjaxBootstrapSelectList}
@@ -451,7 +480,7 @@ AjaxBootstrapSelect.prototype.init = function () {
     var requestDelayTimer, plugin = this;
 
     // Add placeholder text to the search input.
-    this.selectpicker.$searchbox.attr('placeholder', this.options.searchPlaceholder);
+    this.selectpicker.$searchbox.attr('placeholder', this.t('searchPlaceholder'));
 
     // Remove selectpicker events on the search input and add our own.
     this.selectpicker.$searchbox.off().on(this.options.bindEvent, function (e) {
@@ -599,6 +628,29 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
             }
         }
     });
+};
+
+/**
+ * Generates a translated string for a given locale key.
+ *
+ * @param {String} key
+ *   The translation key to use.
+ * @param {String} langCode
+ *   Overrides the default language code. This is automatically derived from
+ *   the options.
+ *
+ * @return
+ *   The translated string.
+ *
+ * @see ./src/locale/en.js
+ */
+AjaxBootstrapSelect.prototype.t = function (key, langCode) {
+    langCode = langCode || this.options.langCode;
+    if (this.locale[langCode] && this.locale[langCode][key]) {
+        return this.locale[langCode][key];
+    }
+    this.log(this.LOG_WARNING, 'Unknown translation key:', key);
+    return key;
 };
 
 /**
@@ -1097,9 +1149,12 @@ AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
 };
 
 /**
- * @todo document this.
+ * The jQuery plugin function definition.
+ *
  * @param options
- * @returns {*}
+ *   The options to pass to the plugin.
+ *
+ * @returns {jQuery}
  */
 $.fn.ajaxSelectPicker = function (options) {
     return this.each(function () {
@@ -1108,5 +1163,47 @@ $.fn.ajaxSelectPicker = function (options) {
         }
     });
 };
+
+/**
+ * The locale object containing string translations.
+ * @type {Object}
+ */
+$.fn.ajaxSelectPicker.locale = {};
+
+/**
+ * Note: You do not have to load this translation file. English is the
+ * default language of this plugin and is compiled into it automatically.
+ *
+ * This file is just to serve as the default string mappings and as a
+ * template for future translations.
+ * @see: ./src/js/locale/en-US.js
+ *
+ * Four character language codes are supported ("en-US") and will always
+ * take precedence over two character language codes ("en") if present.
+ *
+ * This comment should be removed when creating a new translation file, along
+ * with all the translation comments.
+ */
+
+/*!
+ * English translation for the "en" language code.
+ * Mark Carver <mark.carver@me.com>
+ */
+$.fn.ajaxSelectPicker.locale['en-US'] = {
+    noResults: 'No Results',
+
+    /**
+     * @name searchPlaceholder
+     * @description The placeholder text to use inside the search input.
+     * @default `'Search...'`
+     */
+    searchPlaceholder: 'Search...',
+
+
+    searching: 'Searching...'
+};
+
+// Provide a fallback, just in case.
+$.fn.ajaxSelectPicker.locale['en'] = $.fn.ajaxSelectPicker.locale['en-US'];
 
 })(jQuery, window);

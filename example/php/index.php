@@ -15,6 +15,7 @@ $data = json_decode($file_contents, true);
 	<title></title>
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="../../dist/css/ajax-bootstrap-select.css"/>
     <style>h3 { text-align: center; } .bootstrap-select { width: 100% !important; }</style>
 </head>
 <body>
@@ -52,7 +53,7 @@ $data = json_decode($file_contents, true);
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="../../dist/ajax-bootstrap-select.js"></script>
+<script type="text/javascript" src="../../dist/js/ajax-bootstrap-select.js"></script>
 <script>
     var options = {
         ajaxOptions: {
@@ -65,7 +66,7 @@ $data = json_decode($file_contents, true);
                 q: '{{{q}}}'
             }
         },
-        log: 2,
+        log: 3,
         preprocessData: function (data) {
             var array = [];
             if (data.length) {

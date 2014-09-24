@@ -122,19 +122,46 @@
         },
 
         /**
+         * @name langCode
+         * @description The language code to use for string translation. By default this value is determined by the browser, however it is not entirely reliable. If you encounter inconsistencies, you may need to manually set this option.
+         * @optional
+         *
+         * @type String
+         * @default `null`
+         */
+        langCode: null,
+
+        /**
+         * @name locale
+         * @description Specific overrides for locale translation strings. Any values set here will completely override and ignore any set language code. This is useful for changing only a single value or if being used in a system that provides its own translations (CMS).
+         * @optional
+         *
+         * @type Object
+         * @default `null`
+         *
+         * @example
+         * ```js
+         * locale: {
+         *     searchPlaceholder: 'Find...'
+         * }
+         * ```
+         */
+        locale: null,
+
+        /**
          * @name log
          * @description The level at which certain logging is displayed:
-         * * __0|false:__ Display no information from the plugin.
-         * * __1|'error':__ Fatal errors that prevent the plugin from working.
-         * * __2|'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
-         * * __3|'info':__ Provides additional information, generally regarding the from request data and callbacks.
-         * * __4|true|'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
+         * * __0, false:__ Display no information from the plugin.
+         * * __1, 'error':__ Fatal errors that prevent the plugin from working.
+         * * __2, 'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
+         * * __3, 'info':__ Provides additional information, generally regarding the from request data and callbacks.
+         * * __4, true, 'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
          * @optional
          *
          * @type Number|Boolean|String
-         * @default `1`,
+         * @default `'error'`,
          */
-        log: 1,
+        log: 'error',
 
         /**
          * @name mixWithCurrents
@@ -190,16 +217,6 @@
          * @default `300`
          */
         requestDelay: 300,
-
-        /**
-         * @name searchPlaceholder
-         * @description The placeholder text to use inside the search input.
-         * @optional
-         *
-         * @type String|null
-         * @default `'Search...'`
-         */
-        searchPlaceholder: 'Search...',
 
         /**
          * @name templates

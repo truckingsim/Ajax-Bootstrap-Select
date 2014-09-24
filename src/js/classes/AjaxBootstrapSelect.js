@@ -188,6 +188,35 @@ var AjaxBootstrapSelect = function (element, options) {
         return;
     }
 
+    // Initialize the locale strings.
+    this.locale = $.extend(true, {}, $.fn.ajaxSelectPicker.locale);
+
+    // Ensure the langCode is properly set.
+    this.options.langCode = this.options.langCode || window.navigator.userLanguage || window.navigator.language || 'en';
+    if (!this.locale[this.options.langCode]) {
+        var langCode = this.options.langCode;
+
+        // Reset the language code.
+        this.options.langCode = 'en';
+
+        // Check for both the two and four character language codes, using
+        // the later first.
+        var langCodeArray = langCode.split('-');
+        var i, length = langCodeArray.length;
+        for (i = 0; i < length; i++) {
+            var code = langCodeArray.join('-');
+            if (code.length && this.locale[code]) {
+                this.options.langCode = code;
+                break;
+            }
+            langCodeArray.pop();
+        }
+        this.log(this.LOG_WARNING, 'Unknown langCode option: "' + langCode + '". Using the following langCode instead: "' + this.options.langCode + '".');
+    }
+
+    // Allow options to override locale specific strings.
+    this.locale[this.options.langCode] = $.extend(true, {}, this.locale[this.options.langCode], this.options.locale);
+
     /**
      * The select list.
      * @type {AjaxBootstrapSelectList}
@@ -210,7 +239,7 @@ AjaxBootstrapSelect.prototype.init = function () {
     var requestDelayTimer, plugin = this;
 
     // Add placeholder text to the search input.
-    this.selectpicker.$searchbox.attr('placeholder', this.options.searchPlaceholder);
+    this.selectpicker.$searchbox.attr('placeholder', this.t('searchPlaceholder'));
 
     // Remove selectpicker events on the search input and add our own.
     this.selectpicker.$searchbox.off().on(this.options.bindEvent, function (e) {
@@ -358,4 +387,27 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
             }
         }
     });
+};
+
+/**
+ * Generates a translated string for a given locale key.
+ *
+ * @param {String} key
+ *   The translation key to use.
+ * @param {String} langCode
+ *   Overrides the default language code. This is automatically derived from
+ *   the options.
+ *
+ * @return
+ *   The translated string.
+ *
+ * @see ./src/locale/en.js
+ */
+AjaxBootstrapSelect.prototype.t = function (key, langCode) {
+    langCode = langCode || this.options.langCode;
+    if (this.locale[langCode] && this.locale[langCode][key]) {
+        return this.locale[langCode][key];
+    }
+    this.log(this.LOG_WARNING, 'Unknown translation key:', key);
+    return key;
 };

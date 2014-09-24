@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-24 6:45:53 AM CDT
+ * Last build: 2014-09-24 12:28:18 PM CDT
  */
 !(function ($, window) {
 
@@ -54,6 +54,18 @@ var AjaxBootstrapSelect = function (element, options) {
     this.$noResults = $();
 
     /**
+     * The previous query that was requested.
+     * @type {String}
+     */
+    this.previousQuery = '';
+
+    /**
+     * The current query being requested.
+     * @type {String}
+     */
+    this.query = '';
+
+    /**
      * Instantiate a relationship with the parent plugin: selectpicker.
      * @type {$.fn.selectpicker}
      */
@@ -62,18 +74,6 @@ var AjaxBootstrapSelect = function (element, options) {
         this.log(this.LOG_ERROR, 'Cannot attach ajax without selectpicker being run first!');
         return;
     }
-
-    /**
-     * Container for cached results.
-     * @type {Object}
-     */
-    this.cachedData = {};
-
-    /**
-     * The current query being requested.
-     * @type {String}
-     */
-    this.query = '';
 
     /**
      * Provide the default options for the plugin.
@@ -204,28 +204,45 @@ var AjaxBootstrapSelect = function (element, options) {
 
         /**
          * @name langCode
-         * @description The language code to use for string translation. This can usually determine the correct language to use, however it is not entirely reliable. If you encounter inconsistencies, you may need to manually set this option.
+         * @description The language code to use for string translation. By default this value is determined by the browser, however it is not entirely reliable. If you encounter inconsistencies, you may need to manually set this option.
          * @optional
          *
          * @type String
-         * @default `null` (automatically detected from browser)
+         * @default `null`
          */
         langCode: null,
 
         /**
+         * @name locale
+         * @description Specific overrides for locale translation strings. Any values set here will completely override and ignore any set language code. This is useful for changing only a single value or if being used in a system that provides its own translations (CMS).
+         * @optional
+         *
+         * @type Object
+         * @default `null`
+         *
+         * @example
+         * ```js
+         * locale: {
+         *     searchPlaceholder: 'Find...'
+         * }
+         * ```
+         */
+        locale: null,
+
+        /**
          * @name log
          * @description The level at which certain logging is displayed:
-         * * __0|false:__ Display no information from the plugin.
-         * * __1|'error':__ Fatal errors that prevent the plugin from working.
-         * * __2|'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
-         * * __3|'info':__ Provides additional information, generally regarding the from request data and callbacks.
-         * * __4|true|'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
+         * * __0, false:__ Display no information from the plugin.
+         * * __1, 'error':__ Fatal errors that prevent the plugin from working.
+         * * __2, 'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
+         * * __3, 'info':__ Provides additional information, generally regarding the from request data and callbacks.
+         * * __4, true, 'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
          * @optional
          *
          * @type Number|Boolean|String
-         * @default `1`,
+         * @default `'error'`,
          */
-        log: 1,
+        log: 'error',
 
         /**
          * @name mixWithCurrents
@@ -251,16 +268,23 @@ var AjaxBootstrapSelect = function (element, options) {
 
         /**
          * @name preserveSelected
-         * @description Preserve selected options. There are 3 possible values:
-         * * __'auto':__ will automatically determine whether or not this option should be enabled based on if the select element can have "multiple" selections.
-         * * __true:__ will always preserve the selected options.
-         * * __false:__ will never preserve the selected options.
+         * @description Preserve selected items(s) between requests. When enabled, they will be placed in an `<optgroup>` with the label `Currently Selected`. Disable this option if you send your currently selected items along with your request and let the server handle this responsibility.
          * @optional
          *
-         * @type String|Boolean
-         * @default `'auto'`
+         * @type Boolean
+         * @default `true`
          */
-        preserveSelected: 'auto',
+        preserveSelected: true,
+
+        /**
+         * @name preserveSelectedPosition
+         * @description Place the currently selected options `'before'` or `'after'` the options returned from the request.
+         * @optional
+         *
+         * @type String
+         * @default `'after'`
+         */
+        preserveSelectedPosition: 'after',
 
         /**
          * @name processData
@@ -384,12 +408,6 @@ var AjaxBootstrapSelect = function (element, options) {
         });
     }
 
-    // Determine if the plugin should preserve selections based on
-    // whether or not the select element can multi-select.
-    if (this.options.preserveSelected && this.options.preserveSelected === 'auto') {
-        this.options.preserveSelected = this.selectpicker.multiple;
-    }
-
     // Override any provided option with the data attribute value.
     if (this.$element.data('searchUrl')) {
         this.options.ajaxOptions.url = this.$element.data('searchUrl');
@@ -479,11 +497,45 @@ window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
 AjaxBootstrapSelect.prototype.init = function () {
     var requestDelayTimer, plugin = this;
 
-    // Add placeholder text to the search input.
-    this.selectpicker.$searchbox.attr('placeholder', this.t('searchPlaceholder'));
+    // Rebind select/deselect to process preserved selections.
+    if (this.options.preserveSelected) {
+        this.selectpicker.$menu.off('click', '.actions-btn').on('click', '.actions-btn', function (e) {
+            if (plugin.selectpicker.options.liveSearch) {
+                plugin.selectpicker.$searchbox.focus();
+            }
+            else {
+                plugin.selectpicker.$button.focus();
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            if ($(this).is('.bs-select-all')) {
+                if (plugin.selectpicker.$lis === null) {
+                    plugin.selectpicker.$lis = plugin.selectpicker.$menu.find('li');
+                }
+                plugin.$element.find('option:enabled').prop('selected', true);
+                $(plugin.selectpicker.$lis).not('.disabled').addClass('selected');
+                plugin.selectpicker.render();
+            }
+            else {
+                if (plugin.selectpicker.$lis === null) {
+                    plugin.selectpicker.$lis = plugin.selectpicker.$menu.find('li');
+                }
+                plugin.$element.find('option:enabled').prop('selected', false);
+                $(plugin.selectpicker.$lis).not('.disabled').removeClass('selected');
+                plugin.selectpicker.render();
+            }
+            plugin.selectpicker.$element.change();
+        });
+    }
 
-    // Remove selectpicker events on the search input and add our own.
-    this.selectpicker.$searchbox.off().on(this.options.bindEvent, function (e) {
+    // Add placeholder text to the search input.
+    this.selectpicker.$searchbox
+        .attr('placeholder', this.t('searchPlaceholder'))
+        // Remove selectpicker events on the search input.
+        .off('input propertychange');
+
+    // Bind this plugin's event.
+    this.selectpicker.$searchbox.on(this.options.bindEvent, function (e) {
         var query = plugin.selectpicker.$searchbox.val();
 
         plugin.log(plugin.LOG_DEBUG, 'Bind event fired: "' + plugin.options.bindEvent + '", keyCode:', e.keyCode, e);
@@ -518,20 +570,21 @@ AjaxBootstrapSelect.prototype.init = function () {
         }
 
         // Store the query.
+        plugin.previousQuery = plugin.query;
         plugin.query = query;
 
         // Return the cached results, if any.
-        if (plugin.options.cache && plugin.cachedData[plugin.query] && e.keyCode !== 13) {
-            var output = plugin.list.build(plugin.cachedData[plugin.query]);
-            // Build the option output.
-            if (output.length) {
-                plugin.$element.html(output);
-                plugin.list.refresh();
+        if (plugin.options.cache && e.keyCode !== 13) {
+            var cache = plugin.list.cacheGet(plugin.query);
+            if (cache) {
+                if (plugin.list.replaceOptions(cache)) {
+                    plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
+                    return;
+                }
+                plugin.log(plugin.LOG_WARNING, 'Unable to rebuild options from cached data.');
+                plugin.list.restore();
                 return;
             }
-            plugin.log(plugin.LOG_WARNING, 'Unable to build the options from cached data.', plugin.query, plugin.cachedData[plugin.query]);
-            plugin.list.restore();
-            return;
         }
 
         requestDelayTimer = setTimeout(function () {
@@ -654,19 +707,57 @@ AjaxBootstrapSelect.prototype.t = function (key, langCode) {
 };
 
 /**
- * @todo document this.
+ * @class AjaxBootstrapSelectList
+ * @description Manages the selectpicker list/menu.
  * @param {AjaxBootstrapSelect} plugin
  * @constructor
  */
 var AjaxBootstrapSelectList = function (plugin) {
+    var that = this;
+
     /**
-     * Container for current and previous states of the select list.
+     * Container for cached data.
+     * @type {Object}
+     */
+    this.cache = { '': [] };
+
+    /**
+     * Reference the plugin for internal use.
+     * @type {AjaxBootstrapSelect}
+     */
+    this.plugin = plugin;
+
+    /**
+     * Container for current selections.
      * @type {Array}
      */
-    this.states = [];
+    this.selected = [];
 
-    // Merge in the AjaxBootstrapSelect properties and methods.
-    $.extend(this, plugin);
+    // Preserve selected options.
+    if (plugin.options.preserveSelected) {
+        plugin.$element.on('change.abs.preserveSelected', function (e) {
+            var $selected = plugin.$element.find(':selected');
+            that.selected = [];
+            // If select does not have multiple selection, ensure that only the
+            // last selected option is preserved.
+            if (!plugin.selectpicker.multiple) {
+                $selected = $selected.last();
+            }
+            $selected.each(function () {
+                var $option = $(this);
+                var value = $option.attr('value');
+                that.selected.push({
+                    value: value,
+                    text: $option.text(),
+                    class: $option.attr('class') || '',
+                    data: $option.data() || {},
+                    preserved: true,
+                    selected: true
+                });
+            });
+            that.replaceOptions(that.cacheGet(that.plugin.query));
+        });
+    }
 };
 window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrapSelectList;
 
@@ -697,42 +788,40 @@ window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrap
  *   HTML containing the <option> elements to place in the element.
  */
 AjaxBootstrapSelectList.prototype.build = function (data) {
-    var a, i, l = data.length, $wrapper = $('<select/>');
+    var a, i, l = data.length;
+    var $select = $('<select/>');
+    var $preserved = $('<optgroup/>').attr('label', this.plugin.t('currentlySelected'));
 
-    this.log(this.LOG_DEBUG, 'Building the select list options from data:', data);
-
-    // Sort the data so preserved items (from a previous state) are
-    // always last (needs work).
-    //data.sort(function (a, b) {
-    //  if (a.preserved && !b.preserved) return 1;
-    //  return 0;
-    //});
+    this.plugin.log(this.plugin.LOG_DEBUG, 'Building the select list options from data:', data);
 
     for (i = 0; i < l; i++) {
         var item = data[i];
-        var $option = $('<option/>');
+        var $option = $('<option/>').appendTo(item.preserved ? $preserved : $select);
 
         // Detect dividers.
         if (item.hasOwnProperty('divider')) {
             $option.attr('data-divider', 'true');
-            $wrapper.append($option);
             continue;
         }
 
         // Set various properties.
-        $option
-            .val(item.value)
-            .text(item.text)
-            .attr('class', item.class)
-            .prop('disabled', item.disabled);
+        $option.val(item.value).text(item.text);
+        if (item.class.length) {
+            $option.attr('class', item.class);
+        }
+        if (item.disabled) {
+            $option.attr('disabled', true);
+        }
 
         // Remove previous selections, if necessary.
-        if (item.selected && !this.selectpicker.multiple) {
-            $wrapper.find(':selected').prop('selected', false);
+        if (item.selected && !this.plugin.selectpicker.multiple) {
+            $select.find(':selected').prop('selected', false);
         }
 
         // Set this option's selected state.
-        $option.prop('selected', item.selected);
+        if (item.selected) {
+            $option.attr('selected', true);
+        }
 
         // Add data attributes.
         for (a in item.data) {
@@ -740,44 +829,56 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
                 $option.attr('data-' + a, item.data[a]);
             }
         }
-
-        // Add option to the wrapper.
-        $wrapper.append($option);
     }
 
-    var options = $wrapper.html();
-    this.log(this.LOG_DEBUG, options);
+    // Append the preserved selections.
+    if ($preserved.find('option').length) {
+        $preserved[this.plugin.options.preserveSelectedPosition === 'before' ? 'prependTo' : 'appendTo']($select);
+    }
+
+    var options = $select.html();
+    this.plugin.log(this.plugin.LOG_DEBUG, options);
     return options;
 };
 
+/**
+ * Retrieve data from the cache.
+ *
+ * @param {string} key
+ *   The identifier name of the data to retrieve.
+ * @param {*} [defaultValue]
+ *   The default value to return if no cache data is available.
+ *
+ * @return {*}
+ *   The cached data or defaultValue.
+ */
+AjaxBootstrapSelectList.prototype.cacheGet = function (key, defaultValue) {
+    var value = this.cache[key] || defaultValue;
+    this.plugin.log(this.LOG_DEBUG, 'Retrieving cache:', key, value);
+    return value;
+};
+
+/**
+ * Save data to the cache.
+ *
+ * @param {string} key
+ *   The identifier name of the data to store.
+ * @param {*} value
+ *   The value of the data to store.
+ *
+ * @return {void}
+ */
+AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
+    this.cache[key] = value;
+    this.plugin.log(this.LOG_DEBUG, 'Saving to cache:', key, value);
+};
 
 /**
  * @todo document this, make method better.
  */
 AjaxBootstrapSelectList.prototype.destroy = function () {
-    this.$element.find('option').remove();
-    this.log(this.LOG_DEBUG, 'Destroyed select list.');
-    this.refresh();
-};
-
-/**
- * Retrieves the last saved state of the select list.
- *
- * @return {Object|false}
- *   Will return false if there are no saved states or an object of the
- *   last saved state containing:
- *     - selected: the JSON data of the selected options. Used to
- *       preserve the selected options between AJAX requests.
- *     - html: the raw HTML of the select list.
- */
-AjaxBootstrapSelectList.prototype.last = function () {
-    if (this.states.length) {
-        var state = this.states[this.states.length - 1];
-        this.log(this.LOG_DEBUG, 'Retrieved the last saved state of the select list:', state);
-        return state;
-    }
-    this.log(this.LOG_DEBUG, 'Unable to retrieve the last saved state of the select list.');
-    return false;
+    this.replaceOptions();
+    this.plugin.log(this.plugin.LOG_DEBUG, 'Destroyed select list.');
 };
 
 /**
@@ -785,21 +886,68 @@ AjaxBootstrapSelectList.prototype.last = function () {
  */
 AjaxBootstrapSelectList.prototype.refresh = function () {
     // Remove unnecessary "min-height" from selectpicker.
-    this.selectpicker.$menu.css('minHeight', 0);
-    this.selectpicker.$menu.find('> .inner').css('minHeight', 0);
-    this.selectpicker.refresh();
+    this.plugin.selectpicker.$menu.css('minHeight', 0);
+    this.plugin.selectpicker.$menu.find('> .inner').css('minHeight', 0);
+    this.plugin.selectpicker.refresh();
     // The "refresh" method will set the $lis property to null, we must rebuild
     // it. Bootstrap Select <= 1.6.2 does not have the "findLis" method, this
     // method will be in included in future releases, but until then we must
     // mimic its functionality.
     // @todo remove this if statement when Bootstrap Select 1.6.3 is released.
-    if (this.selectpicker.findLis) {
-        this.selectpicker.findLis();
+    if (this.plugin.selectpicker.findLis) {
+        this.plugin.selectpicker.findLis();
     }
     else {
-        this.selectpicker.$lis = this.selectpicker.$menu.find('li');
+        this.plugin.selectpicker.$lis = this.plugin.selectpicker.$menu.find('li');
     }
-    this.log(this.LOG_DEBUG, 'Refreshed select list.');
+    this.plugin.$element.trigger('change.$');
+    this.plugin.log(this.plugin.LOG_DEBUG, 'Refreshed select list.');
+};
+
+/**
+ * Replaces the select list options with provided data.
+ *
+ * It will also inject any preserved selections if the preserveSelected
+ * option is enabled.
+ *
+ * @param {Array} data
+ *   The data array to process.
+ *
+ * @returns {void}
+ */
+AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
+    var i, l, item, output = '', processedData = [], selected = [], seenValues = [];
+    data = data || [];
+
+    // Merge in selected options from the previous state (cannot be cached).
+    if (this.selected && this.selected.length) {
+        this.plugin.log(this.plugin.LOG_INFO, 'Processing preserved selections:', this.selected);
+        selected = [].concat(this.selected, data);
+        l = selected.length;
+        for (i = 0; i < l; i++) {
+            item = selected[i];
+            // Typecast the value for the seenValues array. Array indexOf
+            // searches are type sensitive.
+            if (item.hasOwnProperty('value') && seenValues.indexOf(item.value + '') === -1) {
+                seenValues.push(item.value + '');
+                processedData.push(item);
+            }
+            else {
+                this.plugin.log(this.plugin.LOG_DEBUG, 'Duplicate item found, ignoring.');
+            }
+        }
+        data = processedData;
+    }
+
+    // Build the option output.
+    if (data.length) {
+        output = this.plugin.list.build(data);
+    }
+
+    // Replace the options.
+    this.plugin.$element.html(output);
+    this.refresh();
+    this.plugin.log(this.plugin.LOG_DEBUG, 'Replaced options with data:', data);
 };
 
 /**
@@ -809,61 +957,11 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
  *   Return true if successful or false if no states are present.
  */
 AjaxBootstrapSelectList.prototype.restore = function () {
-    if (this.states.length) {
-        var state = this.states.pop();
-        this.$element.html(state.html);
-        this.log(this.LOG_DEBUG, 'Restored select list to a previous state:', state);
-        return true;
+    if (this.plugin.list.replaceOptions(this.plugin.list.cacheGet(this.plugin.previousQuery))) {
+        this.plugin.log(this.plugin.LOG_DEBUG, 'Restored select list to the previous query: ', this.plugin.previousQuery);
     }
-    this.log(this.LOG_DEBUG, 'Unable to restore select list to a previous state.');
+    this.plugin.log(this.plugin.LOG_DEBUG, 'Unable to restore select list to the previous query:', this.plugin.previousQuery);
     return false;
-};
-
-/**
- * Saves the current state of the select list.
- *
- * @param {boolean} [keepPreviousStates = false]
- *   If true, previous states will be preserved and not removed.
- *
- * @return {void}
- */
-AjaxBootstrapSelectList.prototype.save = function (keepPreviousStates) {
-    var selected = [];
-    keepPreviousStates = keepPreviousStates || false;
-
-    // Clear out previous history.
-    if (!keepPreviousStates) {
-        this.states = [];
-    }
-
-    // Preserve the selected options.
-    if (this.options.preserveSelected) {
-        var selectedOptions = this.$element.find(':selected');
-        // If select does not have multiple selection, ensure that only the
-        // last selected option is preserved.
-        if (!this.selectpicker.multiple) {
-            selectedOptions = selectedOptions.last();
-        }
-        selectedOptions.each(function () {
-            var $option = $(this);
-            var value = $option.val();
-            selected.push({
-                value: value,
-                text: $option.text(),
-                data: $option.data() || {},
-                preserved: true,
-                selected: true
-            });
-        });
-    }
-
-    // Save the current state of the list.
-    var state = {
-        selected: selected,
-        html: this.$element.html()
-    };
-    this.states.push(state);
-    this.log(this.LOG_DEBUG, 'Saved the current state of the select list:', state);
 };
 
 /**
@@ -932,9 +1030,6 @@ window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBoo
  * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
-    // Save the current state of the plugin.
-    this.plugin.list.save();
-
     // Destroy the list currently there.
     this.plugin.list.destroy();
 
@@ -1002,25 +1097,20 @@ AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
  *   The processed data array or false if an error occurred.
  */
 AjaxBootstrapSelectRequest.prototype.process = function (data) {
-    var i, l, clone, item, lastState, preprocessedData, processedData;
-    var filteredData = [], seenValues = [], selected = [];
+    var i, l, clone, item, preprocessedData, processedData;
+    var filteredData = [], seenValues = [];
 
     this.plugin.log(this.plugin.LOG_INFO, 'Processing raw data for:', this.plugin.query, data);
 
-    // Merge in the selected options from the previous state.
-    if (this.plugin.options.preserveSelected && this.plugin.list && (lastState = this.plugin.list.last()) && lastState) {
-        selected = selected.concat(lastState.selected);
-    }
-
     // If the data argument is an object, convert it to an array.
     if ($.isPlainObject(data)) {
-        clone = selected.concat($.map(data, function (value) {
+        clone = [].concat($.map(data, function (value) {
             return [value];
         }));
     }
     else {
         if ($.isArray(data)) {
-            clone = selected.concat(data);
+            clone = [].concat(data);
         }
         else {
             this.plugin.log(this.plugin.LOG_ERROR, 'The data type passed was not an Array or Object.', data);
@@ -1057,11 +1147,13 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
             // Ensure item has a "value" and is unique.
             else {
                 if (item.hasOwnProperty('value')) {
-                    if (seenValues.indexOf(item.value) === -1) {
-                        seenValues.push(item.value);
+                    // Typecast the value for the seenValues array. Array
+                    // indexOf searches are type sensitive.
+                    if (seenValues.indexOf(item.value + '') === -1) {
+                        seenValues.push(item.value + '');
                         // Provide default items to ensure expected structure.
                         item = $.extend({
-                            title: item.value,
+                            text: item.value,
                             class: '',
                             data: {},
                             disabled: false,
@@ -1093,11 +1185,8 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         }
     }
 
-    // Cache the data, if possible.
-    if (this.plugin.options.cache && this.plugin.query) {
-        this.plugin.log(this.plugin.LOG_DEBUG, 'Caching processed data.');
-        this.plugin.cachedData[this.plugin.query] = processedData;
-    }
+    // Cache the processed data.
+    this.plugin.list.cacheSet(this.plugin.query, processedData);
 
     this.plugin.log(this.plugin.LOG_INFO, 'Processed data:', processedData);
     return processedData;
@@ -1137,15 +1226,7 @@ AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
 
     // Process the data.
     var processedData = this.process(data);
-    if (processedData && processedData.length) {
-        // Build the option output.
-        var output = this.plugin.list.build(processedData);
-        if (!output.length) {
-            this.plugin.log(this.plugin.LOG_WARNING, 'Unable to build the options from data.', data, output);
-            return;
-        }
-        this.plugin.$element.html(output);
-    }
+    this.plugin.list.replaceOptions(processedData);
 };
 
 /**
@@ -1190,16 +1271,9 @@ $.fn.ajaxSelectPicker.locale = {};
  * Mark Carver <mark.carver@me.com>
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
+    currentlySelected: 'Currently Selected',
     noResults: 'No Results',
-
-    /**
-     * @name searchPlaceholder
-     * @description The placeholder text to use inside the search input.
-     * @default `'Search...'`
-     */
     searchPlaceholder: 'Search...',
-
-
     searching: 'Searching...'
 };
 

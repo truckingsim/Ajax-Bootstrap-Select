@@ -35,16 +35,12 @@ $data = json_decode($file_contents, true);
 
 		<div class="col-xs-4">
 			<h3>With<br>Ajax-Bootstrap-Select</h3>
-			<select id="ajax-select" class="selectpicker" data-live-search="true">
-				<option value="" data-hidden="true">Select and Begin Typing</option>
-			</select>
+			<select id="ajax-select" class="selectpicker with-ajax" data-live-search="true"></select>
 		</div>
 
         <div class="col-xs-4">
             <h3>Multiple<br>Ajax-Bootstrap-Select</h3>
-            <select id="ajax-select-multiple" class="selectpicker" multiple data-live-search="true">
-                <option value="" data-hidden="true">Select and Begin Typing</option>
-            </select>
+            <select id="ajax-select-multiple" class="selectpicker with-ajax" multiple data-live-search="true"></select>
         </div>
 	</div>
 </div>
@@ -68,16 +64,16 @@ $data = json_decode($file_contents, true);
         },
         log: 3,
         preprocessData: function (data) {
-            var array = [];
-            if (data.length) {
-                for(var i = 0; i < data.length; i++){
-                    array.push({
+            var i, l = data.length, array = [];
+            if (l) {
+                for(i = 0; i < l; i++){
+                    array.push($.extend(true, data[i], {
                         text: data[i].Name,
                         value: data[i].Email,
                         data: {
                             subtext: data[i].Email
                         }
-                    });
+                    }));
                 }
             }
             // You must always return a valid array when processing data. The
@@ -87,7 +83,7 @@ $data = json_decode($file_contents, true);
         placeHolderOption: 'Select and Begin Typing'
     };
 
-	$('.selectpicker').selectpicker().ajaxSelectPicker(options);
+	$('.selectpicker').selectpicker().filter('.with-ajax').ajaxSelectPicker(options);
 </script>
 </body>
 </html>

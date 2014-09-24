@@ -36,6 +36,18 @@ var AjaxBootstrapSelect = function (element, options) {
     this.$noResults = $();
 
     /**
+     * The previous query that was requested.
+     * @type {String}
+     */
+    this.previousQuery = '';
+
+    /**
+     * The current query being requested.
+     * @type {String}
+     */
+    this.query = '';
+
+    /**
      * Instantiate a relationship with the parent plugin: selectpicker.
      * @type {$.fn.selectpicker}
      */
@@ -44,18 +56,6 @@ var AjaxBootstrapSelect = function (element, options) {
         this.log(this.LOG_ERROR, 'Cannot attach ajax without selectpicker being run first!');
         return;
     }
-
-    /**
-     * Container for cached results.
-     * @type {Object}
-     */
-    this.cachedData = {};
-
-    /**
-     * The current query being requested.
-     * @type {String}
-     */
-    this.query = '';
 
     /**
      * Provide the default options for the plugin.
@@ -141,12 +141,6 @@ var AjaxBootstrapSelect = function (element, options) {
                 }
             }
         });
-    }
-
-    // Determine if the plugin should preserve selections based on
-    // whether or not the select element can multi-select.
-    if (this.options.preserveSelected && this.options.preserveSelected === 'auto') {
-        this.options.preserveSelected = this.selectpicker.multiple;
     }
 
     // Override any provided option with the data attribute value.
@@ -238,11 +232,45 @@ window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
 AjaxBootstrapSelect.prototype.init = function () {
     var requestDelayTimer, plugin = this;
 
-    // Add placeholder text to the search input.
-    this.selectpicker.$searchbox.attr('placeholder', this.t('searchPlaceholder'));
+    // Rebind select/deselect to process preserved selections.
+    if (this.options.preserveSelected) {
+        this.selectpicker.$menu.off('click', '.actions-btn').on('click', '.actions-btn', function (e) {
+            if (plugin.selectpicker.options.liveSearch) {
+                plugin.selectpicker.$searchbox.focus();
+            }
+            else {
+                plugin.selectpicker.$button.focus();
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            if ($(this).is('.bs-select-all')) {
+                if (plugin.selectpicker.$lis === null) {
+                    plugin.selectpicker.$lis = plugin.selectpicker.$menu.find('li');
+                }
+                plugin.$element.find('option:enabled').prop('selected', true);
+                $(plugin.selectpicker.$lis).not('.disabled').addClass('selected');
+                plugin.selectpicker.render();
+            }
+            else {
+                if (plugin.selectpicker.$lis === null) {
+                    plugin.selectpicker.$lis = plugin.selectpicker.$menu.find('li');
+                }
+                plugin.$element.find('option:enabled').prop('selected', false);
+                $(plugin.selectpicker.$lis).not('.disabled').removeClass('selected');
+                plugin.selectpicker.render();
+            }
+            plugin.selectpicker.$element.change();
+        });
+    }
 
-    // Remove selectpicker events on the search input and add our own.
-    this.selectpicker.$searchbox.off().on(this.options.bindEvent, function (e) {
+    // Add placeholder text to the search input.
+    this.selectpicker.$searchbox
+        .attr('placeholder', this.t('searchPlaceholder'))
+        // Remove selectpicker events on the search input.
+        .off('input propertychange');
+
+    // Bind this plugin's event.
+    this.selectpicker.$searchbox.on(this.options.bindEvent, function (e) {
         var query = plugin.selectpicker.$searchbox.val();
 
         plugin.log(plugin.LOG_DEBUG, 'Bind event fired: "' + plugin.options.bindEvent + '", keyCode:', e.keyCode, e);
@@ -277,20 +305,21 @@ AjaxBootstrapSelect.prototype.init = function () {
         }
 
         // Store the query.
+        plugin.previousQuery = plugin.query;
         plugin.query = query;
 
         // Return the cached results, if any.
-        if (plugin.options.cache && plugin.cachedData[plugin.query] && e.keyCode !== 13) {
-            var output = plugin.list.build(plugin.cachedData[plugin.query]);
-            // Build the option output.
-            if (output.length) {
-                plugin.$element.html(output);
-                plugin.list.refresh();
+        if (plugin.options.cache && e.keyCode !== 13) {
+            var cache = plugin.list.cacheGet(plugin.query);
+            if (cache) {
+                if (plugin.list.replaceOptions(cache)) {
+                    plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
+                    return;
+                }
+                plugin.log(plugin.LOG_WARNING, 'Unable to rebuild options from cached data.');
+                plugin.list.restore();
                 return;
             }
-            plugin.log(plugin.LOG_WARNING, 'Unable to build the options from cached data.', plugin.query, plugin.cachedData[plugin.query]);
-            plugin.list.restore();
-            return;
         }
 
         requestDelayTimer = setTimeout(function () {

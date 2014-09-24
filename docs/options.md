@@ -181,14 +181,22 @@
 
 ***
 #### preserveSelected
-> Preserve selected options. There are 3 possible values:
->  * __'auto':__ will automatically determine whether or not this option should be enabled based on if the select element can have "multiple" selections.
->  * __true:__ will always preserve the selected options.
->  * __false:__ will never preserve the selected options.
+> Preserve selected items(s) between requests. When enabled, they will be placed in an `<optgroup>` with the label `Currently Selected`. Disable this option if you send your currently selected items along with your request and let the server handle this responsibility.
 >
-> __Type:__ `String|Boolean`
+> __Type:__ `Boolean`
 >
-> __Default:__ `'auto'`
+> __Default:__ `true`
+>
+>_Optional_
+>
+
+***
+#### preserveSelectedPosition
+> Place the currently selected options `'before'` or `'after'` the options returned from the request.
+>
+> __Type:__ `String`
+>
+> __Default:__ `'after'`
 >
 >_Optional_
 >

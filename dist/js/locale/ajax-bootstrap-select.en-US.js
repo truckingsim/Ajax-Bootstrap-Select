@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-24 6:41:14 AM CDT
+ * Last build: 2014-09-24 12:28:18 PM CDT
  */
 !(function ($) {
 /**
@@ -35,16 +35,9 @@
  * Mark Carver <mark.carver@me.com>
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
+    currentlySelected: 'Currently Selected',
     noResults: 'No Results',
-
-    /**
-     * @name searchPlaceholder
-     * @description The placeholder text to use inside the search input.
-     * @default `'Search...'`
-     */
     searchPlaceholder: 'Search...',
-
-
     searching: 'Searching...'
 };
 

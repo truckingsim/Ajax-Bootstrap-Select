@@ -64,9 +64,6 @@ window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBoo
  * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
-    // Save the current state of the plugin.
-    this.plugin.list.save();
-
     // Destroy the list currently there.
     this.plugin.list.destroy();
 
@@ -134,25 +131,20 @@ AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
  *   The processed data array or false if an error occurred.
  */
 AjaxBootstrapSelectRequest.prototype.process = function (data) {
-    var i, l, clone, item, lastState, preprocessedData, processedData;
-    var filteredData = [], seenValues = [], selected = [];
+    var i, l, clone, item, preprocessedData, processedData;
+    var filteredData = [], seenValues = [];
 
     this.plugin.log(this.plugin.LOG_INFO, 'Processing raw data for:', this.plugin.query, data);
 
-    // Merge in the selected options from the previous state.
-    if (this.plugin.options.preserveSelected && this.plugin.list && (lastState = this.plugin.list.last()) && lastState) {
-        selected = selected.concat(lastState.selected);
-    }
-
     // If the data argument is an object, convert it to an array.
     if ($.isPlainObject(data)) {
-        clone = selected.concat($.map(data, function (value) {
+        clone = [].concat($.map(data, function (value) {
             return [value];
         }));
     }
     else {
         if ($.isArray(data)) {
-            clone = selected.concat(data);
+            clone = [].concat(data);
         }
         else {
             this.plugin.log(this.plugin.LOG_ERROR, 'The data type passed was not an Array or Object.', data);
@@ -189,11 +181,13 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
             // Ensure item has a "value" and is unique.
             else {
                 if (item.hasOwnProperty('value')) {
-                    if (seenValues.indexOf(item.value) === -1) {
-                        seenValues.push(item.value);
+                    // Typecast the value for the seenValues array. Array
+                    // indexOf searches are type sensitive.
+                    if (seenValues.indexOf(item.value + '') === -1) {
+                        seenValues.push(item.value + '');
                         // Provide default items to ensure expected structure.
                         item = $.extend({
-                            title: item.value,
+                            text: item.value,
                             class: '',
                             data: {},
                             disabled: false,
@@ -225,11 +219,8 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         }
     }
 
-    // Cache the data, if possible.
-    if (this.plugin.options.cache && this.plugin.query) {
-        this.plugin.log(this.plugin.LOG_DEBUG, 'Caching processed data.');
-        this.plugin.cachedData[this.plugin.query] = processedData;
-    }
+    // Cache the processed data.
+    this.plugin.list.cacheSet(this.plugin.query, processedData);
 
     this.plugin.log(this.plugin.LOG_INFO, 'Processed data:', processedData);
     return processedData;
@@ -269,13 +260,5 @@ AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
 
     // Process the data.
     var processedData = this.process(data);
-    if (processedData && processedData.length) {
-        // Build the option output.
-        var output = this.plugin.list.build(processedData);
-        if (!output.length) {
-            this.plugin.log(this.plugin.LOG_WARNING, 'Unable to build the options from data.', data, output);
-            return;
-        }
-        this.plugin.$element.html(output);
-    }
+    this.plugin.list.replaceOptions(processedData);
 };

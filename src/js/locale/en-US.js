@@ -18,16 +18,9 @@
  * Mark Carver <mark.carver@me.com>
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
+    currentlySelected: 'Currently Selected',
     noResults: 'No Results',
-
-    /**
-     * @name searchPlaceholder
-     * @description The placeholder text to use inside the search input.
-     * @default `'Search...'`
-     */
     searchPlaceholder: 'Search...',
-
-
     searching: 'Searching...'
 };
 

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='AjaxBootstrapSelectRequest'>/**
+</span> * @class AjaxBootstrapSelectRequest
+ *   Instantiates a new jQuery.ajax request for the current query.
+ *
+ * @param {AjaxBootstrapSelect} plugin
+ *   The plugin instance.
+ *
+ * @return {AjaxBootstrapSelectRequest}
+ *   A new instance of this class.
+ */
+var AjaxBootstrapSelectRequest = function (plugin) {
+    var that = this;
+    var ajaxCallback = function (event) {
+        return function () {
+            that.plugin.log(that.plugin.LOG_INFO, &#39;Invoking AjaxBootstrapSelectRequest.&#39; + event + &#39; callback:&#39;, arguments);
+            that[event].apply(that, arguments);
+            if (that.callbacks[event]) {
+                that.plugin.log(that.plugin.LOG_INFO, &#39;Invoking ajaxOptions.&#39; + event + &#39; callback:&#39;, arguments);
+                that.callbacks[event].apply(that, arguments);
+            }
+        };
+    };
+    var events = [&#39;beforeSend&#39;, &#39;success&#39;, &#39;error&#39;, &#39;complete&#39;];
+    var i, l = events.length;
+
+    // Reference the existing plugin.
+    this.plugin = plugin;
+
+    // Clone the default ajaxOptions.
+    this.options = $.extend(true, {}, plugin.options.ajaxOptions);
+
+    // Save any existing callbacks provided in the options and replace it with
+    // the relevant method callback. The provided callback will be invoked
+    // after this plugin has executed.
+    this.callbacks = {};
+    for (i = 0; i &lt; l; i++) {
+        var event = events[i];
+        if (this.options[event] &amp;&amp; $.isFunction(this.options[event])) {
+            this.callbacks[event] = this.options[event];
+        }
+        this.options[event] = ajaxCallback(event);
+    }
+
+    // Allow the data option to be dynamically generated.
+    if (this.options.data &amp;&amp; $.isFunction(this.options.data)) {
+        this.options.data = this.options.data.apply(this) || {
+            q: &#39;{{{q}}}&#39;
+        };
+    }
+
+    // Replace all data values that contain &quot;{{{q}}}&quot; with the value of the
+    // current search query.
+    this.plugin.replaceValue(this.options.data, &#39;{{{q}}}&#39;, this.plugin.query);
+
+    // Invoke the AJAX request.
+    this.jqXHR = $.ajax(this.options);
+};
+
+<span id='AjaxBootstrapSelectRequest-event-beforeSend'>/**
+</span> * @event
+ * A callback that can be used to modify the jqXHR object before it is sent.
+ *
+ * Use this to set custom headers, etc. Returning false will cancel the request.
+ * To modify the options being sent, use this.options.
+ *
+ * @param {jqXHR} jqXHR
+ *   The jQuery wrapped XMLHttpRequest object.
+ *
+ * @return {void}
+ */
+AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
+    // Destroy the list currently there.
+    this.plugin.list.destroy();
+
+    // Remove any existing templates.
+    this.plugin.$loading.remove();
+    this.plugin.$noResults.remove();
+
+    // Show the loading template.
+    if (this.plugin.options.templates.loading) {
+        this.plugin.$loading = $(this.plugin.options.templates.loading).appendTo(this.plugin.selectpicker.$menu);
+        this.plugin.list.refresh();
+    }
+};
+
+<span id='AjaxBootstrapSelectRequest-event-complete'>/**
+</span> * @event
+ * The &quot;complete&quot; callback for the request.
+ *
+ * @param {jqXHR} jqXHR
+ *   The jQuery wrapped XMLHttpRequest object.
+ * @param {String} status
+ *   A string categorizing the status of the request: &quot;success&quot;, &quot;notmodified&quot;,
+ *   &quot;error&quot;, &quot;timeout&quot;, &quot;abort&quot;, or &quot;parsererror&quot;.
+ *
+ * @return {void}
+ */
+AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
+    this.plugin.$loading.remove();
+    this.plugin.list.refresh();
+};
+
+<span id='AjaxBootstrapSelectRequest-event-error'>/**
+</span> * @event
+ * The &quot;error&quot; callback for the request.
+ *
+ * @param {jqXHR} jqXHR
+ *   The jQuery wrapped XMLHttpRequest object.
+ * @param {String} status
+ *   A string describing the type of error that occurred. Possible values for
+ *   the second argument (besides null) are &quot;timeout&quot;, &quot;error&quot;, &quot;abort&quot;, and
+ *   &quot;parsererror&quot;.
+ * @param {String|Object} error
+ *   An optional exception object, if one occurred. When an HTTP error occurs,
+ *   error receives the textual portion of the HTTP status, such as &quot;Not Found&quot;
+ *   or &quot;Internal Server Error.&quot;
+ *
+ * @return {void}
+ */
+AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
+    this.plugin.list.restore();
+};
+
+<span id='AjaxBootstrapSelectRequest-method-process'>/**
+</span> * Process incoming data.
+ *
+ * This method ensures that the incoming data has unique values and
+ * is in the proper format that is utilized by this plugin. It also
+ * adds in the existing selects if the option is enabled. If the
+ * preprocessData and processData functions were defined in the plugin
+ * options, they are invoked here.
+ *
+ * @param {Array|Object} data
+ *   The JSON data to process.
+ *
+ * @return {Array|Boolean}
+ *   The processed data array or false if an error occurred.
+ */
+AjaxBootstrapSelectRequest.prototype.process = function (data) {
+    var i, l, callbackResult, clone, item, preprocessedData, processedData;
+    var filteredData = [], seenValues = [];
+
+    this.plugin.log(this.plugin.LOG_INFO, &#39;Processing raw data for:&#39;, this.plugin.query, data);
+
+    // If the data argument is an object, convert it to an array.
+    if ($.isPlainObject(data)) {
+        clone = [].concat($.map(data, function (value) {
+            return [value];
+        }));
+    }
+    else {
+        if ($.isArray(data)) {
+            clone = [].concat(data);
+        }
+        else {
+            this.plugin.log(this.plugin.LOG_ERROR, &#39;The data type passed was not an Array or Object.&#39;, data);
+            return false;
+        }
+    }
+
+    // Invoke the preprocessData option callback.
+    preprocessedData = [].concat(clone);
+    if ($.isFunction(this.plugin.options.preprocessData)) {
+        this.plugin.log(this.plugin.LOG_DEBUG, &#39;Invoking preprocessData callback:&#39;, this.plugin.options.processData);
+        callbackResult = this.plugin.options.preprocessData(preprocessedData);
+        if (typeof callbackResult !== &#39;undefined&#39; &amp;&amp; callbackResult !== null &amp;&amp; callbackResult !== false) {
+            if ($.isArray(callbackResult)) {
+                preprocessedData = callbackResult;
+            }
+            else {
+                this.plugin.log(this.plugin.LOG_ERROR, &#39;The preprocessData callback did not return an array.&#39;, callbackResult);
+                return false;
+            }
+        }
+    }
+
+    // Filter preprocessedData.
+    l = preprocessedData.length;
+    for (i = 0; i &lt; l; i++) {
+        item = preprocessedData[i];
+        this.plugin.log(this.plugin.LOG_DEBUG, &#39;Processing item:&#39;, item);
+        if ($.isPlainObject(item)) {
+            // Check if item is a divider. If so, ignore all other data.
+            if (item.hasOwnProperty(&#39;divider&#39;) || (item.hasOwnProperty(&#39;data&#39;) &amp;&amp; $.isPlainObject(item.data) &amp;&amp; item.data.divider)) {
+                this.plugin.log(this.plugin.LOG_DEBUG, &#39;Item is a divider, ignoring provided data.&#39;);
+                filteredData.push({divider: true});
+            }
+            // Ensure item has a &quot;value&quot; and is unique.
+            else {
+                if (item.hasOwnProperty(&#39;value&#39;)) {
+                    // Typecast the value for the seenValues array. Array
+                    // indexOf searches are type sensitive.
+                    if (seenValues.indexOf(item.value + &#39;&#39;) === -1) {
+                        seenValues.push(item.value + &#39;&#39;);
+                        // Provide default items to ensure expected structure.
+                        item = $.extend({
+                            text: item.value,
+                            class: &#39;&#39;,
+                            data: {},
+                            disabled: false,
+                            selected: false
+                        }, item);
+                        filteredData.push(item);
+                    }
+                    else {
+                        this.plugin.log(this.plugin.LOG_DEBUG, &#39;Duplicate item found, ignoring.&#39;);
+                    }
+                }
+                else {
+                    this.plugin.log(this.plugin.LOG_DEBUG, &#39;Data item must have a &quot;value&quot; property, skipping.&#39;);
+                }
+            }
+        }
+    }
+
+    // Invoke the processData option callback.
+    processedData = [].concat(filteredData);
+    if ($.isFunction(this.plugin.options.processData)) {
+        this.plugin.log(this.plugin.LOG_DEBUG, &#39;Invoking processData callback:&#39;, this.plugin.options.processData);
+        callbackResult = this.plugin.options.processData(processedData);
+        if (typeof callbackResult !== &#39;undefined&#39; &amp;&amp; callbackResult !== null &amp;&amp; callbackResult !== false) {
+            if ($.isArray(callbackResult)) {
+                processedData = callbackResult;
+            }
+            else {
+                this.plugin.log(this.plugin.LOG_ERROR, &#39;The processData callback did not return an array.&#39;, callbackResult);
+                return false;
+            }
+        }
+    }
+
+    // Cache the processed data.
+    this.plugin.list.cacheSet(this.plugin.query, processedData);
+
+    this.plugin.log(this.plugin.LOG_INFO, &#39;Processed data:&#39;, processedData);
+    return processedData;
+};
+
+<span id='AjaxBootstrapSelectRequest-event-success'>/**
+</span> * @event
+ * The &quot;success&quot; callback for the request.
+ *
+ * @param {Object} data
+ *   The data returned from the server, formatted according to the dataType
+ *   option.
+ * @param {String} status
+ *   A string describing the status.
+ * @param {jqXHR} jqXHR
+ *   The jQuery wrapped XMLHttpRequest object.
+ *
+ * @return {void}
+ */
+AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
+    // Only process data if an Array or Object.
+    if (!$.isArray(data) &amp;&amp; !$.isObject(data)) {
+        this.plugin.log(this.plugin.LOG_ERROR, &#39;Request did not return a JSON Array or Object.&#39;, data);
+        this.plugin.list.destroy();
+        return;
+    }
+
+    // Only continue if actual results.
+    if (!Object.keys(data).length) {
+        this.plugin.list.destroy();
+        if (this.plugin.options.templates.noResults) {
+            // Show the &quot;no results&quot; template.
+            this.plugin.$noResults = $(this.plugin.options.templates.noResults).appendTo(this.plugin.selectpicker.$menu);
+        }
+        this.plugin.log(this.plugin.LOG_INFO, &#39;No results were returned.&#39;);
+        return;
+    }
+
+    // Process the data.
+    var processedData = this.process(data);
+    this.plugin.list.replaceOptions(processedData);
+};
+
+<span id='global-property-AjaxBootstrapSelectRequest'>/**
+</span> * Use an existing definition in the Window object or create a new one.
+ *
+ * Note: This must be the last statement of this file.
+ *
+ * @type {AjaxBootstrapSelectRequest}
+ * @ignore
+ */
+window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBootstrapSelectRequest;
+</pre>
+</body>
+</html>

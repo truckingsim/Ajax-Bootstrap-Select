@@ -1,7 +1,7 @@
 /*!
  * Ajax Bootstrap Select
  *
- * Extends the bootstrap-select plugin so it can use a remote source for searching. Originally for CROSCON.
+ * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
  *
  * @version 1.2.0
  * @author Adam Heim - https://github.com/truckingsim
@@ -12,34 +12,40 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-24 1:00:25 PM CDT
+ * Last build: 2014-09-26 7:13:27 AM CDT
  */
 !(function ($, window) {
 
 /**
- * @todo document this.
- * @param element
- * @param {Object} [options]
- * @constructor
+ * @class AjaxBootstrapSelect
+ *
+ * @param {jQuery|HTMLElement} element
+ *   The select element this plugin is to affect.
+ * @param {Object} [options={}]
+ *   The options used to affect the desired functionality of this plugin.
+ *
+ * @return {AjaxBootstrapSelect|null}
+ *   A new instance of this class or null if unable to instantiate.
  */
 var AjaxBootstrapSelect = function (element, options) {
-    var defaultOptions, plugin = this;
-    this.options = {};
+    var plugin = this;
     options = options || {};
 
     /**
-     * Define the log types for use with AjaxBootstrapSelect.log().
-     */
-    this.LOG_ERROR = 1;
-    this.LOG_WARNING = 2;
-    this.LOG_INFO = 3;
-    this.LOG_DEBUG = 4;
-
-    /**
-     * The <select> element this plugin is being attached to.
+     * The select element this plugin is being attached to.
      * @type {jQuery}
      */
     this.$element = $(element);
+
+    /**
+     * Reference to the selectpicker instance.
+     * @type {Selectpicker}
+     */
+    this.selectpicker = this.$element.data('selectpicker');
+    if (!this.selectpicker) {
+        this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
+        return null;
+    }
 
     /**
      * The "loading" DOM element placeholder.
@@ -54,6 +60,36 @@ var AjaxBootstrapSelect = function (element, options) {
     this.$noResults = $();
 
     /**
+     * Used for logging error messages.
+     * @type {Number}
+     */
+    this.LOG_ERROR = 1;
+
+    /**
+     * Used for logging warning messages.
+     * @type {Number}
+     */
+    this.LOG_WARNING = 2;
+
+    /**
+     * Used for logging informational messages.
+     * @type {Number}
+     */
+    this.LOG_INFO = 3;
+
+    /**
+     * Used for logging debug messages.
+     * @type {Number}
+     */
+    this.LOG_DEBUG = 4;
+
+    /**
+     * The merged default and passed options.
+     * @type {Object}
+     */
+    this.options = $.extend(true, {}, $.fn.ajaxSelectPicker.defaults, options);
+
+    /**
      * The previous query that was requested.
      * @type {String}
      */
@@ -65,276 +101,7 @@ var AjaxBootstrapSelect = function (element, options) {
      */
     this.query = '';
 
-    /**
-     * Instantiate a relationship with the parent plugin: selectpicker.
-     * @type {$.fn.selectpicker}
-     */
-    this.selectpicker = this.$element.data('selectpicker');
-    if (!this.selectpicker) {
-        this.log(this.LOG_ERROR, 'Cannot attach ajax without selectpicker being run first!');
-        return;
-    }
-
-    /**
-     * Provide the default options for the plugin.
-     * @type {Object}
-     */
-    defaultOptions = {
-        /**
-         * @name ajaxResultsPreHook
-         * @deprecated Since version `1.2.0`.
-         * @see {preprocessData}
-         */
-
-        /**
-         * @name ajaxOptions
-         * @description The options to pass to the jQuery AJAX request.
-         * @required
-         *
-         * @type Object
-         * @default
-         * ```js
-         * {
-         *     url: null, // Required.
-         *     type: 'POST',
-         *     dataType: 'json',
-         *     data: {
-         *         q: '{{{q}}}'
-         *     }
-         * }
-         * ```
-         */
-        ajaxOptions: {
-            url: null,
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                q: '{{{q}}}'
-            }
-        },
-
-        /**
-         * @name ajaxSearchUrl
-         * @deprecated Since version `1.2.0`.
-         * @see {ajaxOptions}
-         */
-
-        /**
-         * @name bindEvent
-         * @description The event to bind on the search input element to fire a request.
-         * @optional
-         *
-         * @type String
-         * @default `'keyup'`
-         */
-        bindEvent: 'keyup',
-
-        /**
-         * @name cache
-         * @description Cache previous requests. If enabled, the "enter" key (13) is enabled to allow users to force a refresh of the request.
-         * @optional
-         *
-         * @type Boolean
-         * @default `true`
-         */
-        cache: true,
-
-        /**
-         * @name clearOnEmpty
-         * @description Clears the previous results when the search input has no value.
-         * @optional
-         *
-         * @type Boolean
-         * @default `true`
-         */
-        clearOnEmpty: true,
-
-        /**
-         * @name debug
-         * @deprecated Since version `1.2.0`.
-         * @see {log}
-         */
-
-        /**
-         * @name emptyRequest
-         * @description Invoke a request for empty search values.
-         * @optional
-         *
-         * @type Boolean
-         * @default `false`
-         */
-        emptyRequest: false,
-
-        /**
-         * @name ignoredKeys
-         * @description Key codes to ignore so a request is not invoked with bindEvent. The "enter" key (13) will always be dynamically added to any list provided unless the "cache" option above is set to "true".
-         * @optional
-         *
-         * @type Object
-         * @default
-         * ```js
-         * {
-         *     9: "tab",
-         *     16: "shift",
-         *     17: "ctrl",
-         *     18: "alt",
-         *     27: "esc",
-         *     37: "left",
-         *     39: "right",
-         *     38: "up",
-         *     40: "down",
-         *     91: "meta",
-         *     229: "unknown"
-         * }
-         * ```
-         */
-        ignoredKeys: {
-            9: "tab",
-            16: "shift",
-            17: "ctrl",
-            18: "alt",
-            27: "esc",
-            37: "left",
-            39: "right",
-            38: "up",
-            40: "down",
-            91: "meta",
-            229: "unknown"
-        },
-
-        /**
-         * @name langCode
-         * @description The language code to use for string translation. By default this value is determined by the browser, however it is not entirely reliable. If you encounter inconsistencies, you may need to manually set this option.
-         * @optional
-         *
-         * @type String
-         * @default `null`
-         */
-        langCode: null,
-
-        /**
-         * @name locale
-         * @description Specific overrides for locale translation strings. Any values set here will completely override and ignore any set language code. This is useful for changing only a single value or if being used in a system that provides its own translations (CMS).
-         * @optional
-         *
-         * @type Object
-         * @default `null`
-         *
-         * @example
-         * ```js
-         * locale: {
-         *     searchPlaceholder: 'Find...'
-         * }
-         * ```
-         */
-        locale: null,
-
-        /**
-         * @name log
-         * @description The level at which certain logging is displayed:
-         * * __0, false:__ Display no information from the plugin.
-         * * __1, 'error':__ Fatal errors that prevent the plugin from working.
-         * * __2, 'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
-         * * __3, 'info':__ Provides additional information, generally regarding the from request data and callbacks.
-         * * __4, true, 'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
-         * @optional
-         *
-         * @type Number|Boolean|String
-         * @default `'error'`,
-         */
-        log: 'error',
-
-        /**
-         * @name mixWithCurrents
-         * @deprecated Since version `1.2.0`.
-         * @see {preserveSelected}
-         */
-
-        /**
-         * @name placeHolderOption
-         * @deprecated Since version `1.2.0`.
-         * @see {templates}
-         */
-
-        /**
-         * @name preprocessData
-         * @description Process the data returned before this plugin.
-         * @optional
-         *
-         * @type Function|null
-         * @default `null`
-         */
-        preprocessData: null,
-
-        /**
-         * @name preserveSelected
-         * @description Preserve selected items(s) between requests. When enabled, they will be placed in an `<optgroup>` with the label `Currently Selected`. Disable this option if you send your currently selected items along with your request and let the server handle this responsibility.
-         * @optional
-         *
-         * @type Boolean
-         * @default `true`
-         */
-        preserveSelected: true,
-
-        /**
-         * @name preserveSelectedPosition
-         * @description Place the currently selected options `'before'` or `'after'` the options returned from the request.
-         * @optional
-         *
-         * @type String
-         * @default `'after'`
-         */
-        preserveSelectedPosition: 'after',
-
-        /**
-         * @name processData
-         * @description Process the data returned after this plugin, but before the list is built.
-         * @optional
-         *
-         * @type Function|null
-         * @default `null`
-         */
-        processData: null,
-
-        /**
-         * @name requestDelay
-         * @description The time, in milliseconds, that must pass before a request is made. Each time the bindEvent is fired, it will reset the currently elapsed time and start a new delay.
-         * @optional
-         *
-         * @type Number
-         * @default `300`
-         */
-        requestDelay: 300,
-
-        /**
-         * @name templates
-         * @description The templates used in this plugin.
-         * @type Object
-         * @default
-         * ```js
-         * templates: {
-         *     // The template used when a request is being sent.
-         *     loading: '<div class="menu-loading">Loading...</div>',
-         *
-         *     // The template used when there are no results to display.
-         *     noResults: '<div class="no-results">No Results</div>'
-         * }
-         * ```
-         */
-        templates: {
-            loading: '<div class="menu-loading">Loading...</div>',
-            noResults: '<div class="no-results">No Results</div>'
-        }
-
-    };
-
-    // Merge the options into the plugin.
-    this.options = $.extend(true, {}, defaultOptions, options);
-
-    /**
-     * Maps deprecated options to new ones between releases.
-     * @type {Array}
-     */
+    // Maps deprecated options to new ones between releases.
     var deprecatedOptionsMap = [
         // @todo Remove these options in next minor release.
         {
@@ -372,8 +139,6 @@ var AjaxBootstrapSelect = function (element, options) {
             }
         }
     ];
-
-    // Map depreciated options into their newer counterparts.
     if (deprecatedOptionsMap.length) {
         $.map(deprecatedOptionsMap, function (map) {
             // Depreciated option detected.
@@ -475,7 +240,7 @@ var AjaxBootstrapSelect = function (element, options) {
      * The select list.
      * @type {AjaxBootstrapSelectList}
      */
-    this.list = new AjaxBootstrapSelectList(this);
+    this.list = new window.AjaxBootstrapSelectList(this);
     this.list.refresh();
 
     // We need for selectpicker to be attached first. Putting the init in a
@@ -485,10 +250,9 @@ var AjaxBootstrapSelect = function (element, options) {
         plugin.init();
     }, 500);
 };
-window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
 
 /**
- * @todo document this.
+ * Initializes this plugin on a selectpicker instance.
  */
 AjaxBootstrapSelect.prototype.init = function () {
     var requestDelayTimer, plugin = this;
@@ -573,31 +337,30 @@ AjaxBootstrapSelect.prototype.init = function () {
         if (plugin.options.cache && e.keyCode !== 13) {
             var cache = plugin.list.cacheGet(plugin.query);
             if (cache) {
-                if (plugin.list.replaceOptions(cache)) {
-                    plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
-                    return;
-                }
-                plugin.log(plugin.LOG_WARNING, 'Unable to rebuild options from cached data.');
-                plugin.list.restore();
+                plugin.list.replaceOptions(cache);
+                plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
                 return;
             }
         }
 
         requestDelayTimer = setTimeout(function () {
-            plugin.lastRequest = new AjaxBootstrapSelectRequest(plugin);
+            plugin.lastRequest = new window.AjaxBootstrapSelectRequest(plugin);
         }, plugin.options.requestDelay || 300);
     });
 };
 
 /**
- * Wrapper function for console.log / console.error
+ * Wrapper function for logging messages to window.console.
+ *
  * @param  {Number} type
- *   The type of message to log. Must be one of:
- *     - 1: AjaxBootstrapSelect.LOG_ERROR
- *     - 2: AjaxBootstrapSelect.LOG_WARNING
- *     - 3: AjaxBootstrapSelect.LOG_INFO
- *     - 4: AjaxBootstrapSelect.LOG_DEBUG
- * @param {...*} message
+ * The type of message to log. Must be one of:
+ *
+ * - AjaxBootstrapSelect.LOG_ERROR
+ * - AjaxBootstrapSelect.LOG_WARNING
+ * - AjaxBootstrapSelect.LOG_INFO
+ * - AjaxBootstrapSelect.LOG_DEBUG
+ *
+ * @param {String|Object|*...} message
  *   The message(s) to log. Multiple arguments can be passed.
  *
  * @return {void}
@@ -680,18 +443,15 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
 };
 
 /**
- * Generates a translated string for a given locale key.
+ * Generates a translated {@link $.fn.ajaxSelectPicker.locale locale string} for a given locale key.
  *
  * @param {String} key
  *   The translation key to use.
- * @param {String} langCode
- *   Overrides the default language code. This is automatically derived from
- *   the options.
+ * @param {String} [langCode]
+ *   Overrides the currently set {@link $.fn.ajaxSelectPicker.defaults#langCode langCode} option.
  *
  * @return
  *   The translated string.
- *
- * @see ./src/locale/en.js
  */
 AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     langCode = langCode || this.options.langCode;
@@ -703,10 +463,24 @@ AjaxBootstrapSelect.prototype.t = function (key, langCode) {
 };
 
 /**
+ * Use an existing definition in the Window object or create a new one.
+ *
+ * Note: This must be the last statement of this file.
+ *
+ * @type {AjaxBootstrapSelect}
+ * @ignore
+ */
+window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
+
+/**
  * @class AjaxBootstrapSelectList
- * @description Manages the selectpicker list/menu.
+ *   Maintains the select options and selectpicker menu.
+ *
  * @param {AjaxBootstrapSelect} plugin
- * @constructor
+ *   The plugin instance.
+ *
+ * @return {AjaxBootstrapSelectList}
+ *   A new instance of this class.
  */
 var AjaxBootstrapSelectList = function (plugin) {
     var that = this;
@@ -761,7 +535,6 @@ var AjaxBootstrapSelectList = function (plugin) {
         });
     }
 };
-window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrapSelectList;
 
 /**
  * Builds the options for placing into the element.
@@ -876,7 +649,7 @@ AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
 };
 
 /**
- * @todo document this, make method better.
+ * Destroys the select list.
  */
 AjaxBootstrapSelectList.prototype.destroy = function () {
     this.replaceOptions();
@@ -973,6 +746,11 @@ AjaxBootstrapSelectList.prototype.restore = function () {
     return false;
 };
 
+/**
+ * Restores the previous title of the select element.
+ *
+ * @return {void}
+ */
 AjaxBootstrapSelectList.prototype.restoreTitle = function () {
     this.plugin.selectpicker.options.selectedTextFormat = this.selectedTextFormat;
     if (this.title) {
@@ -984,6 +762,13 @@ AjaxBootstrapSelectList.prototype.restoreTitle = function () {
     this.title = null;
 };
 
+/**
+ * Sets a new title on the select element.
+ *
+ * @param {String} title
+ *
+ * @return {void}
+ */
 AjaxBootstrapSelectList.prototype.setTitle = function (title) {
     this.title = this.plugin.$element.attr('title');
     this.plugin.selectpicker.options.selectedTextFormat = 'static';
@@ -991,9 +776,24 @@ AjaxBootstrapSelectList.prototype.setTitle = function (title) {
 };
 
 /**
- * @todo document this.
+ * Use an existing definition in the Window object or create a new one.
+ *
+ * Note: This must be the last statement of this file.
+ *
+ * @type {AjaxBootstrapSelectList}
+ * @ignore
+ */
+window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrapSelectList;
+
+/**
+ * @class AjaxBootstrapSelectRequest
+ *   Instantiates a new jQuery.ajax request for the current query.
+ *
  * @param {AjaxBootstrapSelect} plugin
- * @constructor
+ *   The plugin instance.
+ *
+ * @return {AjaxBootstrapSelectRequest}
+ *   A new instance of this class.
  */
 var AjaxBootstrapSelectRequest = function (plugin) {
     var that = this;
@@ -1042,9 +842,9 @@ var AjaxBootstrapSelectRequest = function (plugin) {
     // Invoke the AJAX request.
     this.jqXHR = $.ajax(this.options);
 };
-window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBootstrapSelectRequest;
 
 /**
+ * @event
  * A callback that can be used to modify the jqXHR object before it is sent.
  *
  * Use this to set custom headers, etc. Returning false will cancel the request.
@@ -1071,6 +871,7 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
 };
 
 /**
+ * @event
  * The "complete" callback for the request.
  *
  * @param {jqXHR} jqXHR
@@ -1087,6 +888,7 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
 };
 
 /**
+ * @event
  * The "error" callback for the request.
  *
  * @param {jqXHR} jqXHR
@@ -1106,7 +908,6 @@ AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
     this.plugin.list.restore();
 };
 
-
 /**
  * Process incoming data.
  *
@@ -1119,11 +920,11 @@ AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
  * @param {Array|Object} data
  *   The JSON data to process.
  *
- * @return {Array|boolean}
+ * @return {Array|Boolean}
  *   The processed data array or false if an error occurred.
  */
 AjaxBootstrapSelectRequest.prototype.process = function (data) {
-    var i, l, clone, item, preprocessedData, processedData;
+    var i, l, callbackResult, clone, item, preprocessedData, processedData;
     var filteredData = [], seenValues = [];
 
     this.plugin.log(this.plugin.LOG_INFO, 'Processing raw data for:', this.plugin.query, data);
@@ -1144,16 +945,19 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         }
     }
 
-    // Invoke the preprocessData option function and pass it another
-    // clone so it doesn't intentionally modify the array. Only use the
-    // returned value.
+    // Invoke the preprocessData option callback.
     preprocessedData = [].concat(clone);
     if ($.isFunction(this.plugin.options.preprocessData)) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Invoking preprocessData callback:', this.plugin.options.processData);
-        preprocessedData = this.plugin.options.preprocessData(preprocessedData);
-        if (!$.isArray(preprocessedData) || !preprocessedData.length) {
-            this.plugin.log(this.plugin.LOG_ERROR, 'The preprocessData callback did not return an array or was empty.', data, preprocessedData);
-            return false;
+        callbackResult = this.plugin.options.preprocessData(preprocessedData);
+        if (typeof callbackResult !== 'undefined' && callbackResult !== null && callbackResult !== false) {
+            if ($.isArray(callbackResult)) {
+                preprocessedData = callbackResult;
+            }
+            else {
+                this.plugin.log(this.plugin.LOG_ERROR, 'The preprocessData callback did not return an array.', callbackResult);
+                return false;
+            }
         }
     }
 
@@ -1164,8 +968,6 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Processing item:', item);
         if ($.isPlainObject(item)) {
             // Check if item is a divider. If so, ignore all other data.
-            // @todo Remove depreciated item.data.divider check in next
-            // minor release.
             if (item.hasOwnProperty('divider') || (item.hasOwnProperty('data') && $.isPlainObject(item.data) && item.data.divider)) {
                 this.plugin.log(this.plugin.LOG_DEBUG, 'Item is a divider, ignoring provided data.');
                 filteredData.push({divider: true});
@@ -1198,16 +1000,19 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         }
     }
 
-    // Invoke the processData option function and pass a clone of
-    // processedData so it doesn't intentionally modify the array. Only
-    // use the returned value.
+    // Invoke the processData option callback.
     processedData = [].concat(filteredData);
     if ($.isFunction(this.plugin.options.processData)) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Invoking processData callback:', this.plugin.options.processData);
-        processedData = this.plugin.options.processData(processedData);
-        if (!$.isArray(processedData) || !processedData.length) {
-            this.plugin.log(this.plugin.LOG_ERROR, 'The processedData callback did not return an array or was empty.', data, filteredData, processedData);
-            return false;
+        callbackResult = this.plugin.options.processData(processedData);
+        if (typeof callbackResult !== 'undefined' && callbackResult !== null && callbackResult !== false) {
+            if ($.isArray(callbackResult)) {
+                processedData = callbackResult;
+            }
+            else {
+                this.plugin.log(this.plugin.LOG_ERROR, 'The processData callback did not return an array.', callbackResult);
+                return false;
+            }
         }
     }
 
@@ -1219,6 +1024,7 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
 };
 
 /**
+ * @event
  * The "success" callback for the request.
  *
  * @param {Object} data
@@ -1256,10 +1062,25 @@ AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
 };
 
 /**
- * The jQuery plugin function definition.
+ * Use an existing definition in the Window object or create a new one.
  *
- * @param options
- *   The options to pass to the plugin.
+ * Note: This must be the last statement of this file.
+ *
+ * @type {AjaxBootstrapSelectRequest}
+ * @ignore
+ */
+window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBootstrapSelectRequest;
+
+/**
+ * @class $.fn.ajaxSelectPicker
+ * @chainable
+ *
+ * The jQuery plugin definition.
+ *
+ * This initializes a new AjaxBootstrapSelect class for each element in the jQuery chain.
+ *
+ * @param {Object} options
+ *   The {@link $.fn.ajaxSelectPicker.defaults options} to pass to the plugin.
  *
  * @returns {jQuery}
  */
@@ -1273,11 +1094,290 @@ $.fn.ajaxSelectPicker = function (options) {
 
 /**
  * The locale object containing string translations.
+ *
+ * See: {@link $.fn.ajaxSelectPicker.locale}
  * @type {Object}
  */
 $.fn.ajaxSelectPicker.locale = {};
 
 /**
+ * The default options the plugin will use if none are provided.
+ *
+ * See: {@link $.fn.ajaxSelectPicker.defaults}
+ *
+ * @member $.fn.ajaxSelectPicker
+ * @property {Object} defaults
+ */
+$.fn.ajaxSelectPicker.defaults = {
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#preprocessData}.
+     * @cfg {Function} ajaxResultsPreHook
+     */
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Object} ajaxOptions (required)
+     * @markdown
+     * The options to pass to the jQuery AJAX request.
+     *
+     * ```js
+     * {
+         *     url: null, // Required.
+         *     type: 'POST',
+         *     dataType: 'json',
+         *     data: {
+         *         q: '{{{q}}}'
+         *     }
+         * }
+     * ```
+     */
+    ajaxOptions: {
+        url: null,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            q: '{{{q}}}'
+        }
+    },
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String} ajaxSearchUrl
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#ajaxOptions}.
+     */
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String} bindEvent = "keyup"
+     * @markdown
+     * The event to bind on the search input element to fire a request.
+     */
+    bindEvent: 'keyup',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} cache = true
+     * @markdown
+     * Cache previous requests. If enabled, the "enter" key (13) is enabled to
+     * allow users to force a refresh of the request.
+     */
+    cache: true,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} clearOnEmpty = true
+     * @markdown
+     * Clears the previous results when the search input has no value.
+     */
+    clearOnEmpty: true,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} debug
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#log}.
+     */
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} emptyRequest = false
+     * @markdown
+     * Invoke a request for empty search values.
+     */
+    emptyRequest: false,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Object} ignoredKeys
+     * @markdown
+     * Key codes to ignore so a request is not invoked with bindEvent. The
+     * "enter" key (13) will always be dynamically added to any list provided
+     * unless the "cache" option above is set to "true".
+     *
+     * ```js
+     * {
+     *     9: "tab",
+     *     16: "shift",
+     *     17: "ctrl",
+     *     18: "alt",
+     *     27: "esc",
+     *     37: "left",
+     *     39: "right",
+     *     38: "up",
+     *     40: "down",
+     *     91: "meta",
+     *     229: "unknown"
+     * }
+     * ```
+     */
+    ignoredKeys: {
+        9: "tab",
+        16: "shift",
+        17: "ctrl",
+        18: "alt",
+        27: "esc",
+        37: "left",
+        39: "right",
+        38: "up",
+        40: "down",
+        91: "meta",
+        229: "unknown"
+    },
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String} langCode = null
+     * @markdown
+     * The language code to use for string translation. By default this value
+     * is determined by the browser, however it is not entirely reliable. If
+     * you encounter inconsistencies, you may need to manually set this option.
+     */
+    langCode: null,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Object} locale = null
+     * @markdown
+     * Provide specific overrides for {@link $.fn.ajaxSelectPicker.locale locale string} translations. Values
+     * set here will cause the plugin to completely ignore defined locale string
+     * translations provided by the set language code. This is useful when
+     * needing to change a single value or when being used in a system that
+     * provides its own translations, like a CMS.
+     *
+     * ```js
+     * locale: {
+     *     searchPlaceholder: Drupal.t('Find...')
+     * }
+     * ```
+     */
+    locale: null,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String|Number|Number} log = 'error'
+     * @markdown
+     * Determines the amount of logging that is displayed:
+     *
+     * - __0, false:__ Display no information from the plugin.
+     * - __1, 'error':__ Fatal errors that prevent the plugin from working.
+     * - __2, 'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
+     * - __3, 'info':__ Provides additional information, generally regarding the from request data and callbacks.
+     * - __4, true, 'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
+     */
+    log: 'error',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} mixWithCurrents
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#preserveSelected}.
+     */
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg placeHolderOption
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.locale#emptyTitle}.
+     */
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Function|null} preprocessData = null
+     * @markdown
+     * Process the raw data returned from a request.
+     *
+     * The following arguments are passed to this callback:
+     *
+     * - __data__ - `Array` The raw data returned from the request, passed by reference.
+     *
+     * This callback must return one of the following:
+     *
+     * - `Array` - A new array of items. This will replace the passed data.
+     * - `undefined|null|false` - Stops the callback and will use whatever modifications have been made to data.
+     *
+     * ```js
+     * function (data) {
+     *     var new = [], old = [], other = [];
+     *     for (var i = 0; i < data.length; i++) {
+     *         // Add items flagged as "new" to the correct array.
+     *         if (data[i].new) {
+     *             new.push(data[i]);
+     *         }
+     *         // Add items flagged as "old" to the correct array.
+     *         else if (data[i].old) {
+     *             old.push(data[i]);
+     *         }
+     *         // Something out of the ordinary happened, put these last.
+     *         else {
+     *             other.push(data[i]);
+     *         }
+     *     }
+     *     // Sort the data according to the order of these arrays.
+     *     return [].concat(new, old, other).
+     * }
+     * ```
+     */
+    preprocessData: null,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} preserveSelected = true
+     * @markdown
+     * Preserve selected items(s) between requests. When enabled, they will be
+     * placed in an `<optgroup>` with the label `Currently Selected`. Disable
+     * this option if you send your currently selected items along with your
+     * request and let the server handle this responsibility.
+     */
+    preserveSelected: true,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String} preserveSelectedPosition = 'after'
+     * @markdown
+     * Place the currently selected options `'before'` or `'after'` the options
+     * returned from the request.
+     */
+    preserveSelectedPosition: 'after',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Function|null} processData = null
+     * @markdown
+     * Process the data returned after this plugin, but before the list is built.
+     */
+    processData: null,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Number} requestDelay = 300
+     * @markdown
+     * The amount of time, in milliseconds, that must pass before a request
+     * is initiated. Each time the {@link $.fn.ajaxSelectPicker.defaults#bindEvent bindEvent} is fired, it will cancel the
+     * current delayed request and start a new one.
+     */
+    requestDelay: 300,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Object} templates
+     * @markdown
+     * The DOM templates used in this plugin.
+     *
+     * ```js
+     * templates: {
+     *     // The template used when a request is being sent.
+     *     loading: '<div class="menu-loading">Loading...</div>',
+     *
+     *     // The template used when there are no results to display.
+     *     noResults: '<div class="no-results">No Results</div>'
+     * }
+     * ```
+     */
+    templates: {
+        loading: '<div class="menu-loading">Loading...</div>',
+        noResults: '<div class="no-results">No Results</div>'
+    }
+};
+
+/*
  * Note: You do not have to load this translation file. English is the
  * default language of this plugin and is compiled into it automatically.
  *
@@ -1288,23 +1388,55 @@ $.fn.ajaxSelectPicker.locale = {};
  * Four character language codes are supported ("en-US") and will always
  * take precedence over two character language codes ("en") if present.
  *
- * This comment should be removed when creating a new translation file, along
- * with all the translation comments.
+ * When copying this file, remove all comments except the one above the
+ * definition objection giving credit to the translation author.
  */
 
 /*!
- * English translation for the "en" language code.
+ * English translation for the "en-US" and "en" language codes.
  * Mark Carver <mark.carver@me.com>
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} currentlySelected = 'Currently Selected'
+     * @markdown
+     * The text to use for the label of the option group when currently selected options are preserved.
+     */
     currentlySelected: 'Currently Selected',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} emptyTitle = 'Select and begin typing'
+     * @markdown
+     * The text to use as the title for the select element when there are no items to display.
+     */
     emptyTitle: 'Select and begin typing',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} noResults = 'No Results'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
     noResults: 'No Results',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} searchPlaceholder = 'Search...'
+     * @markdown
+     * The text to use for the search input placeholder attribute.
+     */
     searchPlaceholder: 'Search...',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} searching = 'Searching...'
+     * @markdown
+     * The text to use in the status container when a request is being made.
+     */
     searching: 'Searching...'
 };
-
-// Provide a fallback, just in case.
-$.fn.ajaxSelectPicker.locale['en'] = $.fn.ajaxSelectPicker.locale['en-US'];
+$.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];
 
 })(jQuery, window);

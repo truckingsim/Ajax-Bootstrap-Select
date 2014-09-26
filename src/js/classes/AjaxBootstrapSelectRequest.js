@@ -1,7 +1,12 @@
 /**
- * @todo document this.
+ * @class AjaxBootstrapSelectRequest
+ *   Instantiates a new jQuery.ajax request for the current query.
+ *
  * @param {AjaxBootstrapSelect} plugin
- * @constructor
+ *   The plugin instance.
+ *
+ * @return {AjaxBootstrapSelectRequest}
+ *   A new instance of this class.
  */
 var AjaxBootstrapSelectRequest = function (plugin) {
     var that = this;
@@ -50,9 +55,9 @@ var AjaxBootstrapSelectRequest = function (plugin) {
     // Invoke the AJAX request.
     this.jqXHR = $.ajax(this.options);
 };
-window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBootstrapSelectRequest;
 
 /**
+ * @event
  * A callback that can be used to modify the jqXHR object before it is sent.
  *
  * Use this to set custom headers, etc. Returning false will cancel the request.
@@ -79,6 +84,7 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
 };
 
 /**
+ * @event
  * The "complete" callback for the request.
  *
  * @param {jqXHR} jqXHR
@@ -95,6 +101,7 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
 };
 
 /**
+ * @event
  * The "error" callback for the request.
  *
  * @param {jqXHR} jqXHR
@@ -114,7 +121,6 @@ AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
     this.plugin.list.restore();
 };
 
-
 /**
  * Process incoming data.
  *
@@ -127,11 +133,11 @@ AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
  * @param {Array|Object} data
  *   The JSON data to process.
  *
- * @return {Array|boolean}
+ * @return {Array|Boolean}
  *   The processed data array or false if an error occurred.
  */
 AjaxBootstrapSelectRequest.prototype.process = function (data) {
-    var i, l, clone, item, preprocessedData, processedData;
+    var i, l, callbackResult, clone, item, preprocessedData, processedData;
     var filteredData = [], seenValues = [];
 
     this.plugin.log(this.plugin.LOG_INFO, 'Processing raw data for:', this.plugin.query, data);
@@ -152,16 +158,19 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         }
     }
 
-    // Invoke the preprocessData option function and pass it another
-    // clone so it doesn't intentionally modify the array. Only use the
-    // returned value.
+    // Invoke the preprocessData option callback.
     preprocessedData = [].concat(clone);
     if ($.isFunction(this.plugin.options.preprocessData)) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Invoking preprocessData callback:', this.plugin.options.processData);
-        preprocessedData = this.plugin.options.preprocessData(preprocessedData);
-        if (!$.isArray(preprocessedData) || !preprocessedData.length) {
-            this.plugin.log(this.plugin.LOG_ERROR, 'The preprocessData callback did not return an array or was empty.', data, preprocessedData);
-            return false;
+        callbackResult = this.plugin.options.preprocessData(preprocessedData);
+        if (typeof callbackResult !== 'undefined' && callbackResult !== null && callbackResult !== false) {
+            if ($.isArray(callbackResult)) {
+                preprocessedData = callbackResult;
+            }
+            else {
+                this.plugin.log(this.plugin.LOG_ERROR, 'The preprocessData callback did not return an array.', callbackResult);
+                return false;
+            }
         }
     }
 
@@ -172,8 +181,6 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Processing item:', item);
         if ($.isPlainObject(item)) {
             // Check if item is a divider. If so, ignore all other data.
-            // @todo Remove depreciated item.data.divider check in next
-            // minor release.
             if (item.hasOwnProperty('divider') || (item.hasOwnProperty('data') && $.isPlainObject(item.data) && item.data.divider)) {
                 this.plugin.log(this.plugin.LOG_DEBUG, 'Item is a divider, ignoring provided data.');
                 filteredData.push({divider: true});
@@ -206,16 +213,19 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         }
     }
 
-    // Invoke the processData option function and pass a clone of
-    // processedData so it doesn't intentionally modify the array. Only
-    // use the returned value.
+    // Invoke the processData option callback.
     processedData = [].concat(filteredData);
     if ($.isFunction(this.plugin.options.processData)) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Invoking processData callback:', this.plugin.options.processData);
-        processedData = this.plugin.options.processData(processedData);
-        if (!$.isArray(processedData) || !processedData.length) {
-            this.plugin.log(this.plugin.LOG_ERROR, 'The processedData callback did not return an array or was empty.', data, filteredData, processedData);
-            return false;
+        callbackResult = this.plugin.options.processData(processedData);
+        if (typeof callbackResult !== 'undefined' && callbackResult !== null && callbackResult !== false) {
+            if ($.isArray(callbackResult)) {
+                processedData = callbackResult;
+            }
+            else {
+                this.plugin.log(this.plugin.LOG_ERROR, 'The processData callback did not return an array.', callbackResult);
+                return false;
+            }
         }
     }
 
@@ -227,6 +237,7 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
 };
 
 /**
+ * @event
  * The "success" callback for the request.
  *
  * @param {Object} data
@@ -262,3 +273,13 @@ AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
     var processedData = this.process(data);
     this.plugin.list.replaceOptions(processedData);
 };
+
+/**
+ * Use an existing definition in the Window object or create a new one.
+ *
+ * Note: This must be the last statement of this file.
+ *
+ * @type {AjaxBootstrapSelectRequest}
+ * @ignore
+ */
+window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBootstrapSelectRequest;

@@ -1,27 +1,33 @@
 /**
- * @todo document this.
- * @param element
- * @param {Object} [options]
- * @constructor
+ * @class AjaxBootstrapSelect
+ *
+ * @param {jQuery|HTMLElement} element
+ *   The select element this plugin is to affect.
+ * @param {Object} [options={}]
+ *   The options used to affect the desired functionality of this plugin.
+ *
+ * @return {AjaxBootstrapSelect|null}
+ *   A new instance of this class or null if unable to instantiate.
  */
 var AjaxBootstrapSelect = function (element, options) {
-    var defaultOptions, plugin = this;
-    this.options = {};
+    var plugin = this;
     options = options || {};
 
     /**
-     * Define the log types for use with AjaxBootstrapSelect.log().
-     */
-    this.LOG_ERROR = 1;
-    this.LOG_WARNING = 2;
-    this.LOG_INFO = 3;
-    this.LOG_DEBUG = 4;
-
-    /**
-     * The <select> element this plugin is being attached to.
+     * The select element this plugin is being attached to.
      * @type {jQuery}
      */
     this.$element = $(element);
+
+    /**
+     * Reference to the selectpicker instance.
+     * @type {Selectpicker}
+     */
+    this.selectpicker = this.$element.data('selectpicker');
+    if (!this.selectpicker) {
+        this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
+        return null;
+    }
 
     /**
      * The "loading" DOM element placeholder.
@@ -36,6 +42,36 @@ var AjaxBootstrapSelect = function (element, options) {
     this.$noResults = $();
 
     /**
+     * Used for logging error messages.
+     * @type {Number}
+     */
+    this.LOG_ERROR = 1;
+
+    /**
+     * Used for logging warning messages.
+     * @type {Number}
+     */
+    this.LOG_WARNING = 2;
+
+    /**
+     * Used for logging informational messages.
+     * @type {Number}
+     */
+    this.LOG_INFO = 3;
+
+    /**
+     * Used for logging debug messages.
+     * @type {Number}
+     */
+    this.LOG_DEBUG = 4;
+
+    /**
+     * The merged default and passed options.
+     * @type {Object}
+     */
+    this.options = $.extend(true, {}, $.fn.ajaxSelectPicker.defaults, options);
+
+    /**
      * The previous query that was requested.
      * @type {String}
      */
@@ -47,29 +83,7 @@ var AjaxBootstrapSelect = function (element, options) {
      */
     this.query = '';
 
-    /**
-     * Instantiate a relationship with the parent plugin: selectpicker.
-     * @type {$.fn.selectpicker}
-     */
-    this.selectpicker = this.$element.data('selectpicker');
-    if (!this.selectpicker) {
-        this.log(this.LOG_ERROR, 'Cannot attach ajax without selectpicker being run first!');
-        return;
-    }
-
-    /**
-     * Provide the default options for the plugin.
-     * @type {Object}
-     */
-//%DEFAULT_OPTIONS%
-
-    // Merge the options into the plugin.
-    this.options = $.extend(true, {}, defaultOptions, options);
-
-    /**
-     * Maps deprecated options to new ones between releases.
-     * @type {Array}
-     */
+    // Maps deprecated options to new ones between releases.
     var deprecatedOptionsMap = [
         // @todo Remove these options in next minor release.
         {
@@ -107,8 +121,6 @@ var AjaxBootstrapSelect = function (element, options) {
             }
         }
     ];
-
-    // Map depreciated options into their newer counterparts.
     if (deprecatedOptionsMap.length) {
         $.map(deprecatedOptionsMap, function (map) {
             // Depreciated option detected.
@@ -210,7 +222,7 @@ var AjaxBootstrapSelect = function (element, options) {
      * The select list.
      * @type {AjaxBootstrapSelectList}
      */
-    this.list = new AjaxBootstrapSelectList(this);
+    this.list = new window.AjaxBootstrapSelectList(this);
     this.list.refresh();
 
     // We need for selectpicker to be attached first. Putting the init in a
@@ -220,10 +232,9 @@ var AjaxBootstrapSelect = function (element, options) {
         plugin.init();
     }, 500);
 };
-window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
 
 /**
- * @todo document this.
+ * Initializes this plugin on a selectpicker instance.
  */
 AjaxBootstrapSelect.prototype.init = function () {
     var requestDelayTimer, plugin = this;
@@ -308,31 +319,30 @@ AjaxBootstrapSelect.prototype.init = function () {
         if (plugin.options.cache && e.keyCode !== 13) {
             var cache = plugin.list.cacheGet(plugin.query);
             if (cache) {
-                if (plugin.list.replaceOptions(cache)) {
-                    plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
-                    return;
-                }
-                plugin.log(plugin.LOG_WARNING, 'Unable to rebuild options from cached data.');
-                plugin.list.restore();
+                plugin.list.replaceOptions(cache);
+                plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
                 return;
             }
         }
 
         requestDelayTimer = setTimeout(function () {
-            plugin.lastRequest = new AjaxBootstrapSelectRequest(plugin);
+            plugin.lastRequest = new window.AjaxBootstrapSelectRequest(plugin);
         }, plugin.options.requestDelay || 300);
     });
 };
 
 /**
- * Wrapper function for console.log / console.error
+ * Wrapper function for logging messages to window.console.
+ *
  * @param  {Number} type
- *   The type of message to log. Must be one of:
- *     - 1: AjaxBootstrapSelect.LOG_ERROR
- *     - 2: AjaxBootstrapSelect.LOG_WARNING
- *     - 3: AjaxBootstrapSelect.LOG_INFO
- *     - 4: AjaxBootstrapSelect.LOG_DEBUG
- * @param {...*} message
+ * The type of message to log. Must be one of:
+ *
+ * - AjaxBootstrapSelect.LOG_ERROR
+ * - AjaxBootstrapSelect.LOG_WARNING
+ * - AjaxBootstrapSelect.LOG_INFO
+ * - AjaxBootstrapSelect.LOG_DEBUG
+ *
+ * @param {String|Object|*...} message
  *   The message(s) to log. Multiple arguments can be passed.
  *
  * @return {void}
@@ -415,18 +425,15 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
 };
 
 /**
- * Generates a translated string for a given locale key.
+ * Generates a translated {@link $.fn.ajaxSelectPicker.locale locale string} for a given locale key.
  *
  * @param {String} key
  *   The translation key to use.
- * @param {String} langCode
- *   Overrides the default language code. This is automatically derived from
- *   the options.
+ * @param {String} [langCode]
+ *   Overrides the currently set {@link $.fn.ajaxSelectPicker.defaults#langCode langCode} option.
  *
  * @return
  *   The translated string.
- *
- * @see ./src/locale/en.js
  */
 AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     langCode = langCode || this.options.langCode;
@@ -436,3 +443,13 @@ AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     this.log(this.LOG_WARNING, 'Unknown translation key:', key);
     return key;
 };
+
+/**
+ * Use an existing definition in the Window object or create a new one.
+ *
+ * Note: This must be the last statement of this file.
+ *
+ * @type {AjaxBootstrapSelect}
+ * @ignore
+ */
+window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;

@@ -1,8 +1,12 @@
 /**
  * @class AjaxBootstrapSelectList
- * @description Manages the selectpicker list/menu.
+ *   Maintains the select options and selectpicker menu.
+ *
  * @param {AjaxBootstrapSelect} plugin
- * @constructor
+ *   The plugin instance.
+ *
+ * @return {AjaxBootstrapSelectList}
+ *   A new instance of this class.
  */
 var AjaxBootstrapSelectList = function (plugin) {
     var that = this;
@@ -57,7 +61,6 @@ var AjaxBootstrapSelectList = function (plugin) {
         });
     }
 };
-window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrapSelectList;
 
 /**
  * Builds the options for placing into the element.
@@ -172,7 +175,7 @@ AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
 };
 
 /**
- * @todo document this, make method better.
+ * Destroys the select list.
  */
 AjaxBootstrapSelectList.prototype.destroy = function () {
     this.replaceOptions();
@@ -269,6 +272,11 @@ AjaxBootstrapSelectList.prototype.restore = function () {
     return false;
 };
 
+/**
+ * Restores the previous title of the select element.
+ *
+ * @return {void}
+ */
 AjaxBootstrapSelectList.prototype.restoreTitle = function () {
     this.plugin.selectpicker.options.selectedTextFormat = this.selectedTextFormat;
     if (this.title) {
@@ -280,8 +288,25 @@ AjaxBootstrapSelectList.prototype.restoreTitle = function () {
     this.title = null;
 };
 
+/**
+ * Sets a new title on the select element.
+ *
+ * @param {String} title
+ *
+ * @return {void}
+ */
 AjaxBootstrapSelectList.prototype.setTitle = function (title) {
     this.title = this.plugin.$element.attr('title');
     this.plugin.selectpicker.options.selectedTextFormat = 'static';
     this.plugin.$element.attr('title', title);
 };
+
+/**
+ * Use an existing definition in the Window object or create a new one.
+ *
+ * Note: This must be the last statement of this file.
+ *
+ * @type {AjaxBootstrapSelectList}
+ * @ignore
+ */
+window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrapSelectList;

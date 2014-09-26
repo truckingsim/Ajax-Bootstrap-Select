@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='$-fn-ajaxSelectPicker-property-defaults'>/**
+</span> * The default options the plugin will use if none are provided.
+ *
+ * See: {@link $.fn.ajaxSelectPicker.defaults}
+ *
+ * @member $.fn.ajaxSelectPicker
+ * @property {Object} defaults
+ */
+$.fn.ajaxSelectPicker.defaults = {
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-ajaxResultsPreHook'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#preprocessData}.
+     * @cfg {Function} ajaxResultsPreHook
+     */
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-ajaxOptions'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Object} ajaxOptions (required)
+     * @markdown
+     * The options to pass to the jQuery AJAX request.
+     *
+     * ```js
+     * {
+         *     url: null, // Required.
+         *     type: &#39;POST&#39;,
+         *     dataType: &#39;json&#39;,
+         *     data: {
+         *         q: &#39;{{{q}}}&#39;
+         *     }
+         * }
+     * ```
+     */
+    ajaxOptions: {
+        url: null,
+        type: &#39;POST&#39;,
+        dataType: &#39;json&#39;,
+        data: {
+            q: &#39;{{{q}}}&#39;
+        }
+    },
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-ajaxSearchUrl'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String} ajaxSearchUrl
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#ajaxOptions}.
+     */
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-bindEvent'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String} bindEvent = &quot;keyup&quot;
+     * @markdown
+     * The event to bind on the search input element to fire a request.
+     */
+    bindEvent: &#39;keyup&#39;,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-cache'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} cache = true
+     * @markdown
+     * Cache previous requests. If enabled, the &quot;enter&quot; key (13) is enabled to
+     * allow users to force a refresh of the request.
+     */
+    cache: true,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-clearOnEmpty'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} clearOnEmpty = true
+     * @markdown
+     * Clears the previous results when the search input has no value.
+     */
+    clearOnEmpty: true,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-debug'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} debug
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#log}.
+     */
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-emptyRequest'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} emptyRequest = false
+     * @markdown
+     * Invoke a request for empty search values.
+     */
+    emptyRequest: false,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-ignoredKeys'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Object} ignoredKeys
+     * @markdown
+     * Key codes to ignore so a request is not invoked with bindEvent. The
+     * &quot;enter&quot; key (13) will always be dynamically added to any list provided
+     * unless the &quot;cache&quot; option above is set to &quot;true&quot;.
+     *
+     * ```js
+     * {
+     *     9: &quot;tab&quot;,
+     *     16: &quot;shift&quot;,
+     *     17: &quot;ctrl&quot;,
+     *     18: &quot;alt&quot;,
+     *     27: &quot;esc&quot;,
+     *     37: &quot;left&quot;,
+     *     39: &quot;right&quot;,
+     *     38: &quot;up&quot;,
+     *     40: &quot;down&quot;,
+     *     91: &quot;meta&quot;,
+     *     229: &quot;unknown&quot;
+     * }
+     * ```
+     */
+    ignoredKeys: {
+        9: &quot;tab&quot;,
+        16: &quot;shift&quot;,
+        17: &quot;ctrl&quot;,
+        18: &quot;alt&quot;,
+        27: &quot;esc&quot;,
+        37: &quot;left&quot;,
+        39: &quot;right&quot;,
+        38: &quot;up&quot;,
+        40: &quot;down&quot;,
+        91: &quot;meta&quot;,
+        229: &quot;unknown&quot;
+    },
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-langCode'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String} langCode = null
+     * @markdown
+     * The language code to use for string translation. By default this value
+     * is determined by the browser, however it is not entirely reliable. If
+     * you encounter inconsistencies, you may need to manually set this option.
+     */
+    langCode: null,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-locale'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Object} locale = null
+     * @markdown
+     * Provide specific overrides for {@link $.fn.ajaxSelectPicker.locale locale string} translations. Values
+     * set here will cause the plugin to completely ignore defined locale string
+     * translations provided by the set language code. This is useful when
+     * needing to change a single value or when being used in a system that
+     * provides its own translations, like a CMS.
+     *
+     * ```js
+     * locale: {
+     *     searchPlaceholder: Drupal.t(&#39;Find...&#39;)
+     * }
+     * ```
+     */
+    locale: null,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-log'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String|Number|Number} log = &#39;error&#39;
+     * @markdown
+     * Determines the amount of logging that is displayed:
+     *
+     * - __0, false:__ Display no information from the plugin.
+     * - __1, &#39;error&#39;:__ Fatal errors that prevent the plugin from working.
+     * - __2, &#39;warn&#39;:__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
+     * - __3, &#39;info&#39;:__ Provides additional information, generally regarding the from request data and callbacks.
+     * - __4, true, &#39;debug&#39;:__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
+     */
+    log: &#39;error&#39;,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-mixWithCurrents'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} mixWithCurrents
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#preserveSelected}.
+     */
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-placeHolderOption'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg placeHolderOption
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.locale#emptyTitle}.
+     */
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-preprocessData'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Function|null} preprocessData = null
+     * @markdown
+     * Process the raw data returned from a request.
+     *
+     * The following arguments are passed to this callback:
+     *
+     * - __data__ - `Array` The raw data returned from the request, passed by reference.
+     *
+     * This callback must return one of the following:
+     *
+     * - `Array` - A new array of items. This will replace the passed data.
+     * - `undefined|null|false` - Stops the callback and will use whatever modifications have been made to data.
+     *
+     * ```js
+     * function (data) {
+     *     var new = [], old = [], other = [];
+     *     for (var i = 0; i &lt; data.length; i++) {
+     *         // Add items flagged as &quot;new&quot; to the correct array.
+     *         if (data[i].new) {
+     *             new.push(data[i]);
+     *         }
+     *         // Add items flagged as &quot;old&quot; to the correct array.
+     *         else if (data[i].old) {
+     *             old.push(data[i]);
+     *         }
+     *         // Something out of the ordinary happened, put these last.
+     *         else {
+     *             other.push(data[i]);
+     *         }
+     *     }
+     *     // Sort the data according to the order of these arrays.
+     *     return [].concat(new, old, other).
+     * }
+     * ```
+     */
+    preprocessData: null,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-preserveSelected'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} preserveSelected = true
+     * @markdown
+     * Preserve selected items(s) between requests. When enabled, they will be
+     * placed in an `&lt;optgroup&gt;` with the label `Currently Selected`. Disable
+     * this option if you send your currently selected items along with your
+     * request and let the server handle this responsibility.
+     */
+    preserveSelected: true,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-preserveSelectedPosition'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {String} preserveSelectedPosition = &#39;after&#39;
+     * @markdown
+     * Place the currently selected options `&#39;before&#39;` or `&#39;after&#39;` the options
+     * returned from the request.
+     */
+    preserveSelectedPosition: &#39;after&#39;,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-processData'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Function|null} processData = null
+     * @markdown
+     * Process the data returned after this plugin, but before the list is built.
+     */
+    processData: null,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-requestDelay'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Number} requestDelay = 300
+     * @markdown
+     * The amount of time, in milliseconds, that must pass before a request
+     * is initiated. Each time the {@link $.fn.ajaxSelectPicker.defaults#bindEvent bindEvent} is fired, it will cancel the
+     * current delayed request and start a new one.
+     */
+    requestDelay: 300,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-templates'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Object} templates
+     * @markdown
+     * The DOM templates used in this plugin.
+     *
+     * ```js
+     * templates: {
+     *     // The template used when a request is being sent.
+     *     loading: &#39;&lt;div class=&quot;menu-loading&quot;&gt;Loading...&lt;/div&gt;&#39;,
+     *
+     *     // The template used when there are no results to display.
+     *     noResults: &#39;&lt;div class=&quot;no-results&quot;&gt;No Results&lt;/div&gt;&#39;
+     * }
+     * ```
+     */
+    templates: {
+        loading: &#39;&lt;div class=&quot;menu-loading&quot;&gt;Loading...&lt;/div&gt;&#39;,
+        noResults: &#39;&lt;div class=&quot;no-results&quot;&gt;No Results&lt;/div&gt;&#39;
+    }
+};
+</pre>
+</body>
+</html>

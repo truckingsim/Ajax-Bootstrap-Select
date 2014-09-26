@@ -1,7 +1,7 @@
 /*!
  * Ajax Bootstrap Select
  *
- * Extends the bootstrap-select plugin so it can use a remote source for searching. Originally for CROSCON.
+ * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
  *
  * @version 1.2.0
  * @author Adam Heim - https://github.com/truckingsim
@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-24 1:00:26 PM CDT
+ * Last build: 2014-09-26 7:06:42 AM CDT
  */
 .bootstrap-select .placeholder {
   background: #f0f0f0;

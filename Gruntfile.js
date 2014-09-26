@@ -6,6 +6,30 @@ module.exports = function (grunt) {
       return option.toLowerCase().replace(/[^a-z0-9]/, '-');
     };
 
+    var parseLink = function (link) {
+        if (link) {
+            var anchor, title, internal = link.match(/({@link (\$\.fn\.ajaxSelectPicker\.(?:defaults|locale)|AjaxBootstrapSelect(?:List|Request)?)#?([^\s]*)\s?([^}]*)})/);
+            if (internal) {
+                anchor = internal[3];
+                title = internal[4] ? internal[4] : internal[3];
+                if (anchor) {
+                    anchor = optionAnchor(anchor);
+                }
+                else if (internal[2] === '$.fn.ajaxSelectPicker.defaults') {
+                    anchor = 'options';
+                }
+                else if (internal[2] === '$.fn.ajaxSelectPicker.locale') {
+                    anchor = 'locale-strings';
+                }
+                else {
+                    anchor = optionAnchor(internal[2]);
+                }
+                return link.replace(internal[0], '[' + title + '](#' + anchor + ')');
+            }
+        }
+        return link;
+    };
+
     var multiLineParser = function (type, i, line, block) {
         // find the next instance of a parser (if there is one based on the @ symbol)
         // in order to isolate the current multi-line parser
@@ -15,11 +39,11 @@ module.exports = function (grunt) {
             newBlock = (function(newBlock){
                 var ret = [], lines = newBlock.split('\n');
                 lines.forEach(function(line){
-                    var pattern = '*', index = line.indexOf(pattern);
+                    var pattern = '* ', index = line.indexOf(pattern);
                     if (index !== -1 && index <= (type.length + 4)) { line = line.split('').splice((index + pattern.length), line.length).join(''); }
-                    line = line.replace(new RegExp('^\\s+?@' + type + '\\s+'), '').replace(/\s+$/,'');
-                    if (line.match(new RegExp('.*@' + type + '\\s*$'))) { ret.push(''); return; }
-                    if (line) { ret.push(line); }
+                    line = line.replace(new RegExp('^\\s+?@' + type + '\\s+'), '').replace(/\\s+$/,'');
+                    if (line.match(new RegExp('.*@' + type + '\\s*$'))) { return; }
+                    if (line) { ret.push(parseLink(line)); }
                 });
                 return ret.join('\n> ');
             })(newBlock);
@@ -27,22 +51,20 @@ module.exports = function (grunt) {
     };
 
     var parsers = {
-        'default': function(i, line, block) { return multiLineParser('default', i, line, block); },
-        example: function (i, line, block) { return multiLineParser('example', i, line, block); },
-        deprecated: function (i, line) { return line; },
-        description: function (i, line, block) { return multiLineParser('description', i, line, block); },
-        optional: function () { return true; },
-        required: function () { return true; },
-        see: function (i, line) {
-            var pattern = new RegExp('{([a-z0-9_-]+)}$', 'ig');
-            if (line.match(pattern)) {
-                var option = line.replace(pattern, '$1');
-                return '[' + option + '](#' + optionAnchor(option) + ')';
-            }
-            return line;
-
+        cfg: function (i, line, block) {
+            var matches = line.match(/(?:\{([^\}]+)\})?\s?([a-zA-Z0-9_]+)(?:\s?=\s?(.*))?\s?(\(required\))?/);
+            var deprecated = block.match(/@deprecated (.*)/) || [];
+            return {
+                type: matches[1],
+                name: matches[2],
+                default: matches[3],
+                required: matches[4],
+                deprecated: parseLink(deprecated[1])
+            };
         },
-        type: function (i, line) { return line; }
+        markdown: function (i, line, block) {
+            return multiLineParser('markdown', i, line, block);
+        }
     };
 
     // Project configuration.
@@ -63,6 +85,7 @@ module.exports = function (grunt) {
         clean: {
             locale: ['dist/js/locale/*'],
             plugin: [
+                'api-doc',
                 'dist/js/<%= pkg.name %>.js',
                 'dist/js/<%= pkg.name %>.min.js'
             ],
@@ -71,13 +94,26 @@ module.exports = function (grunt) {
         dss: {
             docs: {
                 files: {
-                    docs: ['src/js/defaultOptions.js']
+                    docs: [
+                        'src/js/ajaxSelectPicker.defaults.js',
+                        'src/js/ajaxSelectPicker.locale/en-US.js'
+                    ]
                 },
                 options: {
-                    template: 'docs/templates/',
+                    template: 'templates/',
                     template_index: 'jsdoc2md.handlebars',
                     output_index: '/options.md',
-                    parsers: parsers
+                    parsers: parsers,
+                    handlebars_helpers: {
+                        section: function(filename) {
+                            if (filename === 'src/js/ajaxSelectPicker.defaults.js') {
+                                return '## Options';
+                            }
+                            else if (filename === 'src/js/ajaxSelectPicker.locale/en-US.js') {
+                                return '## Locale Strings';
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -89,8 +125,9 @@ module.exports = function (grunt) {
                 },
                 src: [
                     'src/js/classes/**/*.js',
-                    'src/js/jQueryPlugin.js',
-                    'src/js/locale/en-US.js'
+                    'src/js/ajaxSelectPicker.js',
+                    'src/js/ajaxSelectPicker.defaults.js',
+                    'src/js/ajaxSelectPicker.locale/en-US.js'
                 ],
                 dest: 'dist/js/<%= pkg.name %>.js'
             }
@@ -99,12 +136,14 @@ module.exports = function (grunt) {
             locale: {
                 files: [{
                     expand: true,
-                    cwd: 'src/js/locale/',
+                    cwd: 'src/js/ajaxSelectPicker.locale/',
                     src: [
                         '**/*.js'
                     ],
                     dest: 'dist/js/locale/',
                     rename: function(dest, src) {
+                        grunt.log.writeln(dest);
+                        grunt.log.writeln(src);
                         return dest + src.replace(/(.*)\.js$/, pkg.name + '.$1.js');
                     }
                 }],
@@ -115,20 +154,39 @@ module.exports = function (grunt) {
                 }
             }
         },
+        jsduck: {
+            api: {
+                src: [
+                    'src/js/classes/**/*.js',
+                    'src/js/ajaxSelectPicker.js',
+                    'src/js/ajaxSelectPicker.defaults.js',
+                    'src/js/ajaxSelectPicker.locale/en-US.js'
+                ],
+                dest: 'api-docs',
+                options: {
+                    categories: 'jsduck.categories.json',
+                    external: ['jQuery', '$', 'jqXHR', 'Selectpicker'],
+                    warnings: ['-tag(default,description,example,name,optional,required,see)']
+                }
+            }
+        },
         jshint: {
             options: {
                 jshintrc: '.jshintrc'
             },
             locale: {
                 src: [
-                    'src/js/locale/**/*.js'
+                    'src/js/ajaxSelectPicker.locale/**/*.js'
                 ]
             },
             plugin: {
                 src: [
                     'package.json',
                     'Gruntfile.js',
-                    'src/js/classes/**/*.js'
+                    'src/js/classes/**/*.js',
+                    'src/js/ajaxSelectPicker.js',
+                    'src/js/ajaxSelectPicker.defaults.js',
+                    'src/js/ajaxSelectPicker.locale/en-US.js'
                 ]
             }
         },
@@ -141,20 +199,6 @@ module.exports = function (grunt) {
                 dest: 'dist/css/<%= pkg.name %>.css'
             }
         },
-        sed: {
-            plugin: {
-                path: 'dist',
-                pattern: /\/\/%DEFAULT_OPTIONS%\n/,
-                replacement: grunt.file.read('src/js/defaultOptions.js'),
-                recursive: true
-            },
-            jshintIgnore: {
-                path: 'dist',
-                pattern: /\/(\/?|\*+)\s*?jshint ignore:(start|end|line)(\s*\*\/)?\n?$/img,
-                replacement: '',
-                recursive: true
-            }
-        },
         uglify: {
             options: {
                 preserveComments: 'some'
@@ -162,7 +206,7 @@ module.exports = function (grunt) {
             locale: {
                 files: [{
                     expand: true,
-                    cwd: 'src/js/locale/',
+                    cwd: 'src/js/ajaxSelectPicker.locale/',
                     src: ['**/*.js'],
                     dest: 'dist/js/locale/',
                     ext: '.min.js',
@@ -186,8 +230,8 @@ module.exports = function (grunt) {
                     '.verbrc.md',
                     'docs/**/*.md',
                     'docs/**/*.handlebars',
-                    'src/js/defaultOptions.js',
-                    'src/js/locale/en-US.js',
+                    'src/js/ajaxSelectPicker.defaults.js',
+                    'src/js/ajaxSelectPicker.locale/en-US.js'
                 ],
                 tasks: ['docs']
             },
@@ -215,13 +259,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-dss');
-    grunt.loadNpmTasks('grunt-sed');
+    grunt.loadNpmTasks('grunt-jsduck');
     grunt.loadNpmTasks('grunt-verb');
 
     // Default task(s).
     grunt.registerTask('docs', ['dss', 'verb']);
     grunt.registerTask('locale', ['jshint:locale', 'clean:locale', 'copy:locale', 'uglify:locale']);
-    grunt.registerTask('plugin', ['jshint:plugin', 'clean:plugin', 'concat:plugin', 'sed', 'uglify:plugin']);
+    grunt.registerTask('plugin', ['jshint:plugin', 'clean:plugin', 'concat:plugin', 'uglify:plugin', 'jsduck']);
     grunt.registerTask('styles', ['clean:styles', 'less']);
     grunt.registerTask('default', ['docs', 'locale', 'plugin', 'styles']);
 

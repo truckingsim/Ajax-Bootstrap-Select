@@ -1,0 +1,19 @@
+[
+    {
+        "name": "Ajax Bootstrap Select",
+        "groups": [
+            {
+                "name": "jQuery Plugin",
+                "classes": [
+                    "$.fn.ajaxSelectPicker*"
+                ]
+            },
+            {
+                "name": "Classes",
+                "classes": [
+                    "AjaxBootstrapSelect*"
+                ]
+            }
+        ]
+    }
+]

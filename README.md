@@ -35,15 +35,15 @@ __Suggested requirements:__
 
 ### Options
 
-##### ~~ajaxResultsPreHook~~
-> __Deprecated:__ Since version `1.2.0`, see: [preprocessData](#preprocessdata).
+##### ~~options.ajaxResultsPreHook~~
+> __Deprecated:__ Since version `1.2.0`, see: [options.preprocessData](#optionspreprocessdata).
 >
 > __Type:__ `Function`
 >
 
 ***
 
-##### ajaxOptions
+##### options.ajaxOptions
 > __Required__
 >
 > __Type:__ `Object`
@@ -62,15 +62,15 @@ __Suggested requirements:__
 
 ***
 
-##### ~~ajaxSearchUrl~~
-> __Deprecated:__ Since version `1.2.0`, see: [ajaxOptions](#ajaxoptions).
+##### ~~options.ajaxSearchUrl~~
+> __Deprecated:__ Since version `1.2.0`, see: [options.ajaxOptions](#optionsajaxoptions).
 >
 > __Type:__ `String`
 >
 
 ***
 
-##### bindEvent
+##### options.bindEvent
 > __Type:__ `String`
 >
 > __Default:__ `"keyup"`
@@ -79,7 +79,7 @@ __Suggested requirements:__
 
 ***
 
-##### cache
+##### options.cache
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
@@ -89,7 +89,7 @@ __Suggested requirements:__
 
 ***
 
-##### clearOnEmpty
+##### options.clearOnEmpty
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
@@ -98,15 +98,15 @@ __Suggested requirements:__
 
 ***
 
-##### ~~debug~~
-> __Deprecated:__ Since version `1.2.0`, see: [log](#log).
+##### ~~options.debug~~
+> __Deprecated:__ Since version `1.2.0`, see: [options.log](#optionslog).
 >
 > __Type:__ `Boolean`
 >
 
 ***
 
-##### emptyRequest
+##### options.emptyRequest
 > __Type:__ `Boolean`
 >
 > __Default:__ `false`
@@ -115,7 +115,7 @@ __Suggested requirements:__
 
 ***
 
-##### ignoredKeys
+##### options.ignoredKeys
 > __Type:__ `Object`
 >
 > Key codes to ignore so a request is not invoked with bindEvent. The
@@ -139,7 +139,7 @@ __Suggested requirements:__
 
 ***
 
-##### langCode
+##### options.langCode
 > __Type:__ `String`
 >
 > __Default:__ `null`
@@ -150,7 +150,7 @@ __Suggested requirements:__
 
 ***
 
-##### locale
+##### options.locale
 > __Type:__ `Object`
 >
 > __Default:__ `null`
@@ -168,7 +168,7 @@ __Suggested requirements:__
 
 ***
 
-##### log
+##### options.log
 > __Type:__ `String|Number|Number`
 >
 > __Default:__ `'error'`
@@ -182,21 +182,21 @@ __Suggested requirements:__
 
 ***
 
-##### ~~mixWithCurrents~~
-> __Deprecated:__ Since version `1.2.0`, see: [preserveSelected](#preserveselected).
+##### ~~options.mixWithCurrents~~
+> __Deprecated:__ Since version `1.2.0`, see: [options.preserveSelected](#optionspreserveselected).
 >
 > __Type:__ `Boolean`
 >
 
 ***
 
-##### ~~placeHolderOption~~
-> __Deprecated:__ Since version `1.2.0`, see: [emptyTitle](#emptytitle).
+##### ~~options.placeHolderOption~~
+> __Deprecated:__ Since version `1.2.0`, see: [locale.emptyTitle](#localeemptytitle).
 >
 
 ***
 
-##### preprocessData
+##### options.preprocessData
 > __Type:__ `Function|null`
 >
 > __Default:__ `null`
@@ -231,7 +231,7 @@ __Suggested requirements:__
 
 ***
 
-##### preserveSelected
+##### options.preserveSelected
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
@@ -243,7 +243,7 @@ __Suggested requirements:__
 
 ***
 
-##### preserveSelectedPosition
+##### options.preserveSelectedPosition
 > __Type:__ `String`
 >
 > __Default:__ `'after'`
@@ -253,7 +253,7 @@ __Suggested requirements:__
 
 ***
 
-##### processData
+##### options.processData
 > __Type:__ `Function|null`
 >
 > __Default:__ `null`
@@ -262,18 +262,18 @@ __Suggested requirements:__
 
 ***
 
-##### requestDelay
+##### options.requestDelay
 > __Type:__ `Number`
 >
 > __Default:__ `300`
 >
 > The amount of time, in milliseconds, that must pass before a request
-> is initiated. Each time the [bindEvent](#bindevent) is fired, it will cancel the
+> is initiated. Each time the [options.bindEvent](#optionsbindevent) is fired, it will cancel the
 > current delayed request and start a new one.
 
 ***
 
-##### templates
+##### options.templates
 > __Type:__ `Object`
 >
 > The DOM templates used in this plugin.
@@ -290,8 +290,10 @@ __Suggested requirements:__
 
 ### Locale Strings
 
+See: [options.locale](#optionslocale)
 
-##### currentlySelected
+
+##### locale.currentlySelected
 > __Type:__ `String`
 >
 > __Default:__ `'Currently Selected'`
@@ -300,7 +302,7 @@ __Suggested requirements:__
 
 ***
 
-##### emptyTitle
+##### locale.emptyTitle
 > __Type:__ `String`
 >
 > __Default:__ `'Select and begin typing'`
@@ -309,7 +311,7 @@ __Suggested requirements:__
 
 ***
 
-##### noResults
+##### locale.noResults
 > __Type:__ `String`
 >
 > __Default:__ `'No Results'`
@@ -318,7 +320,7 @@ __Suggested requirements:__
 
 ***
 
-##### searchPlaceholder
+##### locale.searchPlaceholder
 > __Type:__ `String`
 >
 > __Default:__ `'Search...'`
@@ -327,7 +329,7 @@ __Suggested requirements:__
 
 ***
 
-##### searching
+##### locale.searching
 > __Type:__ `String`
 >
 > __Default:__ `'Searching...'`

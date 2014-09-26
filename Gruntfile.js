@@ -8,23 +8,27 @@ module.exports = function (grunt) {
 
     var parseLink = function (link) {
         if (link) {
-            var anchor, title, internal = link.match(/({@link (\$\.fn\.ajaxSelectPicker\.(?:defaults|locale)|AjaxBootstrapSelect(?:List|Request)?)#?([^\s]*)\s?([^}]*)})/);
+            var anchor, title, prefix = '', internal = link.match(/({@link (\$\.fn\.ajaxSelectPicker\.(?:defaults|locale)|AjaxBootstrapSelect(?:List|Request)?)#?([^\s]*)\s?([^}]*)})/);
             if (internal) {
-                anchor = internal[3];
                 title = internal[4] ? internal[4] : internal[3];
-                if (anchor) {
-                    anchor = optionAnchor(anchor);
-                }
-                else if (internal[2] === '$.fn.ajaxSelectPicker.defaults') {
+                if (internal[2] === '$.fn.ajaxSelectPicker.defaults') {
                     anchor = 'options';
+                    if (internal[3]) {
+                        anchor = optionAnchor(internal[3]);
+                        prefix = 'options';
+                    }
                 }
                 else if (internal[2] === '$.fn.ajaxSelectPicker.locale') {
                     anchor = 'locale-strings';
+                    if (internal[3]) {
+                        anchor = optionAnchor(internal[3]);
+                        prefix = 'locale';
+                    }
                 }
                 else {
                     anchor = optionAnchor(internal[2]);
                 }
-                return link.replace(internal[0], '[' + title + '](#' + anchor + ')');
+                return link.replace(internal[0], '[' + (prefix ? prefix + '.' : '') + title + '](#' + prefix + anchor + ')');
             }
         }
         return link;
@@ -54,9 +58,19 @@ module.exports = function (grunt) {
         cfg: function (i, line, block) {
             var matches = line.match(/(?:\{([^\}]+)\})?\s?([a-zA-Z0-9_]+)(?:\s?=\s?(.*))?\s?(\(required\))?/);
             var deprecated = block.match(/@deprecated (.*)/) || [];
+            var member = block.match(/@member (.*)/) || [];
+            var prefix = '';
+            if (member && member[1]) {
+                if (member[1] === '$.fn.ajaxSelectPicker.defaults') {
+                    prefix = 'options.';
+                }
+                else if (member[1] === '$.fn.ajaxSelectPicker.locale') {
+                    prefix = 'locale.';
+                }
+            }
             return {
                 type: matches[1],
-                name: matches[2],
+                name: prefix + matches[2],
                 default: matches[3],
                 required: matches[4],
                 deprecated: parseLink(deprecated[1])
@@ -110,7 +124,7 @@ module.exports = function (grunt) {
                                 return '## Options';
                             }
                             else if (filename === 'src/js/ajaxSelectPicker.locale/en-US.js') {
-                                return '## Locale Strings';
+                                return '## Locale Strings\n\nSee: [options.locale](#optionslocale)';
                             }
                         }
                     }
@@ -142,8 +156,6 @@ module.exports = function (grunt) {
                     ],
                     dest: 'dist/js/locale/',
                     rename: function(dest, src) {
-                        grunt.log.writeln(dest);
-                        grunt.log.writeln(src);
                         return dest + src.replace(/(.*)\.js$/, pkg.name + '.$1.js');
                     }
                 }],

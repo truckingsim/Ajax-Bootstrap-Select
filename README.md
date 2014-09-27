@@ -352,24 +352,28 @@ The plugin expects a certain result structure, an array of objects with the obje
 
 ```js
 [
-	{
-		value: 'string', //This is the only required option
-		text: 'string', //If this is not set it will use the value for the text
+    {
+        value: 'string',    // Required.
+        text: 'string',     // If not set, it will use the value as the text.
+        class: 'string',    // The CSS class(es) to apply to the option element.
+        disable: false,     // {Boolean} true|false
 
-		//data- properties that you would set on the option tag, these will be set on
-        //  the newly created options tags when the items are loaded in
-		data: {
-			//If this is set to true everything else about this option will be ignored.
-            //  If this is true, this item will be used as a divider.
-			divider: false,  //Boolean true/false
-			subtext: 'string',
-			icon: 'class-name', //Icon class name ex: icon-glass
-			content: 'custom-html'
-		},
-		disable: false, //Boolean true/false
-		class: 'string' //CSS class to apply to the option
-	}
-	....
+        // NOTE: If "divider" is present as a property, the entire item is
+        // considered a divider and the rest of the item value/data is
+        // ignored. Alternatively, this can be set in the data property as well.
+        divider: true,
+
+        // Data attributes that you would set on the option tag, these will be
+        // set on the newly created options tags and the selectpicker plugin
+        // will process them accordingly.
+        data: {
+            divider: true,
+            subtext: 'string',
+            icon: 'class-name', // Icon class name ex: icon-glass
+            content: '<div class="custom-class">my value label</div>',
+        }
+    }
+    ....
 ]
 ```
 
@@ -382,13 +386,27 @@ $('.select-picker')
         liveSearch: true
     })
     .ajaxSelectPicker({
-        ajaxSearchUrl: '/path/to/method/to/run',
-        ajaxResultsPreHook: function(results){
+        ajaxOptions: {
+            url: '/server/path/to/ajax/results',
+            data: function () {
+                var params = {
+                    q: '{{{q}}}'
+                };
+                if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
+                    params.GroupID = gModel.selectedGroup().ContactGroupID;
+                }
+                return params;
+            }
+        },
+        locale: {
+            emptyTitle: 'Search for contact...'
+        },
+        preprocessData: function(data){
             var contacts = [];
-            if(results.hasOwnProperty('Contacts')){
-                var len = results.Contacts.length;
+            if(data.hasOwnProperty('Contacts')){
+                var len = data.Contacts.length;
                 for(var i = 0; i < len; i++){
-                    var curr = results.Contacts[i];
+                    var curr = data.Contacts[i];
                     contacts.push(
                         {
                             'value': curr.ContactID,
@@ -401,26 +419,10 @@ $('.select-picker')
                         }
                     );
                 }
-                return contacts;
-            } else {
-                return [];
             }
+            return contacts;
         },
-        ajaxOptions: {
-            data: function(){
-                var params = {
-                    q: '{{{q}}}'
-                };
-
-                if(gModel.selectedGroup().hasOwnProperty('ContactGroupID')){
-                    params.GroupID = gModel.selectedGroup().ContactGroupID;
-                }
-
-                return params;
-            }
-        },
-        placeHolderOption: 'Click and start typing',
-        mixWithCurrents: false
+        preserveSelected: false
     });
 ```
 

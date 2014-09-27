@@ -36,14 +36,6 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
-     * @cfg {String} noResults = 'No Results'
-     * @markdown
-     * The text used in the status container when the request returns no results.
-     */
-    noResults: 'No Results',
-
-    /**
-     * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} searchPlaceholder = 'Search...'
      * @markdown
      * The text to use for the search input placeholder attribute.
@@ -52,10 +44,26 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
-     * @cfg {String} searching = 'Searching...'
+     * @cfg {String} statusInitialized = 'Start typing a search query'
      * @markdown
-     * The text to use in the status container when a request is being made.
+     * The text used in the status container when it is initialized.
      */
-    searching: 'Searching...'
+    statusInitialized: 'Start typing a search query',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusNoResults = 'No Results'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
+    statusNoResults: 'No Results',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusSearching = 'Searching...'
+     * @markdown
+     * The text to use in the status container when a request is being initiated.
+     */
+    statusSearching: 'Searching...'
 };
 $.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];

@@ -46,18 +46,6 @@ var AjaxBootstrapSelect = function (element, options) {
         return null;
     }
 
-<span id='AjaxBootstrapSelect-property-S-loading'>    /**
-</span>     * The &quot;loading&quot; DOM element placeholder.
-     * @type {jQuery}
-     */
-    this.$loading = $();
-
-<span id='AjaxBootstrapSelect-property-S-noResults'>    /**
-</span>     * The &quot;noResults&quot; DOM element placeholder.
-     * @type {jQuery}
-     */
-    this.$noResults = $();
-
 <span id='AjaxBootstrapSelect-property-LOG_ERROR'>    /**
 </span>     * Used for logging error messages.
      * @type {Number}
@@ -336,6 +324,7 @@ AjaxBootstrapSelect.prototype.init = function () {
         if (plugin.options.cache &amp;&amp; e.keyCode !== 13) {
             var cache = plugin.list.cacheGet(plugin.query);
             if (cache) {
+                plugin.list.setStatus(!cache.length ? plugin.t(&#39;statusNoResults&#39;) : &#39;&#39;);
                 plugin.list.replaceOptions(cache);
                 plugin.log(plugin.LOG_INFO, &#39;Rebuilt options from cached data.&#39;);
                 return;

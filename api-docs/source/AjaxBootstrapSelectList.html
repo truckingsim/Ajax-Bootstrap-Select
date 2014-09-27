@@ -28,6 +28,16 @@
 var AjaxBootstrapSelectList = function (plugin) {
     var that = this;
 
+<span id='AjaxBootstrapSelectList-property-S-status'>    /**
+</span>     * DOM element used for updating the status of requests and list counts.
+     * @type {jQuery}
+     */
+    this.$status = $(plugin.options.templates.status).hide().appendTo(plugin.selectpicker.$menu);
+    var statusInitialized = plugin.t(&#39;statusInitialized&#39;);
+    if (statusInitialized &amp;&amp; statusInitialized.length) {
+        this.setStatus(statusInitialized);
+    }
+
 <span id='AjaxBootstrapSelectList-property-cache'>    /**
 </span>     * Container for cached data.
      * @type {Object}
@@ -196,6 +206,7 @@ AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
  */
 AjaxBootstrapSelectList.prototype.destroy = function () {
     this.replaceOptions();
+    this.plugin.list.setStatus();
     this.plugin.log(this.plugin.LOG_DEBUG, &#39;Destroyed select list.&#39;);
 };
 
@@ -316,6 +327,24 @@ AjaxBootstrapSelectList.prototype.setTitle = function (title) {
     this.title = this.plugin.$element.attr(&#39;title&#39;);
     this.plugin.selectpicker.options.selectedTextFormat = &#39;static&#39;;
     this.plugin.$element.attr(&#39;title&#39;, title);
+};
+
+<span id='AjaxBootstrapSelectList-method-setStatus'>/**
+</span> * Sets a new status on the AjaxBootstrapSelectList.$status DOM element.
+ *
+ * @param {String} [status]
+ *   The new status to set, if empty it will hide it.
+ *
+ * @return {void}
+ */
+AjaxBootstrapSelectList.prototype.setStatus = function (status) {
+    status = status || &#39;&#39;;
+    if (status.length) {
+        this.$status.text(status).show();
+    }
+    else {
+        this.$status.text(&#39;&#39;).hide();
+    }
 };
 
 <span id='global-property-AjaxBootstrapSelectList'>/**

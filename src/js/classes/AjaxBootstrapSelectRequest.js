@@ -72,15 +72,10 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
     // Destroy the list currently there.
     this.plugin.list.destroy();
 
-    // Remove any existing templates.
-    this.plugin.$loading.remove();
-    this.plugin.$noResults.remove();
+    // Set the status accordingly.
+    this.plugin.list.setStatus(this.plugin.t('statusSearching'));
 
-    // Show the loading template.
-    if (this.plugin.options.templates.loading) {
-        this.plugin.$loading = $(this.plugin.options.templates.loading).appendTo(this.plugin.selectpicker.$menu);
-        this.plugin.list.refresh();
-    }
+    //this.plugin.list.refresh();
 };
 
 /**
@@ -96,7 +91,19 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
  * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
-    this.plugin.$loading.remove();
+    // Only continue if actual results.
+    var cache = this.plugin.list.cacheGet(this.plugin.query);
+    if (cache) {
+        if (cache.length) {
+            this.plugin.list.setStatus();
+        }
+        else {
+            this.plugin.list.destroy();
+            this.plugin.list.setStatus(this.plugin.t('statusNoResults'));
+            this.plugin.log(this.plugin.LOG_INFO, 'No results were returned.');
+            return;
+        }
+    }
     this.plugin.list.refresh();
 };
 
@@ -255,17 +262,6 @@ AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
     if (!$.isArray(data) && !$.isObject(data)) {
         this.plugin.log(this.plugin.LOG_ERROR, 'Request did not return a JSON Array or Object.', data);
         this.plugin.list.destroy();
-        return;
-    }
-
-    // Only continue if actual results.
-    if (!Object.keys(data).length) {
-        this.plugin.list.destroy();
-        if (this.plugin.options.templates.noResults) {
-            // Show the "no results" template.
-            this.plugin.$noResults = $(this.plugin.options.templates.noResults).appendTo(this.plugin.selectpicker.$menu);
-        }
-        this.plugin.log(this.plugin.LOG_INFO, 'No results were returned.');
         return;
     }
 

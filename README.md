@@ -279,10 +279,8 @@ __Suggested requirements:__
 > The DOM templates used in this plugin.
 > ```js
 > templates: {
->     // The template used when a request is being sent.
->     loading: '<div class="menu-loading">Loading...</div>',
->     // The template used when there are no results to display.
->     noResults: '<div class="no-results">No Results</div>'
+>     // The placeholder for status updates pertaining to the list and request.
+>     status: '<div class="status"></div>',
 > }
 > ```
 
@@ -311,15 +309,6 @@ See: [options.locale](#optionslocale)
 
 ***
 
-##### locale.noResults
-> __Type:__ `String`
->
-> __Default:__ `'No Results'`
->
-> The text used in the status container when the request returns no results.
-
-***
-
 ##### locale.searchPlaceholder
 > __Type:__ `String`
 >
@@ -329,12 +318,30 @@ See: [options.locale](#optionslocale)
 
 ***
 
-##### locale.searching
+##### locale.statusInitialized
+> __Type:__ `String`
+>
+> __Default:__ `'Start typing a search query'`
+>
+> The text used in the status container when it is initialized.
+
+***
+
+##### locale.statusNoResults
+> __Type:__ `String`
+>
+> __Default:__ `'No Results'`
+>
+> The text used in the status container when the request returns no results.
+
+***
+
+##### locale.statusSearching
 > __Type:__ `String`
 >
 > __Default:__ `'Searching...'`
 >
-> The text to use in the status container when a request is being made.
+> The text to use in the status container when a request is being initiated.
 
 ***
 

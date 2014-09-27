@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-26 7:13:27 AM CDT
+ * Last build: 2014-09-27 1:21:54 PM GMT+0200
  */
 !(function ($, window) {
 
@@ -46,18 +46,6 @@ var AjaxBootstrapSelect = function (element, options) {
         this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
         return null;
     }
-
-    /**
-     * The "loading" DOM element placeholder.
-     * @type {jQuery}
-     */
-    this.$loading = $();
-
-    /**
-     * The "noResults" DOM element placeholder.
-     * @type {jQuery}
-     */
-    this.$noResults = $();
 
     /**
      * Used for logging error messages.
@@ -337,6 +325,7 @@ AjaxBootstrapSelect.prototype.init = function () {
         if (plugin.options.cache && e.keyCode !== 13) {
             var cache = plugin.list.cacheGet(plugin.query);
             if (cache) {
+                plugin.list.setStatus(!cache.length ? plugin.t('statusNoResults') : '');
                 plugin.list.replaceOptions(cache);
                 plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
                 return;
@@ -484,6 +473,16 @@ window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
  */
 var AjaxBootstrapSelectList = function (plugin) {
     var that = this;
+
+    /**
+     * DOM element used for updating the status of requests and list counts.
+     * @type {jQuery}
+     */
+    this.$status = $(plugin.options.templates.status).hide().appendTo(plugin.selectpicker.$menu);
+    var statusInitialized = plugin.t('statusInitialized');
+    if (statusInitialized && statusInitialized.length) {
+        this.setStatus(statusInitialized);
+    }
 
     /**
      * Container for cached data.
@@ -653,6 +652,7 @@ AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
  */
 AjaxBootstrapSelectList.prototype.destroy = function () {
     this.replaceOptions();
+    this.plugin.list.setStatus();
     this.plugin.log(this.plugin.LOG_DEBUG, 'Destroyed select list.');
 };
 
@@ -776,6 +776,24 @@ AjaxBootstrapSelectList.prototype.setTitle = function (title) {
 };
 
 /**
+ * Sets a new status on the AjaxBootstrapSelectList.$status DOM element.
+ *
+ * @param {String} [status]
+ *   The new status to set, if empty it will hide it.
+ *
+ * @return {void}
+ */
+AjaxBootstrapSelectList.prototype.setStatus = function (status) {
+    status = status || '';
+    if (status.length) {
+        this.$status.text(status).show();
+    }
+    else {
+        this.$status.text('').hide();
+    }
+};
+
+/**
  * Use an existing definition in the Window object or create a new one.
  *
  * Note: This must be the last statement of this file.
@@ -859,15 +877,10 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
     // Destroy the list currently there.
     this.plugin.list.destroy();
 
-    // Remove any existing templates.
-    this.plugin.$loading.remove();
-    this.plugin.$noResults.remove();
+    // Set the status accordingly.
+    this.plugin.list.setStatus(this.plugin.t('statusSearching'));
 
-    // Show the loading template.
-    if (this.plugin.options.templates.loading) {
-        this.plugin.$loading = $(this.plugin.options.templates.loading).appendTo(this.plugin.selectpicker.$menu);
-        this.plugin.list.refresh();
-    }
+    //this.plugin.list.refresh();
 };
 
 /**
@@ -883,7 +896,19 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
  * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
-    this.plugin.$loading.remove();
+    // Only continue if actual results.
+    var cache = this.plugin.list.cacheGet(this.plugin.query);
+    if (cache) {
+        if (cache.length) {
+            this.plugin.list.setStatus();
+        }
+        else {
+            this.plugin.list.destroy();
+            this.plugin.list.setStatus(this.plugin.t('statusNoResults'));
+            this.plugin.log(this.plugin.LOG_INFO, 'No results were returned.');
+            return;
+        }
+    }
     this.plugin.list.refresh();
 };
 
@@ -1042,17 +1067,6 @@ AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
     if (!$.isArray(data) && !$.isObject(data)) {
         this.plugin.log(this.plugin.LOG_ERROR, 'Request did not return a JSON Array or Object.', data);
         this.plugin.list.destroy();
-        return;
-    }
-
-    // Only continue if actual results.
-    if (!Object.keys(data).length) {
-        this.plugin.list.destroy();
-        if (this.plugin.options.templates.noResults) {
-            // Show the "no results" template.
-            this.plugin.$noResults = $(this.plugin.options.templates.noResults).appendTo(this.plugin.selectpicker.$menu);
-        }
-        this.plugin.log(this.plugin.LOG_INFO, 'No results were returned.');
         return;
     }
 
@@ -1363,17 +1377,13 @@ $.fn.ajaxSelectPicker.defaults = {
      *
      * ```js
      * templates: {
-     *     // The template used when a request is being sent.
-     *     loading: '<div class="menu-loading">Loading...</div>',
-     *
-     *     // The template used when there are no results to display.
-     *     noResults: '<div class="no-results">No Results</div>'
+     *     // The placeholder for status updates pertaining to the list and request.
+     *     status: '<div class="status"></div>',
      * }
      * ```
      */
     templates: {
-        loading: '<div class="menu-loading">Loading...</div>',
-        noResults: '<div class="no-results">No Results</div>'
+        status: '<div class="status"></div>',
     }
 };
 
@@ -1415,14 +1425,6 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
-     * @cfg {String} noResults = 'No Results'
-     * @markdown
-     * The text used in the status container when the request returns no results.
-     */
-    noResults: 'No Results',
-
-    /**
-     * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} searchPlaceholder = 'Search...'
      * @markdown
      * The text to use for the search input placeholder attribute.
@@ -1431,11 +1433,27 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
-     * @cfg {String} searching = 'Searching...'
+     * @cfg {String} statusInitialized = 'Start typing a search query'
      * @markdown
-     * The text to use in the status container when a request is being made.
+     * The text used in the status container when it is initialized.
      */
-    searching: 'Searching...'
+    statusInitialized: 'Start typing a search query',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusNoResults = 'No Results'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
+    statusNoResults: 'No Results',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusSearching = 'Searching...'
+     * @markdown
+     * The text to use in the status container when a request is being initiated.
+     */
+    statusSearching: 'Searching...'
 };
 $.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];
 

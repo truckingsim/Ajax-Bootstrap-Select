@@ -12,13 +12,15 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-09-26 7:06:42 AM CDT
+ * Last build: 2014-09-27 1:21:56 PM GMT+0200
  */
-.bootstrap-select .placeholder {
+.bootstrap-select .status {
   background: #f0f0f0;
   clear: both;
+  color: #999;
   font-size: 11px;
-  font-weight: 600;
+  font-style: italic;
+  font-weight: 500;
   line-height: 1;
   margin-bottom: -5px;
   padding: 10px 20px;

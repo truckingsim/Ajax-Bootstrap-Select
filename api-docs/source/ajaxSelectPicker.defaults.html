@@ -278,17 +278,13 @@ $.fn.ajaxSelectPicker.defaults = {
      *
      * ```js
      * templates: {
-     *     // The template used when a request is being sent.
-     *     loading: &#39;&lt;div class=&quot;menu-loading&quot;&gt;Loading...&lt;/div&gt;&#39;,
-     *
-     *     // The template used when there are no results to display.
-     *     noResults: &#39;&lt;div class=&quot;no-results&quot;&gt;No Results&lt;/div&gt;&#39;
+     *     // The placeholder for status updates pertaining to the list and request.
+     *     status: &#39;&lt;div class=&quot;status&quot;&gt;&lt;/div&gt;&#39;,
      * }
      * ```
      */
     templates: {
-        loading: &#39;&lt;div class=&quot;menu-loading&quot;&gt;Loading...&lt;/div&gt;&#39;,
-        noResults: &#39;&lt;div class=&quot;no-results&quot;&gt;No Results&lt;/div&gt;&#39;
+        status: &#39;&lt;div class=&quot;status&quot;&gt;&lt;/div&gt;&#39;,
     }
 };
 </pre>

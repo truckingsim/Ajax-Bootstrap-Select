@@ -30,18 +30,6 @@ var AjaxBootstrapSelect = function (element, options) {
     }
 
     /**
-     * The "loading" DOM element placeholder.
-     * @type {jQuery}
-     */
-    this.$loading = $();
-
-    /**
-     * The "noResults" DOM element placeholder.
-     * @type {jQuery}
-     */
-    this.$noResults = $();
-
-    /**
      * Used for logging error messages.
      * @type {Number}
      */
@@ -319,6 +307,7 @@ AjaxBootstrapSelect.prototype.init = function () {
         if (plugin.options.cache && e.keyCode !== 13) {
             var cache = plugin.list.cacheGet(plugin.query);
             if (cache) {
+                plugin.list.setStatus(!cache.length ? plugin.t('statusNoResults') : '');
                 plugin.list.replaceOptions(cache);
                 plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
                 return;

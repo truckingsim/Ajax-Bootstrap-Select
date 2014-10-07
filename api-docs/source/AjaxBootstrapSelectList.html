@@ -225,17 +225,8 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
         this.restoreTitle();
     }
     this.plugin.selectpicker.refresh();
-    // The &quot;refresh&quot; method will set the $lis property to null, we must rebuild
-    // it. Bootstrap Select &lt;= 1.6.2 does not have the &quot;findLis&quot; method, this
-    // method will be in included in future releases, but until then we must
-    // mimic its functionality.
-    // @todo remove this if statement when Bootstrap Select 1.6.3 is released.
-    if (this.plugin.selectpicker.findLis) {
-        this.plugin.selectpicker.findLis();
-    }
-    else {
-        this.plugin.selectpicker.$lis = this.plugin.selectpicker.$menu.find(&#39;li&#39;);
-    }
+    // The &quot;refresh&quot; method sets the $lis property to null, it must be rebuilt.
+    this.plugin.selectpicker.findLis();
     this.plugin.$element.trigger(&#39;change.$&#39;);
     this.plugin.log(this.plugin.LOG_DEBUG, &#39;Refreshed select list.&#39;);
 };

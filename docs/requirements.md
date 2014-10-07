@@ -1,5 +1,5 @@
 __Minimum requirements:__
-* [Bootstrap Select 1.6.2+]
+* [Bootstrap Select 1.6.3+]
 * A server that can process AJAX requests and send back appropriate JSON data.
 
 [Bootstrap Select] must either be be initialized with `liveSearch` enabled in the passed options or the `select` element must have the `data-live-search="true"` attribute.

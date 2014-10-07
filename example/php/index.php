@@ -14,7 +14,7 @@ $data = json_decode($file_contents, true);
 	<meta charset="UTF-8">
 	<title></title>
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css"/>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
     <link rel="stylesheet" href="../../dist/css/ajax-bootstrap-select.css"/>
     <style>h3 { text-align: center; } .bootstrap-select { width: 100% !important; }</style>
 </head>
@@ -48,7 +48,7 @@ $data = json_decode($file_contents, true);
 
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="../../dist/js/ajax-bootstrap-select.js"></script>
 <script>
     var options = {
@@ -61,6 +61,9 @@ $data = json_decode($file_contents, true);
             data: {
                 q: '{{{q}}}'
             }
+        },
+        locale: {
+            emptyTitle: 'Select and Begin Typing'
         },
         log: 3,
         preprocessData: function (data) {
@@ -79,8 +82,7 @@ $data = json_decode($file_contents, true);
             // You must always return a valid array when processing data. The
             // data argument passed is a clone and cannot be modified directly.
             return array;
-        },
-        placeHolderOption: 'Select and Begin Typing'
+        }
     };
 
 	$('.selectpicker').selectpicker().filter('.with-ajax').ajaxSelectPicker(options);

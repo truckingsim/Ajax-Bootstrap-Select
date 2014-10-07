@@ -1,0 +1,15 @@
+{{#each files}}{{{section file}}}{{#blocks}}
+{{#if cfg}}#### {{#if cfg.deprecated}}~~{{/if}}{{cfg.name}}{{#if cfg.deprecated}}~~
+> __Deprecated:__ {{{cfg.deprecated}}}
+>{{/if}}{{#if cfg.required}}
+> __Required__
+>{{/if}}{{#if cfg.type}}
+> __Type:__ `{{{cfg.type}}}`
+>{{/if}}{{#if cfg.default}}
+> __Default:__ `{{{cfg.default}}}`
+>{{/if}}{{#if markdown}}
+> {{{markdown}}}{{/if}}
+
+***
+{{/if}}{{/blocks}}
+{{/each}}

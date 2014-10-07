@@ -13,8 +13,9 @@ $data = json_decode($file_contents, true);
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.css"/>
-	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.css"/>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="../../dist/css/ajax-bootstrap-select.css"/>
     <style>h3 { text-align: center; } .bootstrap-select { width: 100% !important; }</style>
 </head>
 <body>
@@ -34,56 +35,57 @@ $data = json_decode($file_contents, true);
 
 		<div class="col-xs-4">
 			<h3>With<br>Ajax-Bootstrap-Select</h3>
-			<select id="ajax-select" class="selectpicker" data-live-search="true">
-				<option value="" data-hidden="true">Select and Begin Typing</option>
-			</select>
+			<select id="ajax-select" class="selectpicker with-ajax" data-live-search="true"></select>
 		</div>
 
         <div class="col-xs-4">
             <h3>Multiple<br>Ajax-Bootstrap-Select</h3>
-            <select id="ajax-select-multiple" class="selectpicker" multiple data-live-search="true">
-                <option value="" data-hidden="true">Select and Begin Typing</option>
-            </select>
+            <select id="ajax-select-multiple" class="selectpicker with-ajax" multiple data-live-search="true"></select>
         </div>
 	</div>
 </div>
 
 
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.js"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.js"></script>
-<script type="text/javascript" src="../../ajaxSelectPicker.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="../../dist/js/ajax-bootstrap-select.js"></script>
 <script>
-    var commenSettings = {
-        ajaxResultsPreHook: function(data){
-            var arr = [];
-            if(data.length){
-                for(var i = 0; i < data.length; i++){
-                    arr.push({
-                        text: data[i].Name,
-                        value: data[i].Email
-                    });
-                }
-            }
-
-            return arr;
-        },
-        ajaxSearchUrl: 'ajax.php',
+    var options = {
         ajaxOptions: {
+            url: 'ajax.php',
             type: 'POST',
             dataType: 'json',
+            // Use "{{{q}}}" as a placeholder and Ajax Bootstrap Select will
+            // automatically replace it with the value of the search query.
             data: {
-                q: '{{{q}}}' //We use {{{q}}} as a placeholder to specific I want the value from the textbox used
+                q: '{{{q}}}'
             }
         },
-        placeHolderOption: 'Select and Begin Typing'
+        locale: {
+            emptyTitle: 'Select and Begin Typing'
+        },
+        log: 3,
+        preprocessData: function (data) {
+            var i, l = data.length, array = [];
+            if (l) {
+                for(i = 0; i < l; i++){
+                    array.push($.extend(true, data[i], {
+                        text: data[i].Name,
+                        value: data[i].Email,
+                        data: {
+                            subtext: data[i].Email
+                        }
+                    }));
+                }
+            }
+            // You must always return a valid array when processing data. The
+            // data argument passed is a clone and cannot be modified directly.
+            return array;
+        }
     };
 
-	$('.selectpicker').selectpicker();
-	$('#ajax-select').ajaxSelectPicker(commenSettings);
-
-    var multipleSettings = $.extend({}, commenSettings, {mixWithCurrents: true});
-    $('#ajax-select-multiple').ajaxSelectPicker(multipleSettings)
+	$('.selectpicker').selectpicker().filter('.with-ajax').ajaxSelectPicker(options);
 </script>
 </body>
 </html>

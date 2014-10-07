@@ -1,0 +1,44 @@
+{
+  "name": "ajax-bootstrap-select",
+  "title": "Ajax Bootstrap Select",
+  "description": "Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.",
+  "version": "1.2.0",
+  "author": {
+    "name": "Adam Heim",
+    "url": "https://github.com/truckingsim"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/truckingsim/Ajax-Bootstrap-Select/blob/master/LICENSE-MIT"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Mark Carver",
+      "email": "mark.carver@me.com",
+      "url": "https://github.com/markcarver"
+    }
+  ],
+  "homepage": "https://github.com/truckingsim/Ajax-Bootstrap-Select",
+  "bugs": "https://github.com/truckingsim/Ajax-Bootstrap-Select/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/truckingsim/Ajax-Bootstrap-Select.git"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-copy": "^0.6.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-less": "^0.11.4",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-dss": "https://github.com/sebald/grunt-dss/tarball/b859eb88521bb13baecfb4d0af6dc293bd37b067",
+    "grunt-html2md": "^0.1.2",
+    "grunt-jsdoc": "^0.6.0",
+    "grunt-jsduck": "^1.0.1",
+    "grunt-verb": "^0.2.4"
+  }
+}

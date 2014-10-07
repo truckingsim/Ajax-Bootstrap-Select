@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='$-fn-ajaxSelectPicker'>/**
+</span> * @class $.fn.ajaxSelectPicker
+ * @chainable
+ *
+ * The jQuery plugin definition.
+ *
+ * This initializes a new AjaxBootstrapSelect class for each element in the jQuery chain.
+ *
+ * @param {Object} options
+ *   The {@link $.fn.ajaxSelectPicker.defaults options} to pass to the plugin.
+ *
+ * @returns {jQuery}
+ */
+$.fn.ajaxSelectPicker = function (options) {
+    return this.each(function () {
+        if (!$(this).data(&#39;AjaxBootstrapSelect&#39;)) {
+            $(this).data(&#39;AjaxBootstrapSelect&#39;, new window.AjaxBootstrapSelect(this, options));
+        }
+    });
+};
+
+<span id='$-fn-ajaxSelectPicker-property-locale'>/**
+</span> * The locale object containing string translations.
+ *
+ * See: {@link $.fn.ajaxSelectPicker.locale}
+ * @type {Object}
+ */
+$.fn.ajaxSelectPicker.locale = {};
+</pre>
+</body>
+</html>

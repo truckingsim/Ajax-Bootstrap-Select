@@ -161,41 +161,25 @@ AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
  *   The processed data array or false if an error occurred.
  */
 AjaxBootstrapSelectRequest.prototype.process = function (data) {
-    var i, l, callbackResult, clone, item, preprocessedData, processedData;
+    var i, l, callbackResult, item, preprocessedData, processedData;
     var filteredData = [], seenValues = [];
 
     this.plugin.log(this.plugin.LOG_INFO, &#39;Processing raw data for:&#39;, this.plugin.query, data);
 
-    // If the data argument is an object, convert it to an array.
-    if ($.isPlainObject(data)) {
-        clone = [].concat($.map(data, function (value) {
-            return [value];
-        }));
-    }
-    else {
-        if ($.isArray(data)) {
-            clone = [].concat(data);
-        }
-        else {
-            this.plugin.log(this.plugin.LOG_ERROR, &#39;The data type passed was not an Array or Object.&#39;, data);
-            return false;
-        }
-    }
-
     // Invoke the preprocessData option callback.
-    preprocessedData = [].concat(clone);
+    preprocessedData = data;
     if ($.isFunction(this.plugin.options.preprocessData)) {
         this.plugin.log(this.plugin.LOG_DEBUG, &#39;Invoking preprocessData callback:&#39;, this.plugin.options.processData);
         callbackResult = this.plugin.options.preprocessData(preprocessedData);
         if (typeof callbackResult !== &#39;undefined&#39; &amp;&amp; callbackResult !== null &amp;&amp; callbackResult !== false) {
-            if ($.isArray(callbackResult)) {
-                preprocessedData = callbackResult;
-            }
-            else {
-                this.plugin.log(this.plugin.LOG_ERROR, &#39;The preprocessData callback did not return an array.&#39;, callbackResult);
-                return false;
-            }
+            preprocessedData = callbackResult;
         }
+    }
+
+    // Ensure the data is an array.
+    if (!$.isArray(preprocessedData)) {
+        this.plugin.log(this.plugin.LOG_ERROR, &#39;The data returned is not an Array. Use the &quot;preprocessData&quot; callback option to parse the results and construct a proper array for this plugin.&#39;, preprocessedData);
+        return false;
     }
 
     // Filter preprocessedData.
@@ -276,7 +260,7 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
  */
 AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
     // Only process data if an Array or Object.
-    if (!$.isArray(data) &amp;&amp; !$.isObject(data)) {
+    if (!$.isArray(data) &amp;&amp; !$.isPlainObject(data)) {
         this.plugin.log(this.plugin.LOG_ERROR, &#39;Request did not return a JSON Array or Object.&#39;, data);
         this.plugin.list.destroy();
         return;

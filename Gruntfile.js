@@ -280,5 +280,6 @@ module.exports = function (grunt) {
     grunt.registerTask('plugin', ['jshint:plugin', 'clean:plugin', 'concat:plugin', 'uglify:plugin', 'jsduck']);
     grunt.registerTask('styles', ['clean:styles', 'less']);
     grunt.registerTask('default', ['docs', 'locale', 'plugin', 'styles']);
+    grunt.registerTask('travis', ['jshint:locale', 'clean:locale', 'copy:locale', 'uglify:locale', 'jshint:plugin', 'clean:plugin', 'concat:plugin', 'uglify:plugin', 'clean:styles', 'less']);
 
 };

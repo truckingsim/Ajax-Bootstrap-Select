@@ -26,6 +26,9 @@
     "type": "git",
     "url": "https://github.com/truckingsim/Ajax-Bootstrap-Select.git"
   },
+  "scripts": {
+  	  "test": "grunt travis --verbose"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",

@@ -98,6 +98,15 @@ __Suggested requirements:__
 
 ***
 
+##### options.clearOnError
+> __Type:__ `Boolean`
+>
+> __Default:__ `true`
+>
+> Clears the select list when the request returned with an error.
+
+***
+
 ##### ~~options.debug~~
 > __Deprecated:__ Since version `1.2.0`, see: [options.log](#optionslog).
 >
@@ -273,6 +282,16 @@ __Suggested requirements:__
 
 ***
 
+##### options.restoreOnError
+> __Type:__ `Boolean`
+>
+> __Default:__ `false`
+>
+> Restores the select list with the previous results when the request
+> returns with an error.
+
+***
+
 ##### options.templates
 > __Type:__ `Object`
 >
@@ -306,6 +325,15 @@ See: [options.locale](#optionslocale)
 > __Default:__ `'Select and begin typing'`
 >
 > The text to use as the title for the select element when there are no items to display.
+
+***
+
+##### locale.errorText
+> __Type:__ `String`
+>
+> __Default:__ `''Unable to retrieve results'`
+>
+> The text to use in the status container when a request returns with an error.
 
 ***
 

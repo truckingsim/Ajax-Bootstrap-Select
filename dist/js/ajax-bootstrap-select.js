@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-10-09 4:44:31 PM EDT
+ * Last build: 2014-10-13 9:30:14 AM EDT
  */
 !(function ($, window) {
 
@@ -38,14 +38,10 @@ var AjaxBootstrapSelect = function (element, options) {
     this.$element = $(element);
 
     /**
-     * Reference to the selectpicker instance.
-     * @type {Selectpicker}
+     * The merged default and passed options.
+     * @type {Object}
      */
-    this.selectpicker = this.$element.data('selectpicker');
-    if (!this.selectpicker) {
-        this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
-        return null;
-    }
+    this.options = $.extend(true, {}, $.fn.ajaxSelectPicker.defaults, options);
 
     /**
      * Used for logging error messages.
@@ -70,12 +66,6 @@ var AjaxBootstrapSelect = function (element, options) {
      * @type {Number}
      */
     this.LOG_DEBUG = 4;
-
-    /**
-     * The merged default and passed options.
-     * @type {Object}
-     */
-    this.options = $.extend(true, {}, $.fn.ajaxSelectPicker.defaults, options);
 
     /**
      * The previous query that was requested.
@@ -156,11 +146,6 @@ var AjaxBootstrapSelect = function (element, options) {
         });
     }
 
-    // Override any provided option with the data attribute value.
-    if (this.$element.data('searchUrl')) {
-        this.options.ajaxOptions.url = this.$element.data('searchUrl');
-    }
-
     // Ensure the logging level is always an integer.
     if (typeof this.options.log !== 'number') {
         if (typeof this.options.log === 'string') {
@@ -187,6 +172,21 @@ var AjaxBootstrapSelect = function (element, options) {
                 this.options.log = this.LOG_ERROR;
                 break;
         }
+    }
+
+    /**
+     * Reference to the selectpicker instance.
+     * @type {Selectpicker}
+     */
+    this.selectpicker = this.$element.data('selectpicker');
+    if (!this.selectpicker) {
+        this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
+        return null;
+    }
+
+    // Override any provided option with the data attribute value.
+    if (this.$element.data('searchUrl')) {
+        this.options.ajaxOptions.url = this.$element.data('searchUrl');
     }
 
     // Ensure there is a URL.
@@ -360,10 +360,19 @@ AjaxBootstrapSelect.prototype.log = function (type, message) {
 
         // Determine the correct console method to use.
         switch (type) {
-            case this.LOG_DEBUG: type = 'debug'; break;
-            case this.LOG_INFO: type = 'info'; break;
-            case this.LOG_WARNING: type = 'warn'; break;
-            default: case this.LOG_ERROR: type = 'error'; break;
+            case this.LOG_DEBUG:
+                type = 'debug';
+                break;
+            case this.LOG_INFO:
+                type = 'info';
+                break;
+            case this.LOG_WARNING:
+                type = 'warn';
+                break;
+            default:
+            case this.LOG_ERROR:
+                type = 'error';
+                break;
         }
 
         // Prefix the message.
@@ -488,7 +497,7 @@ var AjaxBootstrapSelectList = function (plugin) {
      * Container for cached data.
      * @type {Object}
      */
-    this.cache = { '': [] };
+    this.cache = {};
 
     /**
      * Reference the plugin for internal use.
@@ -730,7 +739,8 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
  *   Return true if successful or false if no states are present.
  */
 AjaxBootstrapSelectList.prototype.restore = function () {
-    if (this.plugin.list.replaceOptions(this.plugin.list.cacheGet(this.plugin.previousQuery))) {
+    var cache = this.plugin.list.cacheGet(this.plugin.previousQuery);
+    if (cache && this.plugin.list.replaceOptions(cache)) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Restored select list to the previous query: ', this.plugin.previousQuery);
     }
     this.plugin.log(this.plugin.LOG_DEBUG, 'Unable to restore select list to the previous query:', this.plugin.previousQuery);
@@ -921,7 +931,22 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
  * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
-    this.plugin.list.restore();
+    // Cache the result data.
+    this.plugin.list.cacheSet(this.plugin.query);
+
+    // Clear the list.
+    if (this.plugin.options.clearOnError) {
+        this.plugin.list.destroy();
+    }
+
+    // Set the status after the list has cleared and before the restore.
+    this.plugin.list.setStatus(this.plugin.t('errorText'));
+
+    // Restore previous request.
+    if (this.plugin.options.restoreOnError) {
+        this.plugin.list.restore();
+        this.plugin.list.setStatus();
+    }
 };
 
 /**
@@ -1163,6 +1188,14 @@ $.fn.ajaxSelectPicker.defaults = {
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} clearOnError = true
+     * @markdown
+     * Clears the select list when the request returned with an error.
+     */
+    clearOnError: true,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
      * @cfg {Boolean} debug
      * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#log}.
      */
@@ -1346,6 +1379,15 @@ $.fn.ajaxSelectPicker.defaults = {
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} restoreOnError = false
+     * @markdown
+     * Restores the select list with the previous results when the request
+     * returns with an error.
+     */
+    restoreOnError: false,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
      * @cfg {Object} templates
      * @markdown
      * The DOM templates used in this plugin.
@@ -1397,6 +1439,14 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      * The text to use as the title for the select element when there are no items to display.
      */
     emptyTitle: 'Select and begin typing',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} errorText = ''Unable to retrieve results'
+     * @markdown
+     * The text to use in the status container when a request returns with an error.
+     */
+    errorText: 'Unable to retrieve results',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale

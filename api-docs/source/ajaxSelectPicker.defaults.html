@@ -87,6 +87,14 @@ $.fn.ajaxSelectPicker.defaults = {
      */
     clearOnEmpty: true,
 
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-clearOnError'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} clearOnError = true
+     * @markdown
+     * Clears the select list when the request returned with an error.
+     */
+    clearOnError: true,
+
 <span id='$-fn-ajaxSelectPicker-defaults-cfg-debug'>    /**
 </span>     * @member $.fn.ajaxSelectPicker.defaults
      * @cfg {Boolean} debug
@@ -269,6 +277,15 @@ $.fn.ajaxSelectPicker.defaults = {
      * current delayed request and start a new one.
      */
     requestDelay: 300,
+
+<span id='$-fn-ajaxSelectPicker-defaults-cfg-restoreOnError'>    /**
+</span>     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} restoreOnError = false
+     * @markdown
+     * Restores the select list with the previous results when the request
+     * returns with an error.
+     */
+    restoreOnError: false,
 
 <span id='$-fn-ajaxSelectPicker-defaults-cfg-templates'>    /**
 </span>     * @member $.fn.ajaxSelectPicker.defaults

@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-10-09 4:44:31 PM EDT
+ * Last build: 2014-10-13 9:30:13 AM EDT
  */
 !(function ($) {
 /*
@@ -50,6 +50,14 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      * The text to use as the title for the select element when there are no items to display.
      */
     emptyTitle: 'Select and begin typing',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} errorText = ''Unable to retrieve results'
+     * @markdown
+     * The text to use in the status container when a request returns with an error.
+     */
+    errorText: 'Unable to retrieve results',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale

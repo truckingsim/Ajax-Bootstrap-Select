@@ -25,7 +25,7 @@ var AjaxBootstrapSelectList = function (plugin) {
      * Container for cached data.
      * @type {Object}
      */
-    this.cache = { '': [] };
+    this.cache = {};
 
     /**
      * Reference the plugin for internal use.
@@ -267,7 +267,8 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
  *   Return true if successful or false if no states are present.
  */
 AjaxBootstrapSelectList.prototype.restore = function () {
-    if (this.plugin.list.replaceOptions(this.plugin.list.cacheGet(this.plugin.previousQuery))) {
+    var cache = this.plugin.list.cacheGet(this.plugin.previousQuery);
+    if (cache && this.plugin.list.replaceOptions(cache)) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Restored select list to the previous query: ', this.plugin.previousQuery);
     }
     this.plugin.log(this.plugin.LOG_DEBUG, 'Unable to restore select list to the previous query:', this.plugin.previousQuery);

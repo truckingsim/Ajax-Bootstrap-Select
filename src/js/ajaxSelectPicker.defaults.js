@@ -72,6 +72,14 @@ $.fn.ajaxSelectPicker.defaults = {
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} clearOnError = true
+     * @markdown
+     * Clears the select list when the request returned with an error.
+     */
+    clearOnError: true,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
      * @cfg {Boolean} debug
      * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#log}.
      */
@@ -252,6 +260,15 @@ $.fn.ajaxSelectPicker.defaults = {
      * current delayed request and start a new one.
      */
     requestDelay: 300,
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} restoreOnError = false
+     * @markdown
+     * Restores the select list with the previous results when the request
+     * returns with an error.
+     */
+    restoreOnError: false,
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults

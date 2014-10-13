@@ -36,6 +36,14 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} errorText = ''Unable to retrieve results'
+     * @markdown
+     * The text to use in the status container when a request returns with an error.
+     */
+    errorText: 'Unable to retrieve results',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} searchPlaceholder = 'Search...'
      * @markdown
      * The text to use for the search input placeholder attribute.

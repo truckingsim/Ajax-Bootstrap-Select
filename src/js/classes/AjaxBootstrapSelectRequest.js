@@ -125,7 +125,22 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
  * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
-    this.plugin.list.restore();
+    // Cache the result data.
+    this.plugin.list.cacheSet(this.plugin.query);
+
+    // Clear the list.
+    if (this.plugin.options.clearOnError) {
+        this.plugin.list.destroy();
+    }
+
+    // Set the status after the list has cleared and before the restore.
+    this.plugin.list.setStatus(this.plugin.t('errorText'));
+
+    // Restore previous request.
+    if (this.plugin.options.restoreOnError) {
+        this.plugin.list.restore();
+        this.plugin.list.setStatus();
+    }
 };
 
 /**

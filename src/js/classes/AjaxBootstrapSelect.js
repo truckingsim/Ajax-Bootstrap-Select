@@ -20,14 +20,10 @@ var AjaxBootstrapSelect = function (element, options) {
     this.$element = $(element);
 
     /**
-     * Reference to the selectpicker instance.
-     * @type {Selectpicker}
+     * The merged default and passed options.
+     * @type {Object}
      */
-    this.selectpicker = this.$element.data('selectpicker');
-    if (!this.selectpicker) {
-        this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
-        return null;
-    }
+    this.options = $.extend(true, {}, $.fn.ajaxSelectPicker.defaults, options);
 
     /**
      * Used for logging error messages.
@@ -52,12 +48,6 @@ var AjaxBootstrapSelect = function (element, options) {
      * @type {Number}
      */
     this.LOG_DEBUG = 4;
-
-    /**
-     * The merged default and passed options.
-     * @type {Object}
-     */
-    this.options = $.extend(true, {}, $.fn.ajaxSelectPicker.defaults, options);
 
     /**
      * The previous query that was requested.
@@ -138,11 +128,6 @@ var AjaxBootstrapSelect = function (element, options) {
         });
     }
 
-    // Override any provided option with the data attribute value.
-    if (this.$element.data('searchUrl')) {
-        this.options.ajaxOptions.url = this.$element.data('searchUrl');
-    }
-
     // Ensure the logging level is always an integer.
     if (typeof this.options.log !== 'number') {
         if (typeof this.options.log === 'string') {
@@ -169,6 +154,21 @@ var AjaxBootstrapSelect = function (element, options) {
                 this.options.log = this.LOG_ERROR;
                 break;
         }
+    }
+
+    /**
+     * Reference to the selectpicker instance.
+     * @type {Selectpicker}
+     */
+    this.selectpicker = this.$element.data('selectpicker');
+    if (!this.selectpicker) {
+        this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
+        return null;
+    }
+
+    // Override any provided option with the data attribute value.
+    if (this.$element.data('searchUrl')) {
+        this.options.ajaxOptions.url = this.$element.data('searchUrl');
     }
 
     // Ensure there is a URL.
@@ -342,10 +342,19 @@ AjaxBootstrapSelect.prototype.log = function (type, message) {
 
         // Determine the correct console method to use.
         switch (type) {
-            case this.LOG_DEBUG: type = 'debug'; break;
-            case this.LOG_INFO: type = 'info'; break;
-            case this.LOG_WARNING: type = 'warn'; break;
-            default: case this.LOG_ERROR: type = 'error'; break;
+            case this.LOG_DEBUG:
+                type = 'debug';
+                break;
+            case this.LOG_INFO:
+                type = 'info';
+                break;
+            case this.LOG_WARNING:
+                type = 'warn';
+                break;
+            default:
+            case this.LOG_ERROR:
+                type = 'error';
+                break;
         }
 
         // Prefix the message.

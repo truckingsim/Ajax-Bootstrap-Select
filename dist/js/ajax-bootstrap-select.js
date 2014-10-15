@@ -3,7 +3,7 @@
  *
  * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
  *
- * @version 1.2.1
+ * @version 1.2.22
  * @author Adam Heim - https://github.com/truckingsim
  * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
  * @copyright 2014 Adam Heim
@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-10-13 9:30:14 AM EDT
+ * Last build: 2014-10-15 3:58:49 PM EDT
  */
 !(function ($, window) {
 

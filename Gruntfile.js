@@ -259,6 +259,22 @@ module.exports = function (grunt) {
                 files: '<%= jshint.plugin.src %>',
                 tasks: ['plugin']
             }
+        },
+        update_json: {
+            options: {
+                src: 'package.json',
+                indent: '    '
+            },
+            bower: {
+                src: 'package.json',
+                dest: 'bower.json',
+                fields: {
+                    name: null,
+                    version: null,
+                    description: null,
+                    repository: null
+                }
+            }
         }
     });
 
@@ -273,13 +289,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-dss');
     grunt.loadNpmTasks('grunt-jsduck');
     grunt.loadNpmTasks('grunt-verb');
+    grunt.loadNpmTasks('grunt-update-json');
 
     // Default task(s).
     grunt.registerTask('docs', ['dss', 'verb']);
     grunt.registerTask('locale', ['jshint:locale', 'clean:locale', 'copy:locale', 'uglify:locale']);
     grunt.registerTask('plugin', ['jshint:plugin', 'clean:plugin', 'concat:plugin', 'uglify:plugin', 'jsduck']);
     grunt.registerTask('styles', ['clean:styles', 'less']);
-    grunt.registerTask('default', ['docs', 'locale', 'plugin', 'styles']);
+    grunt.registerTask('default', ['docs', 'locale', 'plugin', 'styles', 'update_json']);
     grunt.registerTask('travis', ['jshint:locale', 'clean:locale', 'copy:locale', 'uglify:locale', 'jshint:plugin', 'clean:plugin', 'concat:plugin', 'uglify:plugin', 'clean:styles', 'less']);
 
 };

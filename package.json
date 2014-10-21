@@ -42,6 +42,7 @@
     "grunt-html2md": "^0.1.2",
     "grunt-jsdoc": "^0.6.0",
     "grunt-jsduck": "^1.0.1",
-    "grunt-verb": "^0.2.4"
+    "grunt-verb": "^0.2.4",
+    "grunt-update-json": "^0.1.3"
   }
 }

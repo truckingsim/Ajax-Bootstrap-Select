@@ -1,0 +1,27 @@
+{
+	"name": "ajax-bootstrap-select",
+	"version": "1.2.2",
+	"description": "Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/truckingsim/Ajax-Bootstrap-Select.git"
+	},
+	"ignore": [
+		".jshintrc",
+		".travis.yml",
+		".verbc.md",
+		"jsduck.categories.json"
+	],
+	"keywords": [
+		"bootstrap",
+		"bootstrap-select",
+		"ajax"
+	],
+	"main": [
+		"dist/css/ajax-bootstrap-select.css",
+		"dist/js/ajax-bootstrap-select.js"
+	],
+	"dependencies": {
+		"bootstrap-select": ">=1.6.3"
+	}
+}

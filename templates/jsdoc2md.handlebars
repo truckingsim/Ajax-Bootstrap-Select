@@ -1,5 +1,5 @@
 {{#each files}}{{{section file}}}{{#blocks}}
-{{#if cfg}}#### {{#if cfg.deprecated}}~~{{/if}}{{cfg.name}}{{#if cfg.deprecated}}~~
+{{#if cfg}}### {{#if cfg.deprecated}}~~{{/if}}{{cfg.name}}{{#if cfg.deprecated}}~~
 > __Deprecated:__ {{{cfg.deprecated}}}
 >{{/if}}{{#if cfg.required}}
 > __Required__
@@ -7,7 +7,9 @@
 > __Type:__ `{{{cfg.type}}}`
 >{{/if}}{{#if cfg.default}}
 > __Default:__ `{{{cfg.default}}}`
->{{/if}}{{#if markdown}}
+>{{/if}}{{#if cfg.dataAttribute}}{{#unless cfg.deprecated}}
+> __Data Attribute:__ `data-abs-{{{cfg.dataAttribute}}}{{#if cfg.dataAttributeMultiple}}[-*]{{/if}}="..."`
+>{{/unless}}{{/if}}{{#if markdown}}
 > {{{markdown}}}{{/if}}
 
 ***

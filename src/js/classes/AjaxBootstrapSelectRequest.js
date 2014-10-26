@@ -15,7 +15,7 @@ var AjaxBootstrapSelectRequest = function (plugin) {
             that.plugin.log(that.plugin.LOG_INFO, 'Invoking AjaxBootstrapSelectRequest.' + event + ' callback:', arguments);
             that[event].apply(that, arguments);
             if (that.callbacks[event]) {
-                that.plugin.log(that.plugin.LOG_INFO, 'Invoking ajaxOptions.' + event + ' callback:', arguments);
+                that.plugin.log(that.plugin.LOG_INFO, 'Invoking ajax.' + event + ' callback:', arguments);
                 that.callbacks[event].apply(that, arguments);
             }
         };
@@ -26,8 +26,8 @@ var AjaxBootstrapSelectRequest = function (plugin) {
     // Reference the existing plugin.
     this.plugin = plugin;
 
-    // Clone the default ajaxOptions.
-    this.options = $.extend(true, {}, plugin.options.ajaxOptions);
+    // Clone the default ajax options.
+    this.options = $.extend(true, {}, plugin.options.ajax);
 
     // Save any existing callbacks provided in the options and replace it with
     // the relevant method callback. The provided callback will be invoked

@@ -52,7 +52,7 @@ $data = json_decode($file_contents, true);
 <script type="text/javascript" src="../../dist/js/ajax-bootstrap-select.js"></script>
 <script>
     var options = {
-        ajaxOptions: {
+        ajax: {
             url: 'ajax.php',
             type: 'POST',
             dataType: 'json',

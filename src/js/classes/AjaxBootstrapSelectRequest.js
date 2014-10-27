@@ -172,7 +172,7 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
     preprocessedData = data;
     if ($.isFunction(this.plugin.options.preprocessData)) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Invoking preprocessData callback:', this.plugin.options.processData);
-        callbackResult = this.plugin.options.preprocessData(preprocessedData);
+        callbackResult = this.plugin.options.preprocessData.apply(this, [preprocessedData]);
         if (typeof callbackResult !== 'undefined' && callbackResult !== null && callbackResult !== false) {
             preprocessedData = callbackResult;
         }
@@ -227,7 +227,7 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
     processedData = [].concat(filteredData);
     if ($.isFunction(this.plugin.options.processData)) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Invoking processData callback:', this.plugin.options.processData);
-        callbackResult = this.plugin.options.processData(processedData);
+        callbackResult = this.plugin.options.processData.apply(this, [processedData]);
         if (typeof callbackResult !== 'undefined' && callbackResult !== null && callbackResult !== false) {
             if ($.isArray(callbackResult)) {
                 processedData = callbackResult;

@@ -97,7 +97,7 @@ var AjaxBootstrapSelect = function (element, options) {
             to: function (map) {
                 var _options = {};
                 _options.log = Boolean(plugin.options[map.from]) ? plugin.LOG_DEBUG : 0;
-                $.extend(plugin.options, _options);
+                plugin.options = $.extend(true, {}, plugin.options, _options);
                 delete plugin.options[map.from];
                 plugin.log(plugin.LOG_WARNING, 'Deprecated option "' + map.from + '". Update code to use:', _options);
             }
@@ -136,7 +136,7 @@ var AjaxBootstrapSelect = function (element, options) {
                 else {
                     var _options = {};
                     _options[map.to] = plugin.options[map.from];
-                    $.extend(plugin.options, _options);
+                    plugin.options = $.extend(true, {}, plugin.options, _options);
                     plugin.log(plugin.LOG_WARNING, 'Deprecated option "' + map.from + '". Update code to use:', _options);
                     delete plugin.options[map.from];
                 }

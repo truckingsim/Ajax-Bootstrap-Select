@@ -35,7 +35,9 @@ __Suggested requirements:__
 
 ### Options
 
-##### ~~options.ajaxResultsPreHook~~
+Options can be passed via data attributes or through the JavaScript options object. For data attributes, append the option name to the `data-abs-` prefix. Options names (and any nested options) are always lower case and separated by `-`, such as in `data-abs-ajax-url="..."` or `data-abs-locale-search-placeholder="..."`.
+
+#### ~~options.ajaxResultsPreHook~~
 > __Deprecated:__ Since version `1.2.0`, see: [options.preprocessData](#optionspreprocessdata).
 >
 > __Type:__ `Function`
@@ -43,10 +45,12 @@ __Suggested requirements:__
 
 ***
 
-##### options.ajaxOptions
+#### options.ajax
 > __Required__
 >
 > __Type:__ `Object`
+>
+> __Data Attribute:__ `data-abs-ajax[-*]="..."`
 >
 > The options to pass to the jQuery AJAX request.
 > ```js
@@ -62,52 +66,60 @@ __Suggested requirements:__
 
 ***
 
-##### ~~options.ajaxSearchUrl~~
-> __Deprecated:__ Since version `1.2.0`, see: [options.ajaxOptions](#optionsajaxoptions).
+#### ~~options.ajaxSearchUrl~~
+> __Deprecated:__ Since version `1.2.0`, see: [options.ajax](#optionsajax).
 >
 > __Type:__ `String`
 >
 
 ***
 
-##### options.bindEvent
+#### options.bindEvent
 > __Type:__ `String`
 >
 > __Default:__ `"keyup"`
+>
+> __Data Attribute:__ `data-abs-bind-event="..."`
 >
 > The event to bind on the search input element to fire a request.
 
 ***
 
-##### options.cache
+#### options.cache
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
+>
+> __Data Attribute:__ `data-abs-cache="..."`
 >
 > Cache previous requests. If enabled, the "enter" key (13) is enabled to
 > allow users to force a refresh of the request.
 
 ***
 
-##### options.clearOnEmpty
+#### options.clearOnEmpty
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
+>
+> __Data Attribute:__ `data-abs-clear-on-empty="..."`
 >
 > Clears the previous results when the search input has no value.
 
 ***
 
-##### options.clearOnError
+#### options.clearOnError
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
+>
+> __Data Attribute:__ `data-abs-clear-on-error="..."`
 >
 > Clears the select list when the request returned with an error.
 
 ***
 
-##### ~~options.debug~~
+#### ~~options.debug~~
 > __Deprecated:__ Since version `1.2.0`, see: [options.log](#optionslog).
 >
 > __Type:__ `Boolean`
@@ -115,17 +127,21 @@ __Suggested requirements:__
 
 ***
 
-##### options.emptyRequest
+#### options.emptyRequest
 > __Type:__ `Boolean`
 >
 > __Default:__ `false`
+>
+> __Data Attribute:__ `data-abs-empty-request="..."`
 >
 > Invoke a request for empty search values.
 
 ***
 
-##### options.ignoredKeys
+#### options.ignoredKeys
 > __Type:__ `Object`
+>
+> __Data Attribute:__ `data-abs-ignored-keys[-*]="..."`
 >
 > Key codes to ignore so a request is not invoked with bindEvent. The
 > "enter" key (13) will always be dynamically added to any list provided
@@ -148,10 +164,12 @@ __Suggested requirements:__
 
 ***
 
-##### options.langCode
+#### options.langCode
 > __Type:__ `String`
 >
 > __Default:__ `null`
+>
+> __Data Attribute:__ `data-abs-lang-code="..."`
 >
 > The language code to use for string translation. By default this value
 > is determined by the browser, however it is not entirely reliable. If
@@ -159,10 +177,12 @@ __Suggested requirements:__
 
 ***
 
-##### options.locale
+#### options.locale
 > __Type:__ `Object`
 >
 > __Default:__ `null`
+>
+> __Data Attribute:__ `data-abs-locale[-*]="..."`
 >
 > Provide specific overrides for [locale string](#locale-strings) translations. Values
 > set here will cause the plugin to completely ignore defined locale string
@@ -177,10 +197,12 @@ __Suggested requirements:__
 
 ***
 
-##### options.log
+#### options.log
 > __Type:__ `String|Number|Number`
 >
 > __Default:__ `'error'`
+>
+> __Data Attribute:__ `data-abs-log="..."`
 >
 > Determines the amount of logging that is displayed:
 > - __0, false:__ Display no information from the plugin.
@@ -191,7 +213,7 @@ __Suggested requirements:__
 
 ***
 
-##### ~~options.mixWithCurrents~~
+#### ~~options.mixWithCurrents~~
 > __Deprecated:__ Since version `1.2.0`, see: [options.preserveSelected](#optionspreserveselected).
 >
 > __Type:__ `Boolean`
@@ -199,16 +221,16 @@ __Suggested requirements:__
 
 ***
 
-##### ~~options.placeHolderOption~~
+#### ~~options.placeHolderOption~~
 > __Deprecated:__ Since version `1.2.0`, see: [locale.emptyTitle](#localeemptytitle).
 >
 
 ***
 
-##### options.preprocessData
+#### options.preprocessData
 > __Type:__ `Function|null`
 >
-> __Default:__ `null`
+> __Default:__ `function(){}`
 >
 > Process the raw data returned from a request.
 > The following arguments are passed to this callback:
@@ -240,10 +262,12 @@ __Suggested requirements:__
 
 ***
 
-##### options.preserveSelected
+#### options.preserveSelected
 > __Type:__ `Boolean`
 >
 > __Default:__ `true`
+>
+> __Data Attribute:__ `data-abs-preserve-selected="..."`
 >
 > Preserve selected items(s) between requests. When enabled, they will be
 > placed in an `<optgroup>` with the label `Currently Selected`. Disable
@@ -252,29 +276,33 @@ __Suggested requirements:__
 
 ***
 
-##### options.preserveSelectedPosition
+#### options.preserveSelectedPosition
 > __Type:__ `String`
 >
 > __Default:__ `'after'`
+>
+> __Data Attribute:__ `data-abs-preserve-selected-position="..."`
 >
 > Place the currently selected options `'before'` or `'after'` the options
 > returned from the request.
 
 ***
 
-##### options.processData
+#### options.processData
 > __Type:__ `Function|null`
 >
-> __Default:__ `null`
+> __Default:__ `function(){}`
 >
 > Process the data returned after this plugin, but before the list is built.
 
 ***
 
-##### options.requestDelay
+#### options.requestDelay
 > __Type:__ `Number`
 >
 > __Default:__ `300`
+>
+> __Data Attribute:__ `data-abs-request-delay="..."`
 >
 > The amount of time, in milliseconds, that must pass before a request
 > is initiated. Each time the [options.bindEvent](#optionsbindevent) is fired, it will cancel the
@@ -282,18 +310,22 @@ __Suggested requirements:__
 
 ***
 
-##### options.restoreOnError
+#### options.restoreOnError
 > __Type:__ `Boolean`
 >
 > __Default:__ `false`
+>
+> __Data Attribute:__ `data-abs-restore-on-error="..."`
 >
 > Restores the select list with the previous results when the request
 > returns with an error.
 
 ***
 
-##### options.templates
+#### options.templates
 > __Type:__ `Object`
+>
+> __Data Attribute:__ `data-abs-templates[-*]="..."`
 >
 > The DOM templates used in this plugin.
 > ```js
@@ -310,7 +342,7 @@ __Suggested requirements:__
 See: [options.locale](#optionslocale)
 
 
-##### locale.currentlySelected
+#### locale.currentlySelected
 > __Type:__ `String`
 >
 > __Default:__ `'Currently Selected'`
@@ -319,7 +351,7 @@ See: [options.locale](#optionslocale)
 
 ***
 
-##### locale.emptyTitle
+#### locale.emptyTitle
 > __Type:__ `String`
 >
 > __Default:__ `'Select and begin typing'`
@@ -328,7 +360,7 @@ See: [options.locale](#optionslocale)
 
 ***
 
-##### locale.errorText
+#### locale.errorText
 > __Type:__ `String`
 >
 > __Default:__ `''Unable to retrieve results'`
@@ -337,7 +369,7 @@ See: [options.locale](#optionslocale)
 
 ***
 
-##### locale.searchPlaceholder
+#### locale.searchPlaceholder
 > __Type:__ `String`
 >
 > __Default:__ `'Search...'`
@@ -346,7 +378,7 @@ See: [options.locale](#optionslocale)
 
 ***
 
-##### locale.statusInitialized
+#### locale.statusInitialized
 > __Type:__ `String`
 >
 > __Default:__ `'Start typing a search query'`
@@ -355,7 +387,7 @@ See: [options.locale](#optionslocale)
 
 ***
 
-##### locale.statusNoResults
+#### locale.statusNoResults
 > __Type:__ `String`
 >
 > __Default:__ `'No Results'`
@@ -364,7 +396,7 @@ See: [options.locale](#optionslocale)
 
 ***
 
-##### locale.statusSearching
+#### locale.statusSearching
 > __Type:__ `String`
 >
 > __Default:__ `'Searching...'`
@@ -470,3 +502,4 @@ Released under the MIT license
 
 [jQuery 1.9+]: http://jquery.com/download/
 [jQuery]: http://jquery.com
+

@@ -319,10 +319,10 @@ AjaxBootstrapSelectList.prototype.setTitle = function (title) {
 AjaxBootstrapSelectList.prototype.setStatus = function (status) {
     status = status || '';
     if (status.length) {
-        this.$status.text(status).show();
+        this.$status.html(status).show();
     }
     else {
-        this.$status.text('').hide();
+        this.$status.html('').hide();
     }
 };
 

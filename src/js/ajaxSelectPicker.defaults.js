@@ -15,22 +15,22 @@ $.fn.ajaxSelectPicker.defaults = {
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
-     * @cfg {Object} ajaxOptions (required)
+     * @cfg {Object} ajax (required)
      * @markdown
      * The options to pass to the jQuery AJAX request.
      *
      * ```js
      * {
-         *     url: null, // Required.
-         *     type: 'POST',
-         *     dataType: 'json',
-         *     data: {
-         *         q: '{{{q}}}'
-         *     }
-         * }
+     *     url: null, // Required.
+     *     type: 'POST',
+     *     dataType: 'json',
+     *     data: {
+     *         q: '{{{q}}}'
+     *     }
+     * }
      * ```
      */
-    ajaxOptions: {
+    ajax: {
         url: null,
         type: 'POST',
         dataType: 'json',
@@ -42,7 +42,7 @@ $.fn.ajaxSelectPicker.defaults = {
     /**
      * @member $.fn.ajaxSelectPicker.defaults
      * @cfg {String} ajaxSearchUrl
-     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#ajaxOptions}.
+     * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#ajax}.
      */
 
     /**
@@ -186,7 +186,7 @@ $.fn.ajaxSelectPicker.defaults = {
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
-     * @cfg {Function|null} preprocessData = null
+     * @cfg {Function|null} preprocessData = function(){}
      * @markdown
      * Process the raw data returned from a request.
      *
@@ -221,7 +221,7 @@ $.fn.ajaxSelectPicker.defaults = {
      * }
      * ```
      */
-    preprocessData: null,
+    preprocessData: function(){},
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
@@ -245,11 +245,11 @@ $.fn.ajaxSelectPicker.defaults = {
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
-     * @cfg {Function|null} processData = null
+     * @cfg {Function|null} processData = function(){}
      * @markdown
      * Process the data returned after this plugin, but before the list is built.
      */
-    processData: null,
+    processData: function(){},
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults

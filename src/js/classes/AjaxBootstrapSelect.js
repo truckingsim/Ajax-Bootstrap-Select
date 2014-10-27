@@ -10,7 +10,7 @@
  *   A new instance of this class or null if unable to instantiate.
  */
 var AjaxBootstrapSelect = function (element, options) {
-    var plugin = this;
+    var i, l, plugin = this;
     options = options || {};
 
     /**
@@ -71,10 +71,14 @@ var AjaxBootstrapSelect = function (element, options) {
         {
             from: 'ajaxSearchUrl',
             to: {
-                ajaxOptions: {
+                ajax: {
                     url: '{{{value}}}'
                 }
             }
+        },
+        {
+            from: 'ajaxOptions',
+            to: 'ajax'
         },
         {
             from: 'debug',
@@ -128,53 +132,53 @@ var AjaxBootstrapSelect = function (element, options) {
         });
     }
 
-    // Ensure the logging level is always an integer.
-    if (typeof this.options.log !== 'number') {
-        if (typeof this.options.log === 'string') {
-            this.options.log = this.options.log.toLowerCase();
+    // Retrieve the element data attributes.
+    var data = this.$element.data();
+
+    // @todo Deprecated. Remove this in the next minor release.
+    if (data['searchUrl']) {
+        plugin.log(plugin.LOG_WARNING, 'Deprecated attribute name: "data-search-url". Update markup to use: \' data-abs-ajax-url="' + data['searchUrl'] + '" \'');
+        this.options.ajax.url = data['searchUrl'];
+    }
+
+    // Helper functions.
+    var matchToLowerCase = function (match, p1) { return p1.toLowerCase(); };
+    var expandObject = function (keys, value, obj) {
+        var k = [].concat(keys), l = k.length, o = obj || {};
+        if (l) { var key = k.shift(); o[key] = expandObject(k, value, o[key]); }
+        return l ? o : value;
+    };
+
+    // Filter out only the data attributes prefixed with 'data-abs-'.
+    var dataKeys = Object.keys(data).filter(/./.test.bind(new RegExp('^abs[A-Z]')));
+
+    // Map the data attributes to their respective place in the options object.
+    if (dataKeys.length) {
+        // Object containing the data attribute options.
+        var dataOptions = {};
+        for (i = 0, l = dataKeys.length; i < l; i++) {
+            var name = dataKeys[i].replace(/^abs([A-Z])/, matchToLowerCase).replace(/([A-Z])/g, '-$1').toLowerCase();
+            this.log(this.LOG_DEBUG, 'Processing data attribute "data-abs-' + name + '":', data[dataKeys[i]]);
+            expandObject(name.split('-'), data[dataKeys[i]], dataOptions);
         }
-        switch (this.options.log) {
-            case true:
-            case 'debug':
-                this.options.log = this.LOG_DEBUG;
-                break;
-
-            case 'info':
-                this.options.log = this.LOG_INFO;
-                break;
-
-            case 'warn':
-            case 'warning':
-                this.options.log = this.LOG_WARNING;
-                break;
-
-            default:
-            case false:
-            case 'error':
-                this.options.log = this.LOG_ERROR;
-                break;
-        }
+        this.options = $.extend(true, {}, this.options, dataOptions);
+        this.log(this.LOG_DEBUG, 'Merged in the data attribute options: ', dataOptions, this.options);
     }
 
     /**
      * Reference to the selectpicker instance.
      * @type {Selectpicker}
      */
-    this.selectpicker = this.$element.data('selectpicker');
+    this.selectpicker = data['selectpicker'];
     if (!this.selectpicker) {
         this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
         return null;
     }
 
-    // Override any provided option with the data attribute value.
-    if (this.$element.data('searchUrl')) {
-        this.options.ajaxOptions.url = this.$element.data('searchUrl');
-    }
-
     // Ensure there is a URL.
-    if (!this.options.ajaxOptions.url) {
-        this.log(this.LOG_ERROR, 'ajaxOptions.url must be set! Options:', this.options);
-        return;
+    if (!this.options.ajax.url) {
+        this.log(this.LOG_ERROR, 'Option "ajax.url" must be set! Options:', this.options);
+        return null;
     }
 
     // Initialize the locale strings.
@@ -191,8 +195,7 @@ var AjaxBootstrapSelect = function (element, options) {
         // Check for both the two and four character language codes, using
         // the later first.
         var langCodeArray = langCode.split('-');
-        var i, length = langCodeArray.length;
-        for (i = 0; i < length; i++) {
+        for (i = 0, l = langCodeArray.length; i < l; i++) {
             var code = langCodeArray.join('-');
             if (code.length && this.locale[code]) {
                 this.options.langCode = code;
@@ -337,38 +340,67 @@ AjaxBootstrapSelect.prototype.init = function () {
  * @return {void}
  */
 AjaxBootstrapSelect.prototype.log = function (type, message) {
-    if (this.options.log && window.console && typeof type === 'number' && type <= this.options.log) {
-        var args = [].slice.apply(arguments, [2]);
+    if (window.console && this.options.log) {
+        // Ensure the logging level is always an integer.
+        if (typeof this.options.log !== 'number') {
+            if (typeof this.options.log === 'string') {
+                this.options.log = this.options.log.toLowerCase();
+            }
+            switch (this.options.log) {
+                case true:
+                case 'debug':
+                    this.options.log = this.LOG_DEBUG;
+                    break;
 
-        // Determine the correct console method to use.
-        switch (type) {
-            case this.LOG_DEBUG:
-                type = 'debug';
-                break;
-            case this.LOG_INFO:
-                type = 'info';
-                break;
-            case this.LOG_WARNING:
-                type = 'warn';
-                break;
-            default:
-            case this.LOG_ERROR:
-                type = 'error';
-                break;
-        }
+                case 'info':
+                    this.options.log = this.LOG_INFO;
+                    break;
 
-        // Prefix the message.
-        var prefix = '[' + type.toUpperCase() + '] AjaxBootstrapSelect:';
-        if (typeof message === 'string') {
-            args.unshift(prefix + ' ' + message);
-        }
-        else {
-            args.unshift(message);
-            args.unshift(prefix);
-        }
+                case 'warn':
+                case 'warning':
+                    this.options.log = this.LOG_WARNING;
+                    break;
 
-        // Display the message(s).
-        window.console[type].apply(window.console, args);
+                default:
+                case false:
+                case 'error':
+                    this.options.log = this.LOG_ERROR;
+                    break;
+            }
+        }
+        if (type <= this.options.log) {
+            var args = [].slice.apply(arguments, [2]);
+
+            // Determine the correct console method to use.
+            switch (type) {
+                case this.LOG_DEBUG:
+                    type = 'debug';
+                    break;
+                case this.LOG_INFO:
+                    type = 'info';
+                    break;
+                case this.LOG_WARNING:
+                    type = 'warn';
+                    break;
+                default:
+                case this.LOG_ERROR:
+                    type = 'error';
+                    break;
+            }
+
+            // Prefix the message.
+            var prefix = '[' + type.toUpperCase() + '] AjaxBootstrapSelect:';
+            if (typeof message === 'string') {
+                args.unshift(prefix + ' ' + message);
+            }
+            else {
+                args.unshift(message);
+                args.unshift(prefix);
+            }
+
+            // Display the message(s).
+            window.console[type].apply(window.console, args);
+        }
     }
 };
 

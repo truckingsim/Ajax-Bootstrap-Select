@@ -73,6 +73,8 @@ module.exports = function (grunt) {
                 name: prefix + matches[2],
                 default: matches[3],
                 required: matches[4],
+                dataAttribute: prefix === 'options.' && (!matches[1] || !/function/.test(matches[1].toLowerCase())) ? matches[2].replace(/([A-Z])/g, '-$1').toLowerCase() : null,
+                dataAttributeMultiple: matches[1] && /object/.test(matches[1].toLowerCase()),
                 deprecated: parseLink(deprecated[1])
             };
         },
@@ -121,7 +123,7 @@ module.exports = function (grunt) {
                     handlebars_helpers: {
                         section: function(filename) {
                             if (filename === 'src/js/ajaxSelectPicker.defaults.js') {
-                                return '## Options';
+                                return '## Options\n\nOptions can be passed via data attributes or through the JavaScript options object. For data attributes, append the option name to the `data-abs-` prefix. Options names (and any nested options) are always lower case and separated by `-`, such as in `data-abs-ajax-url="..."` or `data-abs-locale-search-placeholder="..."`.';
                             }
                             else if (filename === 'src/js/ajaxSelectPicker.locale/en-US.js') {
                                 return '## Locale Strings\n\nSee: [options.locale](#optionslocale)';

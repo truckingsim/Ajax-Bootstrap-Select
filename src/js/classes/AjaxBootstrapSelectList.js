@@ -281,14 +281,16 @@ AjaxBootstrapSelectList.prototype.restore = function () {
  * @return {void}
  */
 AjaxBootstrapSelectList.prototype.restoreTitle = function () {
-    this.plugin.selectpicker.options.selectedTextFormat = this.selectedTextFormat;
-    if (this.title) {
-        this.plugin.$element.attr('title', this.title);
+    if (!this.plugin.request) {
+        this.plugin.selectpicker.options.selectedTextFormat = this.selectedTextFormat;
+        if (this.title) {
+            this.plugin.$element.attr('title', this.title);
+        }
+        else {
+            this.plugin.$element.removeAttr('title');
+        }
+        this.title = null;
     }
-    else {
-        this.plugin.$element.removeAttr('title');
-    }
-    this.title = null;
 };
 
 /**
@@ -299,9 +301,11 @@ AjaxBootstrapSelectList.prototype.restoreTitle = function () {
  * @return {void}
  */
 AjaxBootstrapSelectList.prototype.setTitle = function (title) {
-    this.title = this.plugin.$element.attr('title');
-    this.plugin.selectpicker.options.selectedTextFormat = 'static';
-    this.plugin.$element.attr('title', title);
+    if (!this.plugin.request) {
+        this.title = this.plugin.$element.attr('title');
+        this.plugin.selectpicker.options.selectedTextFormat = 'static';
+        this.plugin.$element.attr('title', title);
+    }
 };
 
 /**

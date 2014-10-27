@@ -50,6 +50,12 @@ var AjaxBootstrapSelect = function (element, options) {
     this.LOG_DEBUG = 4;
 
     /**
+     * The jqXHR object of the last request, false if there was none.
+     * @type {jqXHR|Boolean}
+     */
+    this.lastRequest = false;
+
+    /**
      * The previous query that was requested.
      * @type {String}
      */
@@ -60,6 +66,12 @@ var AjaxBootstrapSelect = function (element, options) {
      * @type {String}
      */
     this.query = '';
+
+    /**
+     * The jqXHR object of the current request, false if there is none.
+     * @type {jqXHR|Boolean}
+     */
+    this.request = false;
 
     // Maps deprecated options to new ones between releases.
     var deprecatedOptionsMap = [
@@ -318,7 +330,19 @@ AjaxBootstrapSelect.prototype.init = function () {
         }
 
         requestDelayTimer = setTimeout(function () {
-            plugin.lastRequest = new window.AjaxBootstrapSelectRequest(plugin);
+            // Abort any previous requests.
+            if (plugin.lastRequest && plugin.lastRequest.jqXHR && $.isFunction(plugin.lastRequest.jqXHR.abort)) {
+                plugin.lastRequest.jqXHR.abort();
+            }
+
+            // Create a new request.
+            plugin.request = new window.AjaxBootstrapSelectRequest(plugin);
+
+            // Store as the previous request once finished.
+            plugin.request.jqXHR.always(function () {
+                plugin.lastRequest = plugin.request;
+                plugin.request = false;
+            });
         }, plugin.options.requestDelay || 300);
     });
 };

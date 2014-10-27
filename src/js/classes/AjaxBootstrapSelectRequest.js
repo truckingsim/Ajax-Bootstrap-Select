@@ -91,20 +91,22 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
  * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
-    // Only continue if actual results.
-    var cache = this.plugin.list.cacheGet(this.plugin.query);
-    if (cache) {
-        if (cache.length) {
-            this.plugin.list.setStatus();
+    // Only continue if actual results and not an aborted state.
+    if (status !== 'abort') {
+        var cache = this.plugin.list.cacheGet(this.plugin.query);
+        if (cache) {
+            if (cache.length) {
+                this.plugin.list.setStatus();
+            }
+            else {
+                this.plugin.list.destroy();
+                this.plugin.list.setStatus(this.plugin.t('statusNoResults'));
+                this.plugin.log(this.plugin.LOG_INFO, 'No results were returned.');
+                return;
+            }
         }
-        else {
-            this.plugin.list.destroy();
-            this.plugin.list.setStatus(this.plugin.t('statusNoResults'));
-            this.plugin.log(this.plugin.LOG_INFO, 'No results were returned.');
-            return;
-        }
+        this.plugin.list.refresh();
     }
-    this.plugin.list.refresh();
 };
 
 /**
@@ -125,21 +127,23 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
  * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
-    // Cache the result data.
-    this.plugin.list.cacheSet(this.plugin.query);
+    if (status !== 'abort') {
+        // Cache the result data.
+        this.plugin.list.cacheSet(this.plugin.query);
 
-    // Clear the list.
-    if (this.plugin.options.clearOnError) {
-        this.plugin.list.destroy();
-    }
+        // Clear the list.
+        if (this.plugin.options.clearOnError) {
+            this.plugin.list.destroy();
+        }
 
-    // Set the status after the list has cleared and before the restore.
-    this.plugin.list.setStatus(this.plugin.t('errorText'));
+        // Set the status after the list has cleared and before the restore.
+        this.plugin.list.setStatus(this.plugin.t('errorText'));
 
-    // Restore previous request.
-    if (this.plugin.options.restoreOnError) {
-        this.plugin.list.restore();
-        this.plugin.list.setStatus();
+        // Restore previous request.
+        if (this.plugin.options.restoreOnError) {
+            this.plugin.list.restore();
+            this.plugin.list.setStatus();
+        }
     }
 };
 

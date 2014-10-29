@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-10-27 4:32:04 PM CDT
+ * Last build: 2014-10-29 1:53:33 PM CDT
  */
 !(function ($, window) {
 
@@ -589,7 +589,7 @@ var AjaxBootstrapSelectList = function (plugin) {
                 that.selected.push({
                     value: value,
                     text: $option.text(),
-                    class: $option.attr('class') || '',
+                    'class': $option.attr('class') || '',
                     data: $option.data() || {},
                     preserved: true,
                     selected: true
@@ -645,8 +645,8 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
 
         // Set various properties.
         $option.val(item.value).text(item.text);
-        if (item.class.length) {
-            $option.attr('class', item.class);
+        if (item['class'].length) {
+            $option.attr('class', item['class']);
         }
         if (item.disabled) {
             $option.attr('disabled', true);
@@ -1071,7 +1071,7 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
                         // Provide default items to ensure expected structure.
                         item = $.extend({
                             text: item.value,
-                            class: '',
+                            'class': '',
                             data: {},
                             disabled: false,
                             selected: false
@@ -1464,7 +1464,7 @@ $.fn.ajaxSelectPicker.defaults = {
      * ```
      */
     templates: {
-        status: '<div class="status"></div>',
+        status: '<div class="status"></div>'
     }
 };
 

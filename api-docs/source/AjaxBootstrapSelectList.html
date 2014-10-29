@@ -78,7 +78,7 @@ var AjaxBootstrapSelectList = function (plugin) {
                 that.selected.push({
                     value: value,
                     text: $option.text(),
-                    class: $option.attr(&#39;class&#39;) || &#39;&#39;,
+                    &#39;class&#39;: $option.attr(&#39;class&#39;) || &#39;&#39;,
                     data: $option.data() || {},
                     preserved: true,
                     selected: true
@@ -134,8 +134,8 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
 
         // Set various properties.
         $option.val(item.value).text(item.text);
-        if (item.class.length) {
-            $option.attr(&#39;class&#39;, item.class);
+        if (item[&#39;class&#39;].length) {
+            $option.attr(&#39;class&#39;, item[&#39;class&#39;]);
         }
         if (item.disabled) {
             $option.attr(&#39;disabled&#39;, true);

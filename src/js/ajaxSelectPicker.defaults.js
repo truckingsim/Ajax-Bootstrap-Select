@@ -284,6 +284,6 @@ $.fn.ajaxSelectPicker.defaults = {
      * ```
      */
     templates: {
-        status: '<div class="status"></div>',
+        status: '<div class="status"></div>'
     }
 };

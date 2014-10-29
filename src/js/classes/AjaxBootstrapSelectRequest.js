@@ -205,7 +205,7 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
                         // Provide default items to ensure expected structure.
                         item = $.extend({
                             text: item.value,
-                            class: '',
+                            'class': '',
                             data: {},
                             disabled: false,
                             selected: false

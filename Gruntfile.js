@@ -71,7 +71,7 @@ module.exports = function (grunt) {
             return {
                 type: matches[1],
                 name: prefix + matches[2],
-                default: matches[3],
+                'default': matches[3],
                 required: matches[4],
                 dataAttribute: prefix === 'options.' && (!matches[1] || !/function/.test(matches[1].toLowerCase())) ? matches[2].replace(/([A-Z])/g, '-$1').toLowerCase() : null,
                 dataAttributeMultiple: matches[1] && /object/.test(matches[1].toLowerCase()),

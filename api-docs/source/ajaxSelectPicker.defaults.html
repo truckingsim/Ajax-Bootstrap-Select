@@ -39,20 +39,20 @@ $.fn.ajaxSelectPicker.defaults = {
      * ```js
      * {
      *     url: null, // Required.
-     *     type: 'POST',
-     *     dataType: 'json',
+     *     type: &#39;POST&#39;,
+     *     dataType: &#39;json&#39;,
      *     data: {
-     *         q: '{{{q}}}'
+     *         q: &#39;{{{q}}}&#39;
      *     }
      * }
      * ```
      */
     ajax: {
         url: null,
-        type: 'POST',
-        dataType: 'json',
+        type: &#39;POST&#39;,
+        dataType: &#39;json&#39;,
         data: {
-            q: '{{{q}}}'
+            q: &#39;{{{q}}}&#39;
         }
     },
 
@@ -68,7 +68,7 @@ $.fn.ajaxSelectPicker.defaults = {
      * @markdown
      * The event to bind on the search input element to fire a request.
      */
-    bindEvent: 'keyup',
+    bindEvent: &#39;keyup&#39;,
 
 <span id='$-fn-ajaxSelectPicker-defaults-cfg-cache'>    /**
 </span>     * @member $.fn.ajaxSelectPicker.defaults
@@ -169,7 +169,7 @@ $.fn.ajaxSelectPicker.defaults = {
      *
      * ```js
      * locale: {
-     *     searchPlaceholder: Drupal.t('Find...')
+     *     searchPlaceholder: Drupal.t(&#39;Find...&#39;)
      * }
      * ```
      */
@@ -177,17 +177,17 @@ $.fn.ajaxSelectPicker.defaults = {
 
 <span id='$-fn-ajaxSelectPicker-defaults-cfg-log'>    /**
 </span>     * @member $.fn.ajaxSelectPicker.defaults
-     * @cfg {String|Number|Number} log = 'error'
+     * @cfg {String|Number|Number} log = &#39;error&#39;
      * @markdown
      * Determines the amount of logging that is displayed:
      *
      * - __0, false:__ Display no information from the plugin.
-     * - __1, 'error':__ Fatal errors that prevent the plugin from working.
-     * - __2, 'warn':__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
-     * - __3, 'info':__ Provides additional information, generally regarding the from request data and callbacks.
-     * - __4, true, 'debug':__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
+     * - __1, &#39;error&#39;:__ Fatal errors that prevent the plugin from working.
+     * - __2, &#39;warn&#39;:__ Warnings that may impact the display of request data, but does not prevent the plugin from functioning.
+     * - __3, &#39;info&#39;:__ Provides additional information, generally regarding the from request data and callbacks.
+     * - __4, true, &#39;debug&#39;:__ Display all possible information. This will likely be highly verbose and is only recommended for development purposes or tracing an error with a request.
      */
-    log: 'error',
+    log: &#39;error&#39;,
 
 <span id='$-fn-ajaxSelectPicker-defaults-cfg-mixWithCurrents'>    /**
 </span>     * @member $.fn.ajaxSelectPicker.defaults
@@ -253,12 +253,12 @@ $.fn.ajaxSelectPicker.defaults = {
 
 <span id='$-fn-ajaxSelectPicker-defaults-cfg-preserveSelectedPosition'>    /**
 </span>     * @member $.fn.ajaxSelectPicker.defaults
-     * @cfg {String} preserveSelectedPosition = 'after'
+     * @cfg {String} preserveSelectedPosition = &#39;after&#39;
      * @markdown
-     * Place the currently selected options `'before'` or `'after'` the options
+     * Place the currently selected options `&#39;before&#39;` or `&#39;after&#39;` the options
      * returned from the request.
      */
-    preserveSelectedPosition: 'after',
+    preserveSelectedPosition: &#39;after&#39;,
 
 <span id='$-fn-ajaxSelectPicker-defaults-cfg-processData'>    /**
 </span>     * @member $.fn.ajaxSelectPicker.defaults
@@ -296,12 +296,12 @@ $.fn.ajaxSelectPicker.defaults = {
      * ```js
      * templates: {
      *     // The placeholder for status updates pertaining to the list and request.
-     *     status: '&lt;div class=&quot;status&quot;&gt;&lt;/div&gt;',
+     *     status: &#39;&lt;div class=&quot;status&quot;&gt;&lt;/div&gt;&#39;,
      * }
      * ```
      */
     templates: {
-        status: '&lt;div class=&quot;status&quot;&gt;&lt;/div&gt;'
+        status: &#39;&lt;div class=&quot;status&quot;&gt;&lt;/div&gt;&#39;
     }
 };
 </pre>

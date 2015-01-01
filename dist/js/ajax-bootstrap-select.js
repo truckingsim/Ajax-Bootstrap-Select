@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2014-11-04 12:32:40 PM EST
+ * Last build: 2014-12-31 11:24:14 PM EST
  */
 !(function ($, window) {
 
@@ -724,7 +724,7 @@ AjaxBootstrapSelectList.prototype.destroy = function () {
 /**
  * Refreshes the select list.
  */
-AjaxBootstrapSelectList.prototype.refresh = function () {
+AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     // Remove unnecessary "min-height" from selectpicker.
     this.plugin.selectpicker.$menu.css('minHeight', 0);
     this.plugin.selectpicker.$menu.find('> .inner').css('minHeight', 0);
@@ -738,7 +738,12 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
     this.plugin.selectpicker.refresh();
     // The "refresh" method sets the $lis property to null, it must be rebuilt.
     this.plugin.selectpicker.findLis();
-    this.plugin.$element.trigger('change.$');
+
+    // Only trigger change event when specified.
+    if(triggerChange){
+      this.plugin.log(this.plugin.LOG_DEBUG, 'Triggering Change');
+      this.plugin.$element.trigger('change.$');
+    }
     this.plugin.log(this.plugin.LOG_DEBUG, 'Refreshed select list.');
 };
 
@@ -971,7 +976,7 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
                 return;
             }
         }
-        this.plugin.list.refresh();
+        this.plugin.list.refresh(true);
     }
 };
 

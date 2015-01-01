@@ -30,8 +30,8 @@
  */
 $.fn.ajaxSelectPicker = function (options) {
     return this.each(function () {
-        if (!$(this).data('AjaxBootstrapSelect')) {
-            $(this).data('AjaxBootstrapSelect', new window.AjaxBootstrapSelect(this, options));
+        if (!$(this).data(&#39;AjaxBootstrapSelect&#39;)) {
+            $(this).data(&#39;AjaxBootstrapSelect&#39;, new window.AjaxBootstrapSelect(this, options));
         }
     });
 };

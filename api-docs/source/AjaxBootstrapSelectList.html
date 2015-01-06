@@ -33,7 +33,7 @@ var AjaxBootstrapSelectList = function (plugin) {
      * @type {jQuery}
      */
     this.$status = $(plugin.options.templates.status).hide().appendTo(plugin.selectpicker.$menu);
-    var statusInitialized = plugin.t('statusInitialized');
+    var statusInitialized = plugin.t(&#39;statusInitialized&#39;);
     if (statusInitialized &amp;&amp; statusInitialized.length) {
         this.setStatus(statusInitialized);
     }
@@ -64,8 +64,8 @@ var AjaxBootstrapSelectList = function (plugin) {
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
-        plugin.$element.on('change.abs.preserveSelected', function (e) {
-            var $selected = plugin.$element.find(':selected');
+        plugin.$element.on(&#39;change.abs.preserveSelected&#39;, function (e) {
+            var $selected = plugin.$element.find(&#39;:selected&#39;);
             that.selected = [];
             // If select does not have multiple selection, ensure that only the
             // last selected option is preserved.
@@ -74,11 +74,11 @@ var AjaxBootstrapSelectList = function (plugin) {
             }
             $selected.each(function () {
                 var $option = $(this);
-                var value = $option.attr('value');
+                var value = $option.attr(&#39;value&#39;);
                 that.selected.push({
                     value: value,
                     text: $option.text(),
-                    'class': $option.attr('class') || '',
+                    &#39;class&#39;: $option.attr(&#39;class&#39;) || &#39;&#39;,
                     data: $option.data() || {},
                     preserved: true,
                     selected: true
@@ -117,51 +117,51 @@ var AjaxBootstrapSelectList = function (plugin) {
  */
 AjaxBootstrapSelectList.prototype.build = function (data) {
     var a, i, l = data.length;
-    var $select = $('&lt;select/&gt;');
-    var $preserved = $('&lt;optgroup/&gt;').attr('label', this.plugin.t('currentlySelected'));
+    var $select = $(&#39;&lt;select/&gt;&#39;);
+    var $preserved = $(&#39;&lt;optgroup/&gt;&#39;).attr(&#39;label&#39;, this.plugin.t(&#39;currentlySelected&#39;));
 
-    this.plugin.log(this.plugin.LOG_DEBUG, 'Building the select list options from data:', data);
+    this.plugin.log(this.plugin.LOG_DEBUG, &#39;Building the select list options from data:&#39;, data);
 
     for (i = 0; i &lt; l; i++) {
         var item = data[i];
-        var $option = $('&lt;option/&gt;').appendTo(item.preserved ? $preserved : $select);
+        var $option = $(&#39;&lt;option/&gt;&#39;).appendTo(item.preserved ? $preserved : $select);
 
         // Detect dividers.
-        if (item.hasOwnProperty('divider')) {
-            $option.attr('data-divider', 'true');
+        if (item.hasOwnProperty(&#39;divider&#39;)) {
+            $option.attr(&#39;data-divider&#39;, &#39;true&#39;);
             continue;
         }
 
         // Set various properties.
         $option.val(item.value).text(item.text);
-        if (item['class'].length) {
-            $option.attr('class', item['class']);
+        if (item[&#39;class&#39;].length) {
+            $option.attr(&#39;class&#39;, item[&#39;class&#39;]);
         }
         if (item.disabled) {
-            $option.attr('disabled', true);
+            $option.attr(&#39;disabled&#39;, true);
         }
 
         // Remove previous selections, if necessary.
         if (item.selected &amp;&amp; !this.plugin.selectpicker.multiple) {
-            $select.find(':selected').prop('selected', false);
+            $select.find(&#39;:selected&#39;).prop(&#39;selected&#39;, false);
         }
 
-        // Set this option's selected state.
+        // Set this option&#39;s selected state.
         if (item.selected) {
-            $option.attr('selected', true);
+            $option.attr(&#39;selected&#39;, true);
         }
 
         // Add data attributes.
         for (a in item.data) {
             if (item.data.hasOwnProperty(a)) {
-                $option.attr('data-' + a, item.data[a]);
+                $option.attr(&#39;data-&#39; + a, item.data[a]);
             }
         }
     }
 
     // Append the preserved selections.
-    if ($preserved.find('option').length) {
-        $preserved[this.plugin.options.preserveSelectedPosition === 'before' ? 'prependTo' : 'appendTo']($select);
+    if ($preserved.find(&#39;option&#39;).length) {
+        $preserved[this.plugin.options.preserveSelectedPosition === &#39;before&#39; ? &#39;prependTo&#39; : &#39;appendTo&#39;]($select);
     }
 
     var options = $select.html();
@@ -182,7 +182,7 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
  */
 AjaxBootstrapSelectList.prototype.cacheGet = function (key, defaultValue) {
     var value = this.cache[key] || defaultValue;
-    this.plugin.log(this.LOG_DEBUG, 'Retrieving cache:', key, value);
+    this.plugin.log(this.LOG_DEBUG, &#39;Retrieving cache:&#39;, key, value);
     return value;
 };
 
@@ -198,7 +198,7 @@ AjaxBootstrapSelectList.prototype.cacheGet = function (key, defaultValue) {
  */
 AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
     this.cache[key] = value;
-    this.plugin.log(this.LOG_DEBUG, 'Saving to cache:', key, value);
+    this.plugin.log(this.LOG_DEBUG, &#39;Saving to cache:&#39;, key, value);
 };
 
 <span id='AjaxBootstrapSelectList-method-destroy'>/**
@@ -207,18 +207,18 @@ AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
 AjaxBootstrapSelectList.prototype.destroy = function () {
     this.replaceOptions();
     this.plugin.list.setStatus();
-    this.plugin.log(this.plugin.LOG_DEBUG, 'Destroyed select list.');
+    this.plugin.log(this.plugin.LOG_DEBUG, &#39;Destroyed select list.&#39;);
 };
 
 <span id='AjaxBootstrapSelectList-method-refresh'>/**
 </span> * Refreshes the select list.
  */
-AjaxBootstrapSelectList.prototype.refresh = function () {
+AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     // Remove unnecessary &quot;min-height&quot; from selectpicker.
-    this.plugin.selectpicker.$menu.css('minHeight', 0);
-    this.plugin.selectpicker.$menu.find('&gt; .inner').css('minHeight', 0);
-    var emptyTitle = this.plugin.t('emptyTitle');
-    if (!this.plugin.$element.find('option').length &amp;&amp; emptyTitle &amp;&amp; emptyTitle.length) {
+    this.plugin.selectpicker.$menu.css(&#39;minHeight&#39;, 0);
+    this.plugin.selectpicker.$menu.find(&#39;&gt; .inner&#39;).css(&#39;minHeight&#39;, 0);
+    var emptyTitle = this.plugin.t(&#39;emptyTitle&#39;);
+    if (!this.plugin.$element.find(&#39;option&#39;).length &amp;&amp; emptyTitle &amp;&amp; emptyTitle.length) {
         this.setTitle(emptyTitle);
     }
     else if (this.title) {
@@ -227,8 +227,13 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
     this.plugin.selectpicker.refresh();
     // The &quot;refresh&quot; method sets the $lis property to null, it must be rebuilt.
     this.plugin.selectpicker.findLis();
-    this.plugin.$element.trigger('change.$');
-    this.plugin.log(this.plugin.LOG_DEBUG, 'Refreshed select list.');
+
+    // Only trigger change event when specified.
+    if(triggerChange){
+      this.plugin.log(this.plugin.LOG_DEBUG, &#39;Triggering Change&#39;);
+      this.plugin.$element.trigger(&#39;change.$&#39;);
+    }
+    this.plugin.log(this.plugin.LOG_DEBUG, &#39;Refreshed select list.&#39;);
 };
 
 <span id='AjaxBootstrapSelectList-method-replaceOptions'>/**
@@ -243,24 +248,24 @@ AjaxBootstrapSelectList.prototype.refresh = function () {
  * @returns {void}
  */
 AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
-    var i, l, item, output = '', processedData = [], selected = [], seenValues = [];
+    var i, l, item, output = &#39;&#39;, processedData = [], selected = [], seenValues = [];
     data = data || [];
 
     // Merge in selected options from the previous state (cannot be cached).
     if (this.selected &amp;&amp; this.selected.length) {
-        this.plugin.log(this.plugin.LOG_INFO, 'Processing preserved selections:', this.selected);
+        this.plugin.log(this.plugin.LOG_INFO, &#39;Processing preserved selections:&#39;, this.selected);
         selected = [].concat(this.selected, data);
         l = selected.length;
         for (i = 0; i &lt; l; i++) {
             item = selected[i];
             // Typecast the value for the seenValues array. Array indexOf
             // searches are type sensitive.
-            if (item.hasOwnProperty('value') &amp;&amp; seenValues.indexOf(item.value + '') === -1) {
-                seenValues.push(item.value + '');
+            if (item.hasOwnProperty(&#39;value&#39;) &amp;&amp; seenValues.indexOf(item.value + &#39;&#39;) === -1) {
+                seenValues.push(item.value + &#39;&#39;);
                 processedData.push(item);
             }
             else {
-                this.plugin.log(this.plugin.LOG_DEBUG, 'Duplicate item found, ignoring.');
+                this.plugin.log(this.plugin.LOG_DEBUG, &#39;Duplicate item found, ignoring.&#39;);
             }
         }
         data = processedData;
@@ -274,7 +279,7 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
     // Replace the options.
     this.plugin.$element.html(output);
     this.refresh();
-    this.plugin.log(this.plugin.LOG_DEBUG, 'Replaced options with data:', data);
+    this.plugin.log(this.plugin.LOG_DEBUG, &#39;Replaced options with data:&#39;, data);
 };
 
 <span id='AjaxBootstrapSelectList-method-restore'>/**
@@ -286,9 +291,9 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
 AjaxBootstrapSelectList.prototype.restore = function () {
     var cache = this.plugin.list.cacheGet(this.plugin.previousQuery);
     if (cache &amp;&amp; this.plugin.list.replaceOptions(cache)) {
-        this.plugin.log(this.plugin.LOG_DEBUG, 'Restored select list to the previous query: ', this.plugin.previousQuery);
+        this.plugin.log(this.plugin.LOG_DEBUG, &#39;Restored select list to the previous query: &#39;, this.plugin.previousQuery);
     }
-    this.plugin.log(this.plugin.LOG_DEBUG, 'Unable to restore select list to the previous query:', this.plugin.previousQuery);
+    this.plugin.log(this.plugin.LOG_DEBUG, &#39;Unable to restore select list to the previous query:&#39;, this.plugin.previousQuery);
     return false;
 };
 
@@ -301,10 +306,10 @@ AjaxBootstrapSelectList.prototype.restoreTitle = function () {
     if (!this.plugin.request) {
         this.plugin.selectpicker.options.selectedTextFormat = this.selectedTextFormat;
         if (this.title) {
-            this.plugin.$element.attr('title', this.title);
+            this.plugin.$element.attr(&#39;title&#39;, this.title);
         }
         else {
-            this.plugin.$element.removeAttr('title');
+            this.plugin.$element.removeAttr(&#39;title&#39;);
         }
         this.title = null;
     }
@@ -319,9 +324,9 @@ AjaxBootstrapSelectList.prototype.restoreTitle = function () {
  */
 AjaxBootstrapSelectList.prototype.setTitle = function (title) {
     if (!this.plugin.request) {
-        this.title = this.plugin.$element.attr('title');
-        this.plugin.selectpicker.options.selectedTextFormat = 'static';
-        this.plugin.$element.attr('title', title);
+        this.title = this.plugin.$element.attr(&#39;title&#39;);
+        this.plugin.selectpicker.options.selectedTextFormat = &#39;static&#39;;
+        this.plugin.$element.attr(&#39;title&#39;, title);
     }
 };
 
@@ -334,12 +339,12 @@ AjaxBootstrapSelectList.prototype.setTitle = function (title) {
  * @return {void}
  */
 AjaxBootstrapSelectList.prototype.setStatus = function (status) {
-    status = status || '';
+    status = status || &#39;&#39;;
     if (status.length) {
         this.$status.html(status).show();
     }
     else {
-        this.$status.html('').hide();
+        this.$status.html(&#39;&#39;).hide();
     }
 };
 

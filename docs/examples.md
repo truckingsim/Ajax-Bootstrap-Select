@@ -5,7 +5,7 @@ $('.select-picker')
         liveSearch: true
     })
     .ajaxSelectPicker({
-        ajaxOptions: {
+        ajax: {
             url: '/server/path/to/ajax/results',
             data: function () {
                 var params = {

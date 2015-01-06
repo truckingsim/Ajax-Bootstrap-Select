@@ -105,7 +105,7 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
                 return;
             }
         }
-        this.plugin.list.refresh();
+        this.plugin.list.refresh(true);
     }
 };
 

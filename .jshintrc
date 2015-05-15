@@ -12,6 +12,7 @@
     "boss": true,
     "eqnull": true,
     "browser": true,
+    "loopfunc": true,
     "globals": {
         "$": true,
         "jQuery": true,

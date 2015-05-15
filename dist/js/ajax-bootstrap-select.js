@@ -3,7 +3,7 @@
  *
  * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
  *
- * @version 1.4.0
+ * @version 1.3.2
  * @author Adam Heim - https://github.com/truckingsim
  * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
  * @copyright 2015 Adam Heim
@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2015-05-15 5:53:10 PM EDT
+ * Last build: 2015-05-15 6:42:55 PM CDT
  */
 !(function ($, window) {
 
@@ -186,36 +186,29 @@ var AjaxBootstrapSelect = function (element, options) {
     if (dataKeys.length) {
         // Object containing the data attribute options.
         var dataOptions = {};
+        var flattenedOptions = ['locale'];
         for (i = 0, l = dataKeys.length; i < l; i++) {
             var name = dataKeys[i].replace(/^abs([A-Z])/, matchToLowerCase).replace(/([A-Z])/g, '-$1').toLowerCase();
+            var keys = name.split('-');
+
+            // Certain options should be flattened to a single object
+            // and not fully expanded (such as Locale).
+            if (keys[0] && keys.length > 1 && flattenedOptions.indexOf(keys[0]) !== -1) {
+                var newKeys = [keys.shift()];
+                var property = '';
+                // Combine the remaining keys as a single property.
+                for (var ii = 0; ii < keys.length; ii++) {
+                    property += (ii === 0 ? keys[ii] : keys[ii].charAt(0).toUpperCase() + keys[ii].slice(1));
+                }
+                newKeys.push(property);
+                keys = newKeys;
+            }
             this.log(this.LOG_DEBUG, 'Processing data attribute "data-abs-' + name + '":', data[dataKeys[i]]);
-            expandObject(name.split('-'), data[dataKeys[i]], dataOptions);
+            expandObject(keys, data[dataKeys[i]], dataOptions);
         }
         this.options = $.extend(true, {}, this.options, dataOptions);
         this.log(this.LOG_DEBUG, 'Merged in the data attribute options: ', dataOptions, this.options);
     }
-
-    // The data() call on the attribute returns the first letter capitalized after the dash and ignores all other casing.
-    //   Local relies on accurate casing so handle this:
-    if(this.options.locale){
-    	var localeKeys = Object.keys(this.options.locale);
-        var possibleOptions = ['currentlySelected', 'emptyTitle', 'errorText', 'searchPlaceholder', 'statusInitialized', 'statusNoResults', 'statusSearching'];
-    	localeKeys.forEach(function(testLocale){
-    		if(testLocale && !/[A-Z]/.test(testLocale)){
-				var matchedOption = false;
-				possibleOptions.forEach(function(item){
-					if(matchedOption) { return; }
-					if(/[A-Z]/.test(item)){
-						matchedOption = item.toLowerCase() === testLocale.toLowerCase() ? item : false;
-					}
-				});
-				if(matchedOption){
-					plugin.options.locale[matchedOption] = plugin.options.locale[testLocale];
-					delete plugin.options.locale[testLocale];
-				}
-			}
-		});
-	}
 
     /**
      * Reference to the selectpicker instance.

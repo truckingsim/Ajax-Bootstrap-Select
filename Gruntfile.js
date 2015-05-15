@@ -1,5 +1,8 @@
 module.exports = function (grunt) {
 
+    // Force use of Unix newlines
+    grunt.util.linefeed = '\n';
+
     var pkg = grunt.file.readJSON('package.json');
 
     var optionAnchor = function (option) {
@@ -180,6 +183,7 @@ module.exports = function (grunt) {
                 options: {
                     categories: 'jsduck.categories.json',
                     external: ['jQuery', '$', 'jqXHR', 'Selectpicker'],
+                    noSource: true,
                     warnings: ['-tag(default,description,example,name,optional,required,see)']
                 }
             }

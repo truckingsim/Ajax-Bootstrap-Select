@@ -177,6 +177,28 @@ var AjaxBootstrapSelect = function (element, options) {
         this.log(this.LOG_DEBUG, 'Merged in the data attribute options: ', dataOptions, this.options);
     }
 
+    // The data() call on the attribute returns the first letter capitalized after the dash and ignores all other casing.
+    //   Local relies on accurate casing so handle this:
+    if(this.options.locale){
+    	var localeKeys = Object.keys(this.options.locale);
+        var possibleOptions = ['currentlySelected', 'emptyTitle', 'errorText', 'searchPlaceholder', 'statusInitialized', 'statusNoResults', 'statusSearching'];
+    	localeKeys.forEach(function(testLocale){
+    		if(testLocale && !/[A-Z]/.test(testLocale)){
+				var matchedOption = false;
+				possibleOptions.forEach(function(item){
+					if(matchedOption) { return; }
+					if(/[A-Z]/.test(item)){
+						matchedOption = item.toLowerCase() === testLocale.toLowerCase() ? item : false;
+					}
+				});
+				if(matchedOption){
+					plugin.options.locale[matchedOption] = plugin.options.locale[testLocale];
+					delete plugin.options.locale[testLocale];
+				}
+			}
+		});
+	}
+
     /**
      * Reference to the selectpicker instance.
      * @type {Selectpicker}

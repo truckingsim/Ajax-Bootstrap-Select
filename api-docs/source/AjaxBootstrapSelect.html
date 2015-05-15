@@ -76,13 +76,13 @@ var AjaxBootstrapSelect = function (element, options) {
 </span>     * The previous query that was requested.
      * @type {String}
      */
-    this.previousQuery = &#39;&#39;;
+    this.previousQuery = '';
 
 <span id='AjaxBootstrapSelect-property-query'>    /**
 </span>     * The current query being requested.
      * @type {String}
      */
-    this.query = &#39;&#39;;
+    this.query = '';
 
 <span id='AjaxBootstrapSelect-property-request'>    /**
 </span>     * The jqXHR object of the current request, false if there is none.
@@ -94,40 +94,40 @@ var AjaxBootstrapSelect = function (element, options) {
     var deprecatedOptionsMap = [
         // @todo Remove these options in next minor release.
         {
-            from: &#39;ajaxResultsPreHook&#39;,
-            to: &#39;preprocessData&#39;
+            from: 'ajaxResultsPreHook',
+            to: 'preprocessData'
         },
         {
-            from: &#39;ajaxSearchUrl&#39;,
+            from: 'ajaxSearchUrl',
             to: {
                 ajax: {
-                    url: &#39;{{{value}}}&#39;
+                    url: '{{{value}}}'
                 }
             }
         },
         {
-            from: &#39;ajaxOptions&#39;,
-            to: &#39;ajax&#39;
+            from: 'ajaxOptions',
+            to: 'ajax'
         },
         {
-            from: &#39;debug&#39;,
+            from: 'debug',
             to: function (map) {
                 var _options = {};
                 _options.log = Boolean(plugin.options[map.from]) ? plugin.LOG_DEBUG : 0;
                 plugin.options = $.extend(true, {}, plugin.options, _options);
                 delete plugin.options[map.from];
-                plugin.log(plugin.LOG_WARNING, &#39;Deprecated option &quot;&#39; + map.from + &#39;&quot;. Update code to use:&#39;, _options);
+                plugin.log(plugin.LOG_WARNING, 'Deprecated option &quot;' + map.from + '&quot;. Update code to use:', _options);
             }
         },
         {
-            from: &#39;mixWithCurrents&#39;,
-            to: &#39;preserveSelected&#39;
+            from: 'mixWithCurrents',
+            to: 'preserveSelected'
         },
         {
-            from: &#39;placeHolderOption&#39;,
+            from: 'placeHolderOption',
             to: {
                 locale: {
-                    emptyTitle: &#39;{{{value}}}&#39;
+                    emptyTitle: '{{{value}}}'
                 }
             }
         }
@@ -139,9 +139,9 @@ var AjaxBootstrapSelect = function (element, options) {
                 // Map with an object. Use &quot;{{{value}}}&quot; anywhere in the object to
                 // replace it with the passed value.
                 if ($.isPlainObject(map.to)) {
-                    plugin.replaceValue(map.to, &#39;{{{value}}}&#39;, plugin.options[map.from]);
+                    plugin.replaceValue(map.to, '{{{value}}}', plugin.options[map.from]);
                     plugin.options = $.extend(true, {}, plugin.options, map.to);
-                    plugin.log(plugin.LOG_WARNING, &#39;Deprecated option &quot;&#39; + map.from + &#39;&quot;. Update code to use:&#39;, map.to);
+                    plugin.log(plugin.LOG_WARNING, 'Deprecated option &quot;' + map.from + '&quot;. Update code to use:', map.to);
                     delete plugin.options[map.from];
                 }
                 // Map with a function. Functions are silos. They are responsible
@@ -154,7 +154,7 @@ var AjaxBootstrapSelect = function (element, options) {
                     var _options = {};
                     _options[map.to] = plugin.options[map.from];
                     plugin.options = $.extend(true, {}, plugin.options, _options);
-                    plugin.log(plugin.LOG_WARNING, &#39;Deprecated option &quot;&#39; + map.from + &#39;&quot;. Update code to use:&#39;, _options);
+                    plugin.log(plugin.LOG_WARNING, 'Deprecated option &quot;' + map.from + '&quot;. Update code to use:', _options);
                     delete plugin.options[map.from];
                 }
             }
@@ -165,9 +165,9 @@ var AjaxBootstrapSelect = function (element, options) {
     var data = this.$element.data();
 
     // @todo Deprecated. Remove this in the next minor release.
-    if (data[&#39;searchUrl&#39;]) {
-        plugin.log(plugin.LOG_WARNING, &#39;Deprecated attribute name: &quot;data-search-url&quot;. Update markup to use: \&#39; data-abs-ajax-url=&quot;&#39; + data[&#39;searchUrl&#39;] + &#39;&quot; \&#39;&#39;);
-        this.options.ajax.url = data[&#39;searchUrl&#39;];
+    if (data['searchUrl']) {
+        plugin.log(plugin.LOG_WARNING, 'Deprecated attribute name: &quot;data-search-url&quot;. Update markup to use: \' data-abs-ajax-url=&quot;' + data['searchUrl'] + '&quot; \'');
+        this.options.ajax.url = data['searchUrl'];
     }
 
     // Helper functions.
@@ -178,35 +178,57 @@ var AjaxBootstrapSelect = function (element, options) {
         return l ? o : value;
     };
 
-    // Filter out only the data attributes prefixed with &#39;data-abs-&#39;.
-    var dataKeys = Object.keys(data).filter(/./.test.bind(new RegExp(&#39;^abs[A-Z]&#39;)));
+    // Filter out only the data attributes prefixed with 'data-abs-'.
+    var dataKeys = Object.keys(data).filter(/./.test.bind(new RegExp('^abs[A-Z]')));
 
     // Map the data attributes to their respective place in the options object.
     if (dataKeys.length) {
         // Object containing the data attribute options.
         var dataOptions = {};
         for (i = 0, l = dataKeys.length; i &lt; l; i++) {
-            var name = dataKeys[i].replace(/^abs([A-Z])/, matchToLowerCase).replace(/([A-Z])/g, &#39;-$1&#39;).toLowerCase();
-            this.log(this.LOG_DEBUG, &#39;Processing data attribute &quot;data-abs-&#39; + name + &#39;&quot;:&#39;, data[dataKeys[i]]);
-            expandObject(name.split(&#39;-&#39;), data[dataKeys[i]], dataOptions);
+            var name = dataKeys[i].replace(/^abs([A-Z])/, matchToLowerCase).replace(/([A-Z])/g, '-$1').toLowerCase();
+            this.log(this.LOG_DEBUG, 'Processing data attribute &quot;data-abs-' + name + '&quot;:', data[dataKeys[i]]);
+            expandObject(name.split('-'), data[dataKeys[i]], dataOptions);
         }
         this.options = $.extend(true, {}, this.options, dataOptions);
-        this.log(this.LOG_DEBUG, &#39;Merged in the data attribute options: &#39;, dataOptions, this.options);
+        this.log(this.LOG_DEBUG, 'Merged in the data attribute options: ', dataOptions, this.options);
     }
+
+    // The data() call on the attribute returns the first letter capitalized after the dash and ignores all other casing.
+    //   Local relies on accurate casing so handle this:
+    if(this.options.locale){
+    	var localeKeys = Object.keys(this.options.locale);
+        var possibleOptions = ['currentlySelected', 'emptyTitle', 'errorText', 'searchPlaceholder', 'statusInitialized', 'statusNoResults', 'statusSearching'];
+    	localeKeys.forEach(function(testLocale){
+    		if(testLocale &amp;&amp; !/[A-Z]/.test(testLocale)){
+				var matchedOption = false;
+				possibleOptions.forEach(function(item){
+					if(matchedOption) { return; }
+					if(/[A-Z]/.test(item)){
+						matchedOption = item.toLowerCase() === testLocale.toLowerCase() ? item : false;
+					}
+				});
+				if(matchedOption){
+					plugin.options.locale[matchedOption] = plugin.options.locale[testLocale];
+					delete plugin.options.locale[testLocale];
+				}
+			}
+		});
+	}
 
 <span id='AjaxBootstrapSelect-property-selectpicker'>    /**
 </span>     * Reference to the selectpicker instance.
      * @type {Selectpicker}
      */
-    this.selectpicker = data[&#39;selectpicker&#39;];
+    this.selectpicker = data['selectpicker'];
     if (!this.selectpicker) {
-        this.log(this.LOG_ERROR, &#39;Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!&#39;);
+        this.log(this.LOG_ERROR, 'Cannot instantiate an AjaxBootstrapSelect instance without selectpicker first being initialized!');
         return null;
     }
 
     // Ensure there is a URL.
     if (!this.options.ajax.url) {
-        this.log(this.LOG_ERROR, &#39;Option &quot;ajax.url&quot; must be set! Options:&#39;, this.options);
+        this.log(this.LOG_ERROR, 'Option &quot;ajax.url&quot; must be set! Options:', this.options);
         return null;
     }
 
@@ -214,25 +236,25 @@ var AjaxBootstrapSelect = function (element, options) {
     this.locale = $.extend(true, {}, $.fn.ajaxSelectPicker.locale);
 
     // Ensure the langCode is properly set.
-    this.options.langCode = this.options.langCode || window.navigator.userLanguage || window.navigator.language || &#39;en&#39;;
+    this.options.langCode = this.options.langCode || window.navigator.userLanguage || window.navigator.language || 'en';
     if (!this.locale[this.options.langCode]) {
         var langCode = this.options.langCode;
 
         // Reset the language code.
-        this.options.langCode = &#39;en&#39;;
+        this.options.langCode = 'en';
 
         // Check for both the two and four character language codes, using
         // the later first.
-        var langCodeArray = langCode.split(&#39;-&#39;);
+        var langCodeArray = langCode.split('-');
         for (i = 0, l = langCodeArray.length; i &lt; l; i++) {
-            var code = langCodeArray.join(&#39;-&#39;);
+            var code = langCodeArray.join('-');
             if (code.length &amp;&amp; this.locale[code]) {
                 this.options.langCode = code;
                 break;
             }
             langCodeArray.pop();
         }
-        this.log(this.LOG_WARNING, &#39;Unknown langCode option: &quot;&#39; + langCode + &#39;&quot;. Using the following langCode instead: &quot;&#39; + this.options.langCode + &#39;&quot;.&#39;);
+        this.log(this.LOG_WARNING, 'Unknown langCode option: &quot;' + langCode + '&quot;. Using the following langCode instead: &quot;' + this.options.langCode + '&quot;.');
     }
 
     // Allow options to override locale specific strings.
@@ -261,7 +283,7 @@ AjaxBootstrapSelect.prototype.init = function () {
 
     // Rebind select/deselect to process preserved selections.
     if (this.options.preserveSelected) {
-        this.selectpicker.$menu.off(&#39;click&#39;, &#39;.actions-btn&#39;).on(&#39;click&#39;, &#39;.actions-btn&#39;, function (e) {
+        this.selectpicker.$menu.off('click', '.actions-btn').on('click', '.actions-btn', function (e) {
             if (plugin.selectpicker.options.liveSearch) {
                 plugin.selectpicker.$searchbox.focus();
             }
@@ -270,20 +292,20 @@ AjaxBootstrapSelect.prototype.init = function () {
             }
             e.preventDefault();
             e.stopPropagation();
-            if ($(this).is(&#39;.bs-select-all&#39;)) {
+            if ($(this).is('.bs-select-all')) {
                 if (plugin.selectpicker.$lis === null) {
-                    plugin.selectpicker.$lis = plugin.selectpicker.$menu.find(&#39;li&#39;);
+                    plugin.selectpicker.$lis = plugin.selectpicker.$menu.find('li');
                 }
-                plugin.$element.find(&#39;option:enabled&#39;).prop(&#39;selected&#39;, true);
-                $(plugin.selectpicker.$lis).not(&#39;.disabled&#39;).addClass(&#39;selected&#39;);
+                plugin.$element.find('option:enabled').prop('selected', true);
+                $(plugin.selectpicker.$lis).not('.disabled').addClass('selected');
                 plugin.selectpicker.render();
             }
             else {
                 if (plugin.selectpicker.$lis === null) {
-                    plugin.selectpicker.$lis = plugin.selectpicker.$menu.find(&#39;li&#39;);
+                    plugin.selectpicker.$lis = plugin.selectpicker.$menu.find('li');
                 }
-                plugin.$element.find(&#39;option:enabled&#39;).prop(&#39;selected&#39;, false);
-                $(plugin.selectpicker.$lis).not(&#39;.disabled&#39;).removeClass(&#39;selected&#39;);
+                plugin.$element.find('option:enabled').prop('selected', false);
+                $(plugin.selectpicker.$lis).not('.disabled').removeClass('selected');
                 plugin.selectpicker.render();
             }
             plugin.selectpicker.$element.change();
@@ -292,26 +314,26 @@ AjaxBootstrapSelect.prototype.init = function () {
 
     // Add placeholder text to the search input.
     this.selectpicker.$searchbox
-        .attr(&#39;placeholder&#39;, this.t(&#39;searchPlaceholder&#39;))
+        .attr('placeholder', this.t('searchPlaceholder'))
         // Remove selectpicker events on the search input.
-        .off(&#39;input propertychange&#39;);
+        .off('input propertychange');
 
-    // Bind this plugin&#39;s event.
+    // Bind this plugin's event.
     this.selectpicker.$searchbox.on(this.options.bindEvent, function (e) {
         var query = plugin.selectpicker.$searchbox.val();
 
-        plugin.log(plugin.LOG_DEBUG, &#39;Bind event fired: &quot;&#39; + plugin.options.bindEvent + &#39;&quot;, keyCode:&#39;, e.keyCode, e);
+        plugin.log(plugin.LOG_DEBUG, 'Bind event fired: &quot;' + plugin.options.bindEvent + '&quot;, keyCode:', e.keyCode, e);
 
-        // Dynamically ignore the &quot;enter&quot; key (13) so it doesn&#39;t
+        // Dynamically ignore the &quot;enter&quot; key (13) so it doesn't
         // create an additional request if the &quot;cache&quot; option has
         // been disabled.
         if (!plugin.options.cache) {
-            plugin.options.ignoredKeys[13] = &#39;enter&#39;;
+            plugin.options.ignoredKeys[13] = 'enter';
         }
 
-        // Don&#39;t process ignored keys.
+        // Don't process ignored keys.
         if (plugin.options.ignoredKeys[e.keyCode]) {
-            plugin.log(plugin.LOG_DEBUG, &#39;Key ignored.&#39;);
+            plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
             return;
         }
 
@@ -325,7 +347,7 @@ AjaxBootstrapSelect.prototype.init = function () {
                 plugin.list.destroy();
             }
 
-            // Don&#39;t invoke a request.
+            // Don't invoke a request.
             if (!plugin.options.emptyRequest) {
                 return;
             }
@@ -339,9 +361,9 @@ AjaxBootstrapSelect.prototype.init = function () {
         if (plugin.options.cache &amp;&amp; e.keyCode !== 13) {
             var cache = plugin.list.cacheGet(plugin.query);
             if (cache) {
-                plugin.list.setStatus(!cache.length ? plugin.t(&#39;statusNoResults&#39;) : &#39;&#39;);
+                plugin.list.setStatus(!cache.length ? plugin.t('statusNoResults') : '');
                 plugin.list.replaceOptions(cache);
-                plugin.log(plugin.LOG_INFO, &#39;Rebuilt options from cached data.&#39;);
+                plugin.log(plugin.LOG_INFO, 'Rebuilt options from cached data.');
                 return;
             }
         }
@@ -383,28 +405,28 @@ AjaxBootstrapSelect.prototype.init = function () {
 AjaxBootstrapSelect.prototype.log = function (type, message) {
     if (window.console &amp;&amp; this.options.log) {
         // Ensure the logging level is always an integer.
-        if (typeof this.options.log !== &#39;number&#39;) {
-            if (typeof this.options.log === &#39;string&#39;) {
+        if (typeof this.options.log !== 'number') {
+            if (typeof this.options.log === 'string') {
                 this.options.log = this.options.log.toLowerCase();
             }
             switch (this.options.log) {
                 case true:
-                case &#39;debug&#39;:
+                case 'debug':
                     this.options.log = this.LOG_DEBUG;
                     break;
 
-                case &#39;info&#39;:
+                case 'info':
                     this.options.log = this.LOG_INFO;
                     break;
 
-                case &#39;warn&#39;:
-                case &#39;warning&#39;:
+                case 'warn':
+                case 'warning':
                     this.options.log = this.LOG_WARNING;
                     break;
 
                 default:
                 case false:
-                case &#39;error&#39;:
+                case 'error':
                     this.options.log = this.LOG_ERROR;
                     break;
             }
@@ -415,24 +437,24 @@ AjaxBootstrapSelect.prototype.log = function (type, message) {
             // Determine the correct console method to use.
             switch (type) {
                 case this.LOG_DEBUG:
-                    type = &#39;debug&#39;;
+                    type = 'debug';
                     break;
                 case this.LOG_INFO:
-                    type = &#39;info&#39;;
+                    type = 'info';
                     break;
                 case this.LOG_WARNING:
-                    type = &#39;warn&#39;;
+                    type = 'warn';
                     break;
                 default:
                 case this.LOG_ERROR:
-                    type = &#39;error&#39;;
+                    type = 'error';
                     break;
             }
 
             // Prefix the message.
-            var prefix = &#39;[&#39; + type.toUpperCase() + &#39;] AjaxBootstrapSelect:&#39;;
-            if (typeof message === &#39;string&#39;) {
-                args.unshift(prefix + &#39; &#39; + message);
+            var prefix = '[' + type.toUpperCase() + '] AjaxBootstrapSelect:';
+            if (typeof message === 'string') {
+                args.unshift(prefix + ' ' + message);
             }
             else {
                 args.unshift(message);
@@ -476,17 +498,17 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
     // since obj can be either an array or an object. This helps reduce
     // the amount of duplicate code needed.
     $.each(obj, function (k, v) {
-        if (options.limit !== false &amp;&amp; typeof options.limit === &#39;number&#39; &amp;&amp; options.limit &lt;= 0) {
+        if (options.limit !== false &amp;&amp; typeof options.limit === 'number' &amp;&amp; options.limit &lt;= 0) {
             return false;
         }
         if ($.isArray(obj[k]) || $.isPlainObject(obj[k])) {
-            if ((options.recursive &amp;&amp; options.depth === false) || (options.recursive &amp;&amp; typeof options.depth === &#39;number&#39; &amp;&amp; options.depth &gt; 0)) {
+            if ((options.recursive &amp;&amp; options.depth === false) || (options.recursive &amp;&amp; typeof options.depth === 'number' &amp;&amp; options.depth &gt; 0)) {
                 plugin.replaceValue(obj[k], needle, value, options);
             }
         }
         else {
             if (v === needle) {
-                if (options.limit !== false &amp;&amp; typeof options.limit === &#39;number&#39;) {
+                if (options.limit !== false &amp;&amp; typeof options.limit === 'number') {
                     options.limit--;
                 }
                 obj[k] = value;
@@ -511,7 +533,7 @@ AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     if (this.locale[langCode] &amp;&amp; this.locale[langCode].hasOwnProperty(key)) {
         return this.locale[langCode][key];
     }
-    this.log(this.LOG_WARNING, &#39;Unknown translation key:&#39;, key);
+    this.log(this.LOG_WARNING, 'Unknown translation key:', key);
     return key;
 };
 

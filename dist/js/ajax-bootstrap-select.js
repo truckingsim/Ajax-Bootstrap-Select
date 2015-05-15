@@ -3,7 +3,7 @@
  *
  * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
  *
- * @version 1.3.1
+ * @version 1.4.0
  * @author Adam Heim - https://github.com/truckingsim
  * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
  * @copyright 2015 Adam Heim
@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2015-01-06 8:43:11 PM EST
+ * Last build: 2015-05-15 5:53:10 PM EDT
  */
 !(function ($, window) {
 
@@ -194,6 +194,28 @@ var AjaxBootstrapSelect = function (element, options) {
         this.options = $.extend(true, {}, this.options, dataOptions);
         this.log(this.LOG_DEBUG, 'Merged in the data attribute options: ', dataOptions, this.options);
     }
+
+    // The data() call on the attribute returns the first letter capitalized after the dash and ignores all other casing.
+    //   Local relies on accurate casing so handle this:
+    if(this.options.locale){
+    	var localeKeys = Object.keys(this.options.locale);
+        var possibleOptions = ['currentlySelected', 'emptyTitle', 'errorText', 'searchPlaceholder', 'statusInitialized', 'statusNoResults', 'statusSearching'];
+    	localeKeys.forEach(function(testLocale){
+    		if(testLocale && !/[A-Z]/.test(testLocale)){
+				var matchedOption = false;
+				possibleOptions.forEach(function(item){
+					if(matchedOption) { return; }
+					if(/[A-Z]/.test(item)){
+						matchedOption = item.toLowerCase() === testLocale.toLowerCase() ? item : false;
+					}
+				});
+				if(matchedOption){
+					plugin.options.locale[matchedOption] = plugin.options.locale[testLocale];
+					delete plugin.options.locale[testLocale];
+				}
+			}
+		});
+	}
 
     /**
      * Reference to the selectpicker instance.

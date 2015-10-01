@@ -59,7 +59,7 @@ var AjaxBootstrapSelectList = function (plugin) {
             selected: false
         });
     });
-    this.cacheSet(/*query=*/'', initial_options)
+    this.cacheSet(/*query=*/'', initial_options);
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {

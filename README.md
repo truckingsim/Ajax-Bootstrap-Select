@@ -501,4 +501,3 @@ Released under the MIT license
 
 [jQuery 1.9+]: http://jquery.com/download/
 [jQuery]: http://jquery.com
-

@@ -45,6 +45,22 @@ var AjaxBootstrapSelectList = function (plugin) {
     this.title = null;
     this.selectedTextFormat = plugin.selectpicker.options.selectedTextFormat;
 
+    // Save initial options
+    var initial_options = [];
+    plugin.$element.find('option').each(function() {
+        var $option = $(this);
+        var value = $option.attr('value');
+        initial_options.push({
+            value: value,
+            text: $option.text(),
+            'class': $option.attr('class') || '',
+            data: $option.data() || {},
+            preserved: false,
+            selected: false
+        });
+    });
+    this.cacheSet(/*query=*/'', initial_options);
+
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
         plugin.$element.on('change.abs.preserveSelected', function (e) {

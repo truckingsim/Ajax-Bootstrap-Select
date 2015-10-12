@@ -1,6 +1,6 @@
 {
 	"name": "ajax-bootstrap-select",
-	"version": "1.3.3",
+	"version": "1.3.4",
 	"description": "Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.",
 	"repository": {
 		"type": "git",

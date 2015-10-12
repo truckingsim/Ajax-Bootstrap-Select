@@ -6,7 +6,7 @@ The plugin expects a certain result structure, an array of objects with the obje
         value: 'string',    // Required.
         text: 'string',     // If not set, it will use the value as the text.
         class: 'string',    // The CSS class(es) to apply to the option element.
-        disable: false,     // {Boolean} true|false
+        disabled: false,     // {Boolean} true|false
 
         // NOTE: If "divider" is present as a property, the entire item is
         // considered a divider and the rest of the item value/data is

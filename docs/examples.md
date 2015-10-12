@@ -34,7 +34,7 @@ $('.select-picker')
                                 'icon': 'icon-person',
                                 'subtext': 'Internal'
                             },
-                            'disable': false
+                            'disabled': false
                         }
                     );
                 }

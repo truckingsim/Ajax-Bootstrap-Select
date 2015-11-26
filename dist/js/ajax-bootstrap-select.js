@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2015-10-12 3:07:08 PM EDT
+ * Last build: 2015-11-26 2:49:58 PM GMT
  */
 !(function ($, window) {
 
@@ -330,6 +330,12 @@ AjaxBootstrapSelect.prototype.init = function () {
             plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
             return;
         }
+		
+		// Don't process if below minimum query length
+		if (query.length < plugin.options.minLength) {
+			plugin.list.setStatus(plugin.t('statusTooShort'));
+			return;
+		}
 
         // Clear out any existing timer.
         clearTimeout(requestDelayTimer);
@@ -1399,6 +1405,14 @@ $.fn.ajaxSelectPicker.defaults = {
      * @cfg placeHolderOption
      * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.locale#emptyTitle}.
      */
+	 
+	/**
+	 * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Integer} minLength = 0
+     * @markdown
+     * Invoke a request for empty search values.
+     */
+	minLength: 0, 
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
@@ -1578,7 +1592,16 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Searching...'
+    statusSearching: 'Searching...',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusToShort = 'Please enter more characters'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
+    statusTooShort: 'Please enter more characters'
+	
 };
 $.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];
 

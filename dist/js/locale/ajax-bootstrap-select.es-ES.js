@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2015-10-12 3:07:08 PM EDT
+ * Last build: 2015-11-26 2:49:57 PM GMT
  */
 !(function ($) {
  /*!
@@ -74,7 +74,16 @@
          * @markdown
          * El texto que se utilizan en el contenedor de estado cuando se está iniciando una solicitud.
          */
-        statusSearching: "Buscando..."
+        statusSearching: "Buscando...",
+
+		/**
+		 * @member $.fn.ajaxSelectPicker.locale
+		 * @cfg {String} statusToShort = 'Please enter more characters'
+		 * @markdown
+		 * The text used in the status container when the request returns no results.
+		 */
+		statusTooShort: 'Por favor, introduzca más caracteres'
+		
     };
     $.fn.ajaxSelectPicker.locale.es = $.fn.ajaxSelectPicker.locale["es-ES"];
 })(jQuery);

@@ -183,6 +183,14 @@ $.fn.ajaxSelectPicker.defaults = {
      * @cfg placeHolderOption
      * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.locale#emptyTitle}.
      */
+	 
+	/**
+	 * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Integer} minLength = 0
+     * @markdown
+     * Invoke a request for empty search values.
+     */
+	minLength: 0, 
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults

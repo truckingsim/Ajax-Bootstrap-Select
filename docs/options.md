@@ -192,6 +192,17 @@ Options can be passed via data attributes or through the JavaScript options obje
 
 ***
 
+### options.minLength
+> __Type:__ `Integer`
+>
+> __Default:__ `0`
+>
+> __Data Attribute:__ `data-abs-min-length="..."`
+>
+> Invoke a request for empty search values.
+
+***
+
 ### options.preprocessData
 > __Type:__ `Function|null`
 >
@@ -367,6 +378,15 @@ See: [options.locale](#optionslocale)
 > __Default:__ `'Searching...'`
 >
 > The text to use in the status container when a request is being initiated.
+
+***
+
+### locale.statusToShort
+> __Type:__ `String`
+>
+> __Default:__ `'Please enter more characters'`
+>
+> The text used in the status container when the request returns no results.
 
 ***
 

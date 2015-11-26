@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2015-10-12 3:07:08 PM EDT
+ * Last build: 2015-11-26 2:49:57 PM GMT
  */
 !(function ($) {
 /*
@@ -89,7 +89,16 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Searching...'
+    statusSearching: 'Searching...',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusToShort = 'Please enter more characters'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
+    statusTooShort: 'Please enter more characters'
+	
 };
 $.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];
 })(jQuery);

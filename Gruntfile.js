@@ -242,6 +242,16 @@ module.exports = function (grunt) {
                 dest: 'dist/js/<%= pkg.name %>.min.js'
             }
         },
+        cssmin: {
+            options: {
+                'keepSpecialComments': '*'
+            },
+            target: {
+                files: {
+                    'dist/css/ajax-bootstrap-select.min.css': ['dist/css/ajax-bootstrap-select.css']
+                }
+            }
+        },
         watch: {
             docs: {
                 files: [
@@ -292,6 +302,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-dss');
     grunt.loadNpmTasks('grunt-jsduck');
     grunt.loadNpmTasks('grunt-verb');
@@ -301,8 +312,8 @@ module.exports = function (grunt) {
     grunt.registerTask('docs', ['dss', 'verb']);
     grunt.registerTask('locale', ['jshint:locale', 'clean:locale', 'copy:locale', 'uglify:locale']);
     grunt.registerTask('plugin', ['jshint:plugin', 'clean:plugin', 'concat:plugin', 'uglify:plugin', 'jsduck']);
-    grunt.registerTask('styles', ['clean:styles', 'less']);
+    grunt.registerTask('styles', ['clean:styles', 'less', 'cssmin']);
     grunt.registerTask('default', ['docs', 'locale', 'plugin', 'styles', 'update_json']);
-    grunt.registerTask('travis', ['jshint:locale', 'clean:locale', 'copy:locale', 'uglify:locale', 'jshint:plugin', 'clean:plugin', 'concat:plugin', 'uglify:plugin', 'clean:styles', 'less']);
+    grunt.registerTask('travis', ['locale', 'jshint:plugin', 'clean:plugin', 'concat:plugin', 'uglify:plugin', 'styles']);
 
 };

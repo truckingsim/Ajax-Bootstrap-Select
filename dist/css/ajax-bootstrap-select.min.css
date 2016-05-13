@@ -13,15 +13,4 @@
  *   Mark Carver - https://github.com/markcarver
  *
  * Last build: 2016-05-13 8:44:09 AM EDT
- */
-.bootstrap-select .status {
-  background: #f0f0f0;
-  clear: both;
-  color: #999;
-  font-size: 11px;
-  font-style: italic;
-  font-weight: 500;
-  line-height: 1;
-  margin-bottom: -5px;
-  padding: 10px 20px;
-}
+ */.bootstrap-select .status{background:#f0f0f0;clear:both;color:#999;font-size:11px;font-style:italic;font-weight:500;line-height:1;margin-bottom:-5px;padding:10px 20px}

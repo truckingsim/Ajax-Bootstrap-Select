@@ -63,6 +63,7 @@ var AjaxBootstrapSelectList = function (plugin) {
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
+        that.selected = initial_options;
         plugin.$element.on('change.abs.preserveSelected', function (e) {
             var $selected = plugin.$element.find(':selected');
             that.selected = [];

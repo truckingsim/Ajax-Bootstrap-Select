@@ -55,14 +55,15 @@ var AjaxBootstrapSelectList = function (plugin) {
             text: $option.text(),
             'class': $option.attr('class') || '',
             data: $option.data() || {},
-            preserved: false,
-            selected: false
+            preserved: plugin.options.preserveSelected,
+            selected: !!$option.attr('selected')
         });
     });
     this.cacheSet(/*query=*/'', initial_options);
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
+        that.selected = initial_options;
         plugin.$element.on('change.abs.preserveSelected', function (e) {
             var $selected = plugin.$element.find(':selected');
             that.selected = [];

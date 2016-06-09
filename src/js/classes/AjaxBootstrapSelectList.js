@@ -55,8 +55,8 @@ var AjaxBootstrapSelectList = function (plugin) {
             text: $option.text(),
             'class': $option.attr('class') || '',
             data: $option.data() || {},
-            preserved: false,
-            selected: false
+            preserved: plugin.options.preserveSelected,
+            selected: !!$option.attr('selected')
         });
     });
     this.cacheSet(/*query=*/'', initial_options);

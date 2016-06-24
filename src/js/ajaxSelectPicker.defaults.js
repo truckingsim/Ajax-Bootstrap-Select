@@ -112,6 +112,7 @@ $.fn.ajaxSelectPicker.defaults = {
      *     38: "up",
      *     40: "down",
      *     91: "meta",
+     *     229: "unknown"
      * }
      * ```
      */
@@ -126,6 +127,7 @@ $.fn.ajaxSelectPicker.defaults = {
         38: "up",
         40: "down",
         91: "meta",
+        229: "unknown"
     },
 
     /**

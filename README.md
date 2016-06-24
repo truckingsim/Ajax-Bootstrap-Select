@@ -156,8 +156,7 @@ Options can be passed via data attributes or through the JavaScript options obje
 >     39: "right",
 >     38: "up",
 >     40: "down",
->     91: "meta",
->     229: "unknown"
+>     91: "meta"
 > }
 > ```
 

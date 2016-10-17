@@ -59,4 +59,4 @@ $.fn.ajaxSelectPicker.locale['pt-BR'] = {
      */
     statusSearching: 'Buscando...'
 };
-$.fn.ajaxSelectPicker.locale.it = $.fn.ajaxSelectPicker.locale['pt-BR'];
+$.fn.ajaxSelectPicker.locale.pt = $.fn.ajaxSelectPicker.locale['pt-BR'];

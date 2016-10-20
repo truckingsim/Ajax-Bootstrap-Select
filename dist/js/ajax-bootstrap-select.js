@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2016-06-24 1:36:43 PM EDT
+ * Last build: 2016-10-11 5:14:25 AM UTC
  */
 !(function ($, window) {
 
@@ -949,6 +949,11 @@ var AjaxBootstrapSelectRequest = function (plugin) {
         this.options.data = this.options.data.apply(this) || {
             q: '{{{q}}}'
         };
+    }
+
+    // Allow the url option to be dynamically generated.
+    if (this.options.url && $.isFunction(this.options.url)) {
+        this.options.url = this.options.url.apply(this);
     }
 
     // Replace all data values that contain "{{{q}}}" with the value of the

@@ -48,6 +48,11 @@ var AjaxBootstrapSelectRequest = function (plugin) {
         };
     }
 
+    // Allow the url option to be dynamically generated.
+    if (this.options.url && $.isFunction(this.options.url)) {
+        this.options.url = this.options.url.apply(this);
+    }
+
     // Replace all data values that contain "{{{q}}}" with the value of the
     // current search query.
     this.plugin.replaceValue(this.options.data, '{{{q}}}', this.plugin.query);

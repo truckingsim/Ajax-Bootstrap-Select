@@ -16,17 +16,17 @@
  */
 !(function ($) {
 /*!
- * Italian translation for the "it-IT" and "it" language codes.
- * Luca Longo <l.longo@ambita.it>
+ * Brazilian portuguese translation for the "pt-BR" and "pt" language codes.
+ * Luan Fonseca <luanfonceca@gmail.com>
  */
-$.fn.ajaxSelectPicker.locale['it-IT'] = {
+$.fn.ajaxSelectPicker.locale['pt-BR'] = {
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
      * @markdown
      * The text to use for the label of the option group when currently selected options are preserved.
      */
-    currentlySelected: 'Selezionati',
+    currentlySelected: 'Selecionado Atualmente',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -34,7 +34,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use as the title for the select element when there are no items to display.
      */
-    emptyTitle: 'Clicca qui e scrivi...',
+    emptyTitle: 'Clique e comece a digitar',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -42,7 +42,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use in the status container when a request returns with an error.
      */
-    errorText: 'Impossibile recuperare dei risultati',
+    errorText: 'Incapaz de encontrar resultados',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -50,7 +50,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use for the search input placeholder attribute.
      */
-    searchPlaceholder: 'Cerca...',
+    searchPlaceholder: 'Buscar...',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -58,7 +58,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text used in the status container when it is initialized.
      */
-    statusInitialized: 'Inizia a digitare...',
+    statusInitialized: 'Comece a digitar',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -66,7 +66,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusNoResults: 'Non ci sono risultati',
+    statusNoResults: 'Sem Resultados',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -74,7 +74,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Ricerca in corso...'
+    statusSearching: 'Buscando...'
 };
-$.fn.ajaxSelectPicker.locale.it = $.fn.ajaxSelectPicker.locale['it-IT'];
+$.fn.ajaxSelectPicker.locale.pt = $.fn.ajaxSelectPicker.locale['pt-BR'];
 })(jQuery);

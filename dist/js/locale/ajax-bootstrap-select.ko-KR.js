@@ -16,17 +16,17 @@
  */
 !(function ($) {
 /*!
- * Italian translation for the "it-IT" and "it" language codes.
- * Luca Longo <l.longo@ambita.it>
+ * Korean translation for the "ko-KR" and "ko" language codes.
+ * Jo JungLae <ubermenschjo@google.com>
  */
-$.fn.ajaxSelectPicker.locale['it-IT'] = {
+$.fn.ajaxSelectPicker.locale['ko-KR'] = {
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
      * @markdown
      * The text to use for the label of the option group when currently selected options are preserved.
      */
-    currentlySelected: 'Selezionati',
+    currentlySelected: '현재 선택된 항목',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -34,7 +34,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use as the title for the select element when there are no items to display.
      */
-    emptyTitle: 'Clicca qui e scrivi...',
+    emptyTitle: '클릭하고 입력 시작',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -42,7 +42,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use in the status container when a request returns with an error.
      */
-    errorText: 'Impossibile recuperare dei risultati',
+    errorText: '결과를 검색할 수 없습니다',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -50,7 +50,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use for the search input placeholder attribute.
      */
-    searchPlaceholder: 'Cerca...',
+    searchPlaceholder: '검색',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -58,7 +58,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text used in the status container when it is initialized.
      */
-    statusInitialized: 'Inizia a digitare...',
+    statusInitialized: '검색어를 입력',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -66,7 +66,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusNoResults: 'Non ci sono risultati',
+    statusNoResults: '검색결과가 없습니다',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -74,7 +74,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Ricerca in corso...'
+    statusSearching: '검색중'
 };
-$.fn.ajaxSelectPicker.locale.it = $.fn.ajaxSelectPicker.locale['it-IT'];
+$.fn.ajaxSelectPicker.locale.ko = $.fn.ajaxSelectPicker.locale['ko-KR'];
 })(jQuery);

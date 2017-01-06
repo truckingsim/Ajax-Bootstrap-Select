@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2017-01-05 6:15:24 PM CST
+ * Last build: 2017-01-05 6:25:16 PM CST
  */
 !(function ($, window) {
 
@@ -676,7 +676,7 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
         }
 
         // Set various properties.
-        $option.val(item.value).text(item.text);
+        $option.val(item.value).text(item.text).attr('title', item.text);
         if (item['class'].length) {
             $option.attr('class', item['class']);
         }

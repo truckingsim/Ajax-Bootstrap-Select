@@ -67,4 +67,4 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      */
     statusTooShort: 'Lütfen daha fazla karakter girin'
 };
-$.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['tr-TR'];
+$.fn.ajaxSelectPicker.locale.tr = $.fn.ajaxSelectPicker.locale['tr-TR'];

@@ -1,62 +1,62 @@
- /*!
-     * Spanish translation for the "es-ES" and "es" language codes.
-     * Diomedes Domínguez <diomedes.domimnguez@gmail.com>
+/*!
+ * Spanish translation for the "es-ES" and "es" language codes.
+ * Diomedes Domínguez <diomedes.domimnguez@gmail.com>
+ */
+$.fn.ajaxSelectPicker.locale["es-ES"] = {
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} currentlySelected = 'Currently Selected'
+     * @markdown
+     * El texto que se utilizará para la etiqueta del grupo de opciones cuando se conservan las opciones seleccionadas.
      */
-    $.fn.ajaxSelectPicker.locale["es-ES"] = {
-        /**
-         * @member $.fn.ajaxSelectPicker.locale
-         * @cfg {String} currentlySelected = 'Currently Selected'
-         * @markdown
-         * El texto que se utilizará para la etiqueta del grupo de opciones cuando se conservan las opciones seleccionadas.
-         */
-        currentlySelected: "Seleccionado",
+    currentlySelected: "Seleccionado",
 
-        /**
-         * @member $.fn.ajaxSelectPicker.locale
-         * @cfg {String} emptyTitle = 'Select and begin typing'
-         * @markdown
-         * El texto que se utilizará como título para el elemento de selección cuando no hay elementos para mostrar.
-         */
-        emptyTitle: "Seleccione y comience a escribir",
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} emptyTitle = 'Select and begin typing'
+     * @markdown
+     * El texto que se utilizará como título para el elemento de selección cuando no hay elementos para mostrar.
+     */
+    emptyTitle: "Seleccione y comience a escribir",
 
-        /**
-         * @member $.fn.ajaxSelectPicker.locale
-         * @cfg {String} errorText = ''Unable to retrieve results'
-         * @markdown
-         * El texto que se utilizan en el contenedor de estado cuando una solicitud devuelve con un error.
-         */
-        errorText: "No se puede recuperar resultados",
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} errorText = ''Unable to retrieve results'
+     * @markdown
+     * El texto que se utilizan en el contenedor de estado cuando una solicitud devuelve con un error.
+     */
+    errorText: "No se puede recuperar resultados",
 
-        /**
-         * @member $.fn.ajaxSelectPicker.locale
-         * @cfg {String} searchPlaceholder = 'Search...'
-         * @markdown
-         * El texto que se utilizará para el atributo marcador de posición de entrada de búsqueda.
-         */
-        searchPlaceholder: "Buscar...",
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} searchPlaceholder = 'Search...'
+     * @markdown
+     * El texto que se utilizará para el atributo marcador de posición de entrada de búsqueda.
+     */
+    searchPlaceholder: "Buscar...",
 
-        /**
-         * @member $.fn.ajaxSelectPicker.locale
-         * @cfg {String} statusInitialized = 'Start typing a search query'
-         * @markdown
-         * El texto utilizado en el contenedor de estado cuando se inicializa.
-         */
-        statusInitialized: "Empieza a escribir una consulta de búsqueda",
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusInitialized = 'Start typing a search query'
+     * @markdown
+     * El texto utilizado en el contenedor de estado cuando se inicializa.
+     */
+    statusInitialized: "Empieza a escribir una consulta de búsqueda",
 
-        /**
-         * @member $.fn.ajaxSelectPicker.locale
-         * @cfg {String} statusNoResults = 'No Results'
-         * @markdown
-         * El texto utilizado en el contenedor de estado cuando la solicitud no devolvió resultados.
-         */
-        statusNoResults: "Sin Resultados",
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusNoResults = 'No Results'
+     * @markdown
+     * El texto utilizado en el contenedor de estado cuando la solicitud no devolvió resultados.
+     */
+    statusNoResults: "Sin Resultados",
 
-        /**
-         * @member $.fn.ajaxSelectPicker.locale
-         * @cfg {String} statusSearching = 'Searching...'
-         * @markdown
-         * El texto que se utilizan en el contenedor de estado cuando se está iniciando una solicitud.
-         */
-        statusSearching: "Buscando..."
-    };
-    $.fn.ajaxSelectPicker.locale.es = $.fn.ajaxSelectPicker.locale["es-ES"];
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusSearching = 'Searching...'
+     * @markdown
+     * El texto que se utilizan en el contenedor de estado cuando se está iniciando una solicitud.
+     */
+    statusSearching: "Buscando..."
+};
+$.fn.ajaxSelectPicker.locale.es = $.fn.ajaxSelectPicker.locale["es-ES"];

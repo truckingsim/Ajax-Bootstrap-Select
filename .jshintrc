@@ -17,6 +17,7 @@
         "$": true,
         "jQuery": true,
         "module": true,
+        "require": true,
         "AjaxBootstrapSelect": true,
         "AjaxBootstrapSelectList": true,
         "AjaxBootstrapSelectRequest": true

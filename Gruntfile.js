@@ -88,6 +88,10 @@ module.exports = function (grunt) {
 
     // Project configuration.
     grunt.initConfig({
+        // Grunt 1.0+ no longer has _. utility functions. Since there are other
+        // node modules that are using lodash, just use that.
+        _: require('lodash'),
+
         banner: '/*!\n' +
         ' * <%= pkg.title || pkg.name %>\n *\n' +
         ' * <%= pkg.description %>\n *\n' +
@@ -219,7 +223,9 @@ module.exports = function (grunt) {
         },
         uglify: {
             options: {
-                preserveComments: 'some'
+                preserveComments: function (node, comment) {
+                    return /^!|@preserve|@license|@cc_on/i.test(comment.value);
+                }
             },
             locale: {
                 files: [{
@@ -290,6 +296,27 @@ module.exports = function (grunt) {
                     description: null,
                     repository: null
                 }
+            }
+        },
+        verb: {
+            readme: {
+                options: {
+                  // For some reason, verb/plasma cannot find package.json.
+                  config: pkg
+                },
+                files: [
+                  {
+                    src: ['.verbrc.md'],
+                    dest: 'README.md'
+                  },
+                  {
+                    expand: true,
+                    cwd: 'docs',
+                    src: ['**/*.tmpl.md'],
+                    dest: '.',
+                    ext: '.md'
+                  }
+                ]
             }
         }
     });

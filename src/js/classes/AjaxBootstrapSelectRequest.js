@@ -47,6 +47,10 @@ var AjaxBootstrapSelectRequest = function (plugin) {
             q: '{{{q}}}'
         };
     }
+    
+    if (this.options.ajax.url && $.isFunction(this.options.ajax.url)) {
+        this.options.ajax.url = this.options.ajax.url.apply(this);
+    }
 
     // Replace all data values that contain "{{{q}}}" with the value of the
     // current search query.

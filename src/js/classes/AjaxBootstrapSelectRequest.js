@@ -48,7 +48,7 @@ var AjaxBootstrapSelectRequest = function (plugin) {
         };
     }
     
-    if (typeof this.options.ajax !== "undefined" && typeof this.options.ajax.url !== "undefined" && $.isFunction(this.options.ajax.url)) {
+    if (this.options.ajax && this.options.ajax.url && $.isFunction(this.options.ajax.url)) {
         this.options.ajax.url = this.options.ajax.url.apply(this);
     }
 

@@ -3,6 +3,7 @@
  * Jo JungLae <ubermenschjo@google.com>
  */
 $.fn.ajaxSelectPicker.locale['ko-KR'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -58,5 +59,7 @@ $.fn.ajaxSelectPicker.locale['ko-KR'] = {
      * The text to use in the status container when a request is being initiated.
      */
     statusSearching: '검색중'
+
 };
+
 $.fn.ajaxSelectPicker.locale.ko = $.fn.ajaxSelectPicker.locale['ko-KR'];

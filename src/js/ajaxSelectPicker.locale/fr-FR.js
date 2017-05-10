@@ -3,6 +3,7 @@
  * Bastien (https://github.com/lisurc)
  */
 $.fn.ajaxSelectPicker.locale['fr-FR'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -58,5 +59,7 @@ $.fn.ajaxSelectPicker.locale['fr-FR'] = {
      * The text to use in the status container when a request is being initiated.
      */
     statusSearching: 'Recherche en cours...'
+
 };
+
 $.fn.ajaxSelectPicker.locale.fr = $.fn.ajaxSelectPicker.locale['fr-FR'];

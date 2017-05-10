@@ -3,6 +3,7 @@
  * Diomedes Domínguez <diomedes.domimnguez@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale["es-ES"] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -58,5 +59,7 @@ $.fn.ajaxSelectPicker.locale["es-ES"] = {
      * El texto que se utilizan en el contenedor de estado cuando se está iniciando una solicitud.
      */
     statusSearching: "Buscando..."
+
 };
+
 $.fn.ajaxSelectPicker.locale.es = $.fn.ajaxSelectPicker.locale["es-ES"];

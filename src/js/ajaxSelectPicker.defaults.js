@@ -7,6 +7,7 @@
  * @property {Object} defaults
  */
 $.fn.ajaxSelectPicker.defaults = {
+
     /**
      * @member $.fn.ajaxSelectPicker.defaults
      * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#preprocessData}.
@@ -219,7 +220,8 @@ $.fn.ajaxSelectPicker.defaults = {
      * }
      * ```
      */
-    preprocessData: function(){},
+    preprocessData: function () {
+    },
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
@@ -247,7 +249,8 @@ $.fn.ajaxSelectPicker.defaults = {
      * @markdown
      * Process the data returned after this plugin, but before the list is built.
      */
-    processData: function(){},
+    processData: function () {
+    },
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
@@ -284,4 +287,5 @@ $.fn.ajaxSelectPicker.defaults = {
     templates: {
         status: '<div class="status"></div>'
     }
+
 };

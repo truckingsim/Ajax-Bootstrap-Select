@@ -18,6 +18,7 @@
  * Mark Carver <mark.carver@me.com>
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -73,5 +74,7 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      * The text to use in the status container when a request is being initiated.
      */
     statusSearching: 'Searching...'
+
 };
+
 $.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];

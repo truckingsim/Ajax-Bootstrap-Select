@@ -47,7 +47,7 @@ var AjaxBootstrapSelectList = function (plugin) {
 
     // Save initial options
     var initial_options = [];
-    plugin.$element.find('option').each(function() {
+    plugin.$element.find('option').each(function () {
         var $option = $(this);
         var value = $option.attr('value');
         initial_options.push({
@@ -59,7 +59,7 @@ var AjaxBootstrapSelectList = function (plugin) {
             selected: !!$option.attr('selected')
         });
     });
-    this.cacheSet(/*query=*/'', initial_options);
+    this.cacheSet(/* query=*/'', initial_options);
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
@@ -193,8 +193,6 @@ AjaxBootstrapSelectList.prototype.cacheGet = function (key, defaultValue) {
  *   The identifier name of the data to store.
  * @param {*} value
  *   The value of the data to store.
- *
- * @return {void}
  */
 AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
     this.cache[key] = value;
@@ -212,6 +210,9 @@ AjaxBootstrapSelectList.prototype.destroy = function () {
 
 /**
  * Refreshes the select list.
+ *
+ * @param {Boolean} triggerChange
+ *   Flag indicating whether the "change" event should be triggered.
  */
 AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     // Remove unnecessary "min-height" from selectpicker.
@@ -229,9 +230,9 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     this.plugin.selectpicker.findLis();
 
     // Only trigger change event when specified.
-    if(triggerChange){
-      this.plugin.log(this.plugin.LOG_DEBUG, 'Triggering Change');
-      this.plugin.$element.trigger('change.$');
+    if (triggerChange) {
+        this.plugin.log(this.plugin.LOG_DEBUG, 'Triggering Change');
+        this.plugin.$element.trigger('change.$');
     }
     this.plugin.log(this.plugin.LOG_DEBUG, 'Refreshed select list.');
 };
@@ -244,8 +245,6 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
  *
  * @param {Array} data
  *   The data array to process.
- *
- * @returns {void}
  */
 AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
     var i, l, item, output = '', processedData = [], selected = [], seenValues = [];
@@ -299,8 +298,6 @@ AjaxBootstrapSelectList.prototype.restore = function () {
 
 /**
  * Restores the previous title of the select element.
- *
- * @return {void}
  */
 AjaxBootstrapSelectList.prototype.restoreTitle = function () {
     if (!this.plugin.request) {
@@ -319,8 +316,7 @@ AjaxBootstrapSelectList.prototype.restoreTitle = function () {
  * Sets a new title on the select element.
  *
  * @param {String} title
- *
- * @return {void}
+ *   The title to set.
  */
 AjaxBootstrapSelectList.prototype.setTitle = function (title) {
     if (!this.plugin.request) {
@@ -335,8 +331,6 @@ AjaxBootstrapSelectList.prototype.setTitle = function (title) {
  *
  * @param {String} [status]
  *   The new status to set, if empty it will hide it.
- *
- * @return {void}
  */
 AjaxBootstrapSelectList.prototype.setStatus = function (status) {
     status = status || '';

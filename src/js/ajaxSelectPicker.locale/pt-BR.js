@@ -3,6 +3,7 @@
  * Luan Fonseca <luanfonceca@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale['pt-BR'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -58,5 +59,7 @@ $.fn.ajaxSelectPicker.locale['pt-BR'] = {
      * The text to use in the status container when a request is being initiated.
      */
     statusSearching: 'Buscando...'
+
 };
+
 $.fn.ajaxSelectPicker.locale.pt = $.fn.ajaxSelectPicker.locale['pt-BR'];

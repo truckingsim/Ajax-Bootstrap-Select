@@ -329,6 +329,10 @@ AjaxBootstrapSelect.prototype.init = function () {
             }
         }
 
+        // Do not query if min length of query characters aren't provided yet
+        if (!!plugin.options.query && !!plugin.options.query.minlength && query.length < plugin.options.query.minlength)
+            return;
+
         // Store the query.
         plugin.previousQuery = plugin.query;
         plugin.query = query;

@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2017-01-05 6:25:16 PM CST
+ * Last build: 2017-06-06 3:25:00 AM GMT+0530
  */
 !(function ($, window) {
 
@@ -346,6 +346,10 @@ AjaxBootstrapSelect.prototype.init = function () {
                 return;
             }
         }
+
+        // Do not query if min length of query characters aren't provided yet
+        if (!!plugin.options.query && !!plugin.options.query.minlength && query.length < plugin.options.query.minlength)
+            return;
 
         // Store the query.
         plugin.previousQuery = plugin.query;

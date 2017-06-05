@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2017-01-05 6:25:15 PM CST
+ * Last build: 2017-06-06 3:24:59 AM GMT+0530
  */
 !(function ($) {
 /*

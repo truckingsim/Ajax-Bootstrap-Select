@@ -15,18 +15,33 @@
  * Last build: 2017-06-23 12:39:30 AM GMT+0500
  */
 !(function ($) {
-/*!
- * Italian translation for the "it-IT" and "it" language codes.
- * Luca Longo <l.longo@ambita.it>
+/*
+ * Note: You do not have to load this translation file. English is the
+ * default language of this plugin and is compiled into it automatically.
+ *
+ * This file is just to serve as the default string mappings and as a
+ * template for future translations.
+ * @see: ./src/js/locale/en-US.js
+ *
+ * Four character language codes are supported ("en-US") and will always
+ * take precedence over two character language codes ("en") if present.
+ *
+ * When copying this file, remove all comments except the one above the
+ * definition objection giving credit to the translation author.
  */
-$.fn.ajaxSelectPicker.locale['it-IT'] = {
+
+/*!
+ * English translation for the "en-US" and "en" language codes.
+ * Mark Carver <mark.carver@me.com>
+ */
+$.fn.ajaxSelectPicker.locale['ru-RU'] = {
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
      * @markdown
      * The text to use for the label of the option group when currently selected options are preserved.
      */
-    currentlySelected: 'Selezionati',
+    currentlySelected: 'Выбрано',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -34,7 +49,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use as the title for the select element when there are no items to display.
      */
-    emptyTitle: 'Clicca qui e scrivi...',
+    emptyTitle: 'Выделите и начните печатать',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -42,7 +57,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use in the status container when a request returns with an error.
      */
-    errorText: 'Impossibile recuperare dei risultati',
+    errorText: 'Невозможно получить результат',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -50,7 +65,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use for the search input placeholder attribute.
      */
-    searchPlaceholder: 'Cerca...',
+    searchPlaceholder: 'Искать...',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -58,7 +73,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text used in the status container when it is initialized.
      */
-    statusInitialized: 'Inizia a digitare...',
+    statusInitialized: 'Начните печатать запрос для поиска',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -66,7 +81,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusNoResults: 'Non ci sono risultati',
+    statusNoResults: 'Нет результатов',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -74,7 +89,7 @@ $.fn.ajaxSelectPicker.locale['it-IT'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Ricerca in corso...'
+    statusSearching: 'Поиск...'
 };
-$.fn.ajaxSelectPicker.locale.it = $.fn.ajaxSelectPicker.locale['it-IT'];
+$.fn.ajaxSelectPicker.locale.ru = $.fn.ajaxSelectPicker.locale['ru-RU'];
 })(jQuery);

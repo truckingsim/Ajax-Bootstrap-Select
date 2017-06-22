@@ -221,7 +221,9 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     if (!this.plugin.$element.find('option').length && emptyTitle && emptyTitle.length) {
         this.setTitle(emptyTitle);
     }
-    else if (this.title) {
+    else if (this.title ||
+	((plugin.selectpicker.options.selectedTextFormat === 'static' ) &&
+	(this.selectedTextFormat !== plugin.selectpicker.options.selectedTextFormat))) {
         this.restoreTitle();
     }
     this.plugin.selectpicker.refresh();

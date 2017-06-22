@@ -1,21 +1,6 @@
-/*
- * Note: You do not have to load this translation file. English is the
- * default language of this plugin and is compiled into it automatically.
- *
- * This file is just to serve as the default string mappings and as a
- * template for future translations.
- * @see: ./src/js/locale/en-US.js
- *
- * Four character language codes are supported ("en-US") and will always
- * take precedence over two character language codes ("en") if present.
- *
- * When copying this file, remove all comments except the one above the
- * definition objection giving credit to the translation author.
- */
-
 /*!
- * English translation for the "en-US" and "en" language codes.
- * Mark Carver <mark.carver@me.com>
+ * Russian translation for the "ru-RU" and "ru" language codes.
+ * Bercut Stray <bercut497@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale['ru-RU'] = {
     /**

@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2017-01-05 6:25:16 PM CST
+ * Last build: 2017-06-23 12:12:03 AM GMT+0500
  */
 !(function ($, window) {
 
@@ -764,7 +764,9 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     if (!this.plugin.$element.find('option').length && emptyTitle && emptyTitle.length) {
         this.setTitle(emptyTitle);
     }
-    else if (this.title) {
+    else if (this.title ||
+	((this.selectedTextFormat !== 'static' ) &&
+	(this.selectedTextFormat !== this.plugin.selectpicker.options.selectedTextFormat))) {
         this.restoreTitle();
     }
     this.plugin.selectpicker.refresh();

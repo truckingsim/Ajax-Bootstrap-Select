@@ -222,8 +222,8 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
         this.setTitle(emptyTitle);
     }
     else if (this.title ||
-	((plugin.selectpicker.options.selectedTextFormat === 'static' ) &&
-	(this.selectedTextFormat !== plugin.selectpicker.options.selectedTextFormat))) {
+	((this.selectedTextFormat !== 'static' ) &&
+	(this.selectedTextFormat !== this.plugin.selectpicker.options.selectedTextFormat))) {
         this.restoreTitle();
     }
     this.plugin.selectpicker.refresh();

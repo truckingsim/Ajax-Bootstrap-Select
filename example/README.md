@@ -1,1 +1,1 @@
-If you want to add an example file in the language of your choice feel free to send a pull request.
+Example can be run using Node v6+, run `yarn install` or `npm install` in example directory then `yarn start` or `npm start`.

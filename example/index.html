@@ -144,7 +144,7 @@
         </div>
         <div class="col-xs-4">
             <h3>Add option after init<br>Ajax-Bootstrap-Select</h3>
-            <select class="selectpicker with-ajax after-init" data-live-search="true" multiple>
+            <select class="selectpicker with-ajax after-init" data-live-search="true" data-abs-preserve-selected="true" multiple>
             </select>
         </div>
     </div>
@@ -193,8 +193,8 @@
     };
 
     $('.selectpicker').selectpicker().filter('.with-ajax').ajaxSelectPicker(options);
+    $('select.after-init').append('<option value="neque.venenatis.lacus@neque.com" data-subtext="neque.venenatis.lacus@neque.com" selected="selected">Chancellor</option>').selectpicker('refresh');
     $('select').trigger('change');
-    $('select.after-init').append('<option value="neque.venenatis.lacus@neque.com" data-subtext="neque.venenatis.lacus@neque.com" selected>Chancellor</option>').selectpicker('refresh');
 </script>
 </body>
 </html>

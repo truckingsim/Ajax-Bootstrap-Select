@@ -38,6 +38,14 @@ $.fn.ajaxSelectPicker.defaults = {
             q: '{{{q}}}'
         }
     },
+	
+	/**
+ 	 * @member $.fn.ajaxSelectPicker.defaults
+	 * @cfg {Integer} minLength = 0
+	 * @markdown
+	 * Invoke a request for empty search values.
+	 */
+ 	minLength: 0, 
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults

@@ -57,6 +57,14 @@ $.fn.ajaxSelectPicker.locale['ko-KR'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: '검색중'
+    statusSearching: '검색중',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusToShort = 'Please enter more characters'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
+    statusTooShort: '추가 문자를 입력하십시오.'
 };
 $.fn.ajaxSelectPicker.locale.ko = $.fn.ajaxSelectPicker.locale['ko-KR'];

@@ -57,6 +57,14 @@ $.fn.ajaxSelectPicker.locale['ru-RU'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Поиск...'
+    statusSearching: 'Поиск...',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusToShort = 'Please enter more characters'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
+    statusTooShort: 'Введите еще несколько символов'
 };
 $.fn.ajaxSelectPicker.locale.ru = $.fn.ajaxSelectPicker.locale['ru-RU'];

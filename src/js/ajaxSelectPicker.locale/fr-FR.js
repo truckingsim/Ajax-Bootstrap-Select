@@ -57,6 +57,14 @@ $.fn.ajaxSelectPicker.locale['fr-FR'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Recherche en cours...'
+    statusSearching: 'Recherche en cours...',
+
+    /**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusToShort = 'Please enter more characters'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
+    statusTooShort: 'Entrez plus de caractères'
 };
 $.fn.ajaxSelectPicker.locale.fr = $.fn.ajaxSelectPicker.locale['fr-FR'];

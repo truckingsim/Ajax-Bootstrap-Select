@@ -3,7 +3,7 @@
  *
  * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
  *
- * @version 1.3.8
+ * @version 1.4.0
  * @author Adam Heim - https://github.com/truckingsim
  * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
  * @copyright 2017 Adam Heim
@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2017-01-05 6:25:16 PM CST
+ * Last build: 2017-06-26 5:18:16 PM GMT-0400
  */
 !(function ($, window) {
 
@@ -328,6 +328,12 @@ AjaxBootstrapSelect.prototype.init = function () {
         // Don't process ignored keys.
         if (plugin.options.ignoredKeys[e.keyCode]) {
             plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
+            return;
+        }
+		
+        // Don't process if below minimum query length
+        if (query.length < plugin.options.minLength) {
+            plugin.list.setStatus(plugin.t('statusTooShort'));
             return;
         }
 
@@ -764,7 +770,13 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     if (!this.plugin.$element.find('option').length && emptyTitle && emptyTitle.length) {
         this.setTitle(emptyTitle);
     }
-    else if (this.title) {
+    else if (
+        this.title ||
+        (
+            this.selectedTextFormat !== 'static' && 
+            this.selectedTextFormat !== this.plugin.selectpicker.options.selectedTextFormat
+        )
+    ) {
         this.restoreTitle();
     }
     this.plugin.selectpicker.refresh();
@@ -1256,6 +1268,14 @@ $.fn.ajaxSelectPicker.defaults = {
         }
     },
 
+	/**
+ 	 * @member $.fn.ajaxSelectPicker.defaults
+	 * @cfg {Integer} minLength = 0
+	 * @markdown
+	 * Invoke a request for empty search values.
+	 */
+    minLength: 0,
+
     /**
      * @member $.fn.ajaxSelectPicker.defaults
      * @cfg {String} ajaxSearchUrl
@@ -1436,7 +1456,7 @@ $.fn.ajaxSelectPicker.defaults = {
      * }
      * ```
      */
-    preprocessData: function(){},
+    preprocessData: function () { },
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
@@ -1464,7 +1484,7 @@ $.fn.ajaxSelectPicker.defaults = {
      * @markdown
      * Process the data returned after this plugin, but before the list is built.
      */
-    processData: function(){},
+    processData: function () { },
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
@@ -1577,7 +1597,15 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Searching...'
+    statusSearching: 'Searching...',
+
+	/**
+     * @member $.fn.ajaxSelectPicker.locale
+     * @cfg {String} statusToShort = 'Please enter more characters'
+     * @markdown
+     * The text used in the status container when the request returns no results.
+     */
+    statusTooShort: 'Please enter more characters'
 };
 $.fn.ajaxSelectPicker.locale.en = $.fn.ajaxSelectPicker.locale['en-US'];
 

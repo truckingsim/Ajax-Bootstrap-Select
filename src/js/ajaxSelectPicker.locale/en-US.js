@@ -73,7 +73,7 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      * The text to use in the status container when a request is being initiated.
      */
     statusSearching: 'Searching...',
-	
+
 	/**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} statusToShort = 'Please enter more characters'

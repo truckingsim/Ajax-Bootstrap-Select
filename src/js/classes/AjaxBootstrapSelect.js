@@ -313,11 +313,11 @@ AjaxBootstrapSelect.prototype.init = function () {
             return;
         }
 		
-		// Don't process if below minimum query length
- 		if (query.length < plugin.options.minLength) {
- 			plugin.list.setStatus(plugin.t('statusTooShort'));
- 			return;
- 		}
+        // Don't process if below minimum query length
+        if (query.length < plugin.options.minLength) {
+            plugin.list.setStatus(plugin.t('statusTooShort'));
+            return;
+        }
 
         // Clear out any existing timer.
         clearTimeout(requestDelayTimer);

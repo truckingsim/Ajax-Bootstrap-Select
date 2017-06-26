@@ -38,14 +38,14 @@ $.fn.ajaxSelectPicker.defaults = {
             q: '{{{q}}}'
         }
     },
-	
+
 	/**
  	 * @member $.fn.ajaxSelectPicker.defaults
 	 * @cfg {Integer} minLength = 0
 	 * @markdown
 	 * Invoke a request for empty search values.
 	 */
- 	minLength: 0, 
+    minLength: 0,
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
@@ -227,7 +227,7 @@ $.fn.ajaxSelectPicker.defaults = {
      * }
      * ```
      */
-    preprocessData: function(){},
+    preprocessData: function () { },
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults
@@ -255,7 +255,7 @@ $.fn.ajaxSelectPicker.defaults = {
      * @markdown
      * Process the data returned after this plugin, but before the list is built.
      */
-    processData: function(){},
+    processData: function () { },
 
     /**
      * @member $.fn.ajaxSelectPicker.defaults

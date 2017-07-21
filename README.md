@@ -1,4 +1,4 @@
-# Ajax Bootstrap Select [![GitHub version](https://badge.fury.io/gh/truckingsim%2FAjax-Bootstrap-Select.svg)](http://badge.fury.io/gh/truckingsim%2FAjax-Bootstrap-Select) [![Build Status](https://travis-ci.org/truckingsim/Ajax-Bootstrap-Select.svg)](https://travis-ci.org/truckingsim/Ajax-Bootstrap-Select) [![CDNJS](https://img.shields.io/cdnjs/v/ajax-bootstrap-select.svg)](https://cdnjs.com/libraries/ajax-bootstrap-select)
+# Ajax Bootstrap Select [![GitHub version](https://badge.fury.io/gh/truckingsim%2FAjax-Bootstrap-Select.svg)](http://badge.fury.io/gh/truckingsim%2FAjax-Bootstrap-Select) [![Build Status](https://travis-ci.org/truckingsim/Ajax-Bootstrap-Select.svg)](https://travis-ci.org/truckingsim/Ajax-Bootstrap-Select) [![CDNJS](https://img.shields.io/cdnjs/v/ajax-bootstrap-select.svg)](https://cdnjs.com/libraries/ajax-bootstrap-select) [![Gitter](https://badges.gitter.im/truckingsim/Ajax-Bootstrap-Select.svg)](https://gitter.im/truckingsim/Ajax-Bootstrap-Select?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
 

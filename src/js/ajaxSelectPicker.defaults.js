@@ -41,7 +41,7 @@ $.fn.ajaxSelectPicker.defaults = {
 
 	/**
  	 * @member $.fn.ajaxSelectPicker.defaults
-	 * @cfg {Integer} minLength = 0
+	 * @cfg {Number} minLength = 0
 	 * @markdown
 	 * Invoke a request for empty search values.
 	 */

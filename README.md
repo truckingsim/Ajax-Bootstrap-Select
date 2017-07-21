@@ -66,7 +66,7 @@ Options can be passed via data attributes or through the JavaScript options obje
 ***
 
 #### options.minLength
-> __Type:__ `Integer`
+> __Type:__ `Number`
 >
 > __Default:__ `0`
 >

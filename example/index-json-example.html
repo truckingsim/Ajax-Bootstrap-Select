@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="../dist/css/ajax-bootstrap-select.css"/>
+    <style>h3 {
+            text-align: center;
+        }
+
+        .bootstrap-select {
+            width: 100% !important;
+        }</style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>Without<br>Ajax-Bootstrap-Select</h3>
+            <select id="selectpicker" class="selectpicker" data-live-search="true">
+                <option value="ipsum@Quisqueac.net" data-subtext="ipsum@Quisqueac.net">Lacy</option>
+                <option value="neque.venenatis.lacus@neque.com" data-subtext="neque.venenatis.lacus@neque.com">Chancellor</option>
+                <option value="quis@id.com" data-subtext="quis@id.com">Conan</option>
+                <option value="habitant.morbi@mi.co.uk" data-subtext="habitant.morbi@mi.co.uk">Igor</option>
+                <option value="dolor.quam.elementum@interdumenimnon.edu" data-subtext="dolor.quam.elementum@interdumenimnon.edu">Mariam</option>
+                <option value="vestibulum@NullamnislMaecenas.org" data-subtext="vestibulum@NullamnislMaecenas.org">Chancellor</option>
+                <option value="convallis.dolor.Quisque@Maecenas.ca" data-subtext="convallis.dolor.Quisque@Maecenas.ca">Quyn</option>
+                <option value="risus.In.mi@maurissagittis.edu" data-subtext="risus.In.mi@maurissagittis.edu">Lance</option>
+                <option value="at@Integeraliquam.net" data-subtext="at@Integeraliquam.net">Scarlett</option>
+                <option value="nunc.sit@acmattis.net" data-subtext="nunc.sit@acmattis.net">Sandra</option>
+                <option value="velit.Sed@nislMaecenas.com" data-subtext="velit.Sed@nislMaecenas.com">Chanda</option>
+                <option value="mi.lorem.vehicula@vitaeerat.com" data-subtext="mi.lorem.vehicula@vitaeerat.com">Jordan</option>
+                <option value="nunc@aliquetPhasellusfermentum.net" data-subtext="nunc@aliquetPhasellusfermentum.net">Emi</option>
+                <option value="vitae.sodales.nisi@diam.com" data-subtext="vitae.sodales.nisi@diam.com">Yolanda</option>
+                <option value="Cras.pellentesque@metusInnec.org" data-subtext="Cras.pellentesque@metusInnec.org">Kai</option>
+                <option value="metus.eu.erat@Donec.ca" data-subtext="metus.eu.erat@Donec.ca">Ulysses</option>
+                <option value="magna.a@elementum.edu" data-subtext="magna.a@elementum.edu">Hedwig</option>
+                <option value="enim@nonquam.net" data-subtext="enim@nonquam.net">Claudia</option>
+                <option value="enim.mi@sollicitudina.co.uk" data-subtext="enim.mi@sollicitudina.co.uk">Myles</option>
+                <option value="id.magna.et@convallisligula.edu" data-subtext="id.magna.et@convallisligula.edu">Michael</option>
+                <option value="ligula@pretiumnequeMorbi.co.uk" data-subtext="ligula@pretiumnequeMorbi.co.uk">Mira</option>
+                <option value="imperdiet@magna.ca" data-subtext="imperdiet@magna.ca">Cara</option>
+                <option value="vel@Praesenteunulla.org" data-subtext="vel@Praesenteunulla.org">Graiden</option>
+                <option value="sem.mollis@arcuVivamussit.ca" data-subtext="sem.mollis@arcuVivamussit.ca">Kerry</option>
+                <option value="Nulla@ametluctus.com" data-subtext="Nulla@ametluctus.com">Shelley</option>
+                <option value="malesuada.id@sodalesat.org" data-subtext="malesuada.id@sodalesat.org">Nathan</option>
+                <option value="auctor@nonsapienmolestie.org" data-subtext="auctor@nonsapienmolestie.org">Phillip</option>
+                <option value="scelerisque.dui@laoreet.ca" data-subtext="scelerisque.dui@laoreet.ca">Maggie</option>
+                <option value="dolor@Cras.net" data-subtext="dolor@Cras.net">August</option>
+                <option value="molestie@metusInlorem.edu" data-subtext="molestie@metusInlorem.edu">Maile</option>
+                <option value="elit.dictum@Fuscedolorquam.co.uk" data-subtext="elit.dictum@Fuscedolorquam.co.uk">Eden</option>
+                <option value="pretium.neque.Morbi@Inornare.ca" data-subtext="pretium.neque.Morbi@Inornare.ca">Darryl</option>
+                <option value="Ut@nectempus.com" data-subtext="Ut@nectempus.com">Davis</option>
+                <option value="tellus.faucibus@arcu.org" data-subtext="tellus.faucibus@arcu.org">Mechelle</option>
+                <option value="semper.egestas@sagittis.org" data-subtext="semper.egestas@sagittis.org">Dean</option>
+                <option value="per.inceptos@interdumCurabitur.edu" data-subtext="per.inceptos@interdumCurabitur.edu">Olympia</option>
+                <option value="est.ac.facilisis@primisinfaucibus.org" data-subtext="est.ac.facilisis@primisinfaucibus.org">Uriel</option>
+                <option value="dui@cursusin.co.uk" data-subtext="dui@cursusin.co.uk">Barry</option>
+                <option value="erat.volutpat@penatibuset.com" data-subtext="erat.volutpat@penatibuset.com">Zenaida</option>
+                <option value="Nunc.laoreet@sollicitudinadipiscingligula.ca" data-subtext="Nunc.laoreet@sollicitudinadipiscingligula.ca">Celeste</option>
+                <option value="eros.nec@maurisSuspendissealiquet.ca" data-subtext="eros.nec@maurisSuspendissealiquet.ca">Nerea</option>
+                <option value="In@Donec.net" data-subtext="In@Donec.net">Dorothy</option>
+                <option value="lacus.pede.sagittis@massaIntegervitae.ca" data-subtext="lacus.pede.sagittis@massaIntegervitae.ca">Ramona</option>
+                <option value="interdum.libero.dui@aliquetPhasellusfermentum.com" data-subtext="interdum.libero.dui@aliquetPhasellusfermentum.com">Maite</option>
+                <option value="Etiam@necmollis.com" data-subtext="Etiam@necmollis.com">Keith</option>
+                <option value="enim@musProin.co.uk" data-subtext="enim@musProin.co.uk">Mark</option>
+                <option value="diam.at.pretium@Quisquelibero.net" data-subtext="diam.at.pretium@Quisquelibero.net">Neil</option>
+                <option value="dignissim.magna.a@aliquameu.org" data-subtext="dignissim.magna.a@aliquameu.org">Ivana</option>
+                <option value="sed.leo.Cras@interdumCurabiturdictum.edu" data-subtext="sed.leo.Cras@interdumCurabiturdictum.edu">Arden</option>
+                <option value="non@enimNunc.com" data-subtext="non@enimNunc.com">Inez</option>
+                <option value="mauris@elementumlorem.com" data-subtext="mauris@elementumlorem.com">Lenore</option>
+                <option value="Maecenas.iaculis.aliquet@Aliquamultrices.co.uk" data-subtext="Maecenas.iaculis.aliquet@Aliquamultrices.co.uk">Darius</option>
+                <option value="Proin@euduiCum.edu" data-subtext="Proin@euduiCum.edu">Natalie</option>
+                <option value="auctor@nibhlaciniaorci.net" data-subtext="auctor@nibhlaciniaorci.net">Aidan</option>
+                <option value="mollis@vitaenibh.co.uk" data-subtext="mollis@vitaenibh.co.uk">Logan</option>
+                <option value="lacus@inconsectetuer.net" data-subtext="lacus@inconsectetuer.net">Raymond</option>
+                <option value="Integer@egestas.edu" data-subtext="Integer@egestas.edu">Gregory</option>
+                <option value="adipiscing.Mauris.molestie@pharetraNamac.net" data-subtext="adipiscing.Mauris.molestie@pharetraNamac.net">Adena</option>
+                <option value="elementum.purus@musAenean.com" data-subtext="elementum.purus@musAenean.com">Nash</option>
+                <option value="aliquet.molestie@famesac.co.uk" data-subtext="aliquet.molestie@famesac.co.uk">Wanda</option>
+                <option value="felis@ornare.co.uk" data-subtext="felis@ornare.co.uk">Quail</option>
+                <option value="sem.Pellentesque@Duis.co.uk" data-subtext="sem.Pellentesque@Duis.co.uk">Martin</option>
+                <option value="at.auctor.ullamcorper@milacinia.com" data-subtext="at.auctor.ullamcorper@milacinia.com">Xandra</option>
+                <option value="scelerisque@Sed.net" data-subtext="scelerisque@Sed.net">Alfreda</option>
+                <option value="sodales.elit.erat@nasceturridiculusmus.edu" data-subtext="sodales.elit.erat@nasceturridiculusmus.edu">Ralph</option>
+                <option value="magna@Cum.net" data-subtext="magna@Cum.net">Blake</option>
+                <option value="augue.malesuada@tincidunt.net" data-subtext="augue.malesuada@tincidunt.net">Libby</option>
+                <option value="rhoncus.id.mollis@ipsumPhasellus.org" data-subtext="rhoncus.id.mollis@ipsumPhasellus.org">Desirae</option>
+                <option value="nunc.interdum@tincidunt.org" data-subtext="nunc.interdum@tincidunt.org">Zephania</option>
+                <option value="Sed.id@sodalesnisi.net" data-subtext="Sed.id@sodalesnisi.net">Alexa</option>
+                <option value="sed.consequat@etultrices.edu" data-subtext="sed.consequat@etultrices.edu">Roary</option>
+                <option value="montes@sitametdapibus.net" data-subtext="montes@sitametdapibus.net">Brynn</option>
+                <option value="ipsum.Phasellus@loremsit.com" data-subtext="ipsum.Phasellus@loremsit.com">Carl</option>
+                <option value="Curabitur.vel.lectus@facilisis.edu" data-subtext="Curabitur.vel.lectus@facilisis.edu">Uta</option>
+                <option value="ligula.tortor.dictum@Nunc.edu" data-subtext="ligula.tortor.dictum@Nunc.edu">Lee</option>
+                <option value="pellentesque.Sed.dictum@orci.org" data-subtext="pellentesque.Sed.dictum@orci.org">Channing</option>
+                <option value="blandit@id.com" data-subtext="blandit@id.com">Asher</option>
+                <option value="vitae.diam@bibendumullamcorperDuis.org" data-subtext="vitae.diam@bibendumullamcorperDuis.org">Medge</option>
+                <option value="tristique@consequatenim.ca" data-subtext="tristique@consequatenim.ca">Nomlanga</option>
+                <option value="Integer@cursusa.edu" data-subtext="Integer@cursusa.edu">Amity</option>
+                <option value="faucibus.leo.in@rutrumFuscedolor.ca" data-subtext="faucibus.leo.in@rutrumFuscedolor.ca">Rebekah</option>
+                <option value="Praesent@nostra.com" data-subtext="Praesent@nostra.com">Cleo</option>
+                <option value="erat.Vivamus.nisi@venenatisamagna.com" data-subtext="erat.Vivamus.nisi@venenatisamagna.com">Candice</option>
+                <option value="Aliquam@auctornuncnulla.ca" data-subtext="Aliquam@auctornuncnulla.ca">Sade</option>
+                <option value="bibendum.Donec@turpisegestasAliquam.ca" data-subtext="bibendum.Donec@turpisegestasAliquam.ca">Jared</option>
+                <option value="urna.Nunc.quis@elitfermentum.net" data-subtext="urna.Nunc.quis@elitfermentum.net">Erin</option>
+                <option value="Integer@eratnonummyultricies.org" data-subtext="Integer@eratnonummyultricies.org">William</option>
+                <option value="quis@afelisullamcorper.co.uk" data-subtext="quis@afelisullamcorper.co.uk">Dora</option>
+                <option value="nisi.Mauris.nulla@orciconsectetuereuismod.com" data-subtext="nisi.Mauris.nulla@orciconsectetuereuismod.com">Chaim</option>
+                <option value="cubilia@IntegermollisInteger.org" data-subtext="cubilia@IntegermollisInteger.org">Hayes</option>
+                <option value="Aliquam@interdum.org" data-subtext="Aliquam@interdum.org">Morgan</option>
+                <option value="ut.sem.Nulla@duiCraspellentesque.org" data-subtext="ut.sem.Nulla@duiCraspellentesque.org">Ignatius</option>
+                <option value="ipsum.ac.mi@adipiscingnon.co.uk" data-subtext="ipsum.ac.mi@adipiscingnon.co.uk">Madeline</option>
+                <option value="neque.In.ornare@auctorveliteget.edu" data-subtext="neque.In.ornare@auctorveliteget.edu">Joshua</option>
+                <option value="faucibus.orci.luctus@lorem.org" data-subtext="faucibus.orci.luctus@lorem.org">Fulton</option>
+                <option value="tempus@nibhPhasellusnulla.edu" data-subtext="tempus@nibhPhasellusnulla.edu">Elizabeth</option>
+                <option value="penatibus.et@diam.com" data-subtext="penatibus.et@diam.com">Elmo</option>
+                <option value="pharetra.felis.eget@convallisest.ca" data-subtext="pharetra.felis.eget@convallisest.ca">Hammett</option>
+                <option value="tellus.Suspendisse.sed@duiCumsociis.edu" data-subtext="tellus.Suspendisse.sed@duiCumsociis.edu">Quyn</option>
+                <option value="mauris.eu@Naminterdum.co.uk" data-subtext="mauris.eu@Naminterdum.co.uk">Maisie</option>
+            </select>
+        </div>
+
+        <div class="col-xs-4">
+            <h3>With<br>Ajax-Bootstrap-Select</h3>
+            <select id="ajax-select" class="selectpicker with-ajax" data-live-search="true"></select>
+        </div>
+
+        <div class="col-xs-4">
+            <h3>Multiple<br>Ajax-Bootstrap-Select</h3>
+            <select id="ajax-select-multiple" class="selectpicker with-ajax" multiple data-live-search="true"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4">
+            <h3>Cached Options<br>Ajax-Bootstrap-Select</h3>
+            <select class="selectpicker with-ajax" data-live-search="true" multiple>
+                <option value="neque.venenatis.lacus@neque.com" data-subtext="neque.venenatis.lacus@neque.com" selected>
+                    Chancellor
+                </option>
+            </select>
+        </div>
+        <div class="col-xs-4">
+            <h3>Add option after init<br>Ajax-Bootstrap-Select</h3>
+            <select class="selectpicker with-ajax after-init" data-live-search="true" data-abs-preserve-selected="true" multiple>
+            </select>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="../dist/js/ajax-bootstrap-select.js"></script>
+<script>
+    var options = {
+        ajax          : {
+            url     : 'dataset.json',
+            type    : 'GET',
+            dataType: 'json',
+            // Use "{{{q}}}" as a placeholder and Ajax Bootstrap Select will
+            // automatically replace it with the value of the search query.
+            data    : {
+                q: '{{{q}}}'
+            }
+        },
+        locale        : {
+            emptyTitle: 'Select and Begin Typing'
+        },
+        log           : 3,
+        preprocessData: function (data) {
+            var i, l = data.length, array = [];
+            if (l) {
+                for (i = 0; i < l; i++) {
+                    array.push($.extend(true, data[i], {
+                        text : data[i].Name,
+                        value: data[i].Email,
+                        data : {
+                            subtext: data[i].Email
+                        }
+                    }));
+                }
+            }
+            // You must always return a valid array when processing data. The
+            // data argument passed is a clone and cannot be modified directly.
+            return array;
+        }
+    };
+
+    $('.selectpicker').selectpicker().filter('.with-ajax').ajaxSelectPicker(options);
+    $('select.after-init').append('<option value="neque.venenatis.lacus@neque.com" data-subtext="neque.venenatis.lacus@neque.com" selected="selected">Chancellor</option>').selectpicker('refresh');
+    $('select').trigger('change');
+</script>
+</body>
+</html>

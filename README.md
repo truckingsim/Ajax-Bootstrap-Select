@@ -414,7 +414,7 @@ See: [options.locale](#optionslocale)
 
 ***
 
-#### locale.statusToShort
+#### locale.statusTooShort
 > __Type:__ `String`
 >
 > __Default:__ `'Please enter more characters'`

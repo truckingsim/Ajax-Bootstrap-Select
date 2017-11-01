@@ -76,7 +76,7 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
 
 	/**
      * @member $.fn.ajaxSelectPicker.locale
-     * @cfg {String} statusToShort = 'Please enter more characters'
+     * @cfg {String} statusTooShort = 'Please enter more characters'
      * @markdown
      * The text used in the status container when the request returns no results.
      */

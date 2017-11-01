@@ -57,5 +57,6 @@
     "grunt-jsduck": "^1.0.1",
     "grunt-update-json": "git+https://github.com/AndreasPizsa/grunt-update-json.git#e7958d970a5bea85d8153112962ec4ba4315ed37",
     "grunt-verb": "^0.2.4"
-  }
+  },
+  "main": "dist/js/ajax-bootstrap-select.js"
 }

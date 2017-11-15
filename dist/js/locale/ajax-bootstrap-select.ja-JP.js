@@ -16,17 +16,17 @@
  */
 !(function ($) {
 /*!
- * French translation for the "fr-FR" and "fr" language codes.
- * Bastien (https://github.com/lisurc)
+ * Japanese translation for the "ja-JP" and "ja" language codes.
+ * Haginaga <haginaga@unetworks.jp>
  */
-$.fn.ajaxSelectPicker.locale['fr-FR'] = {
+$.fn.ajaxSelectPicker.locale['ja-JP'] = {
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
      * @markdown
      * The text to use for the label of the option group when currently selected options are preserved.
      */
-    currentlySelected: 'Actuellement sélectionné',
+    currentlySelected: '現在の値',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -34,15 +34,15 @@ $.fn.ajaxSelectPicker.locale['fr-FR'] = {
      * @markdown
      * The text to use as the title for the select element when there are no items to display.
      */
-    emptyTitle: 'Sélectionner et commencer à taper',
+    emptyTitle: '未選択',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
-     * @cfg {String} errorText = 'Unable to retrieve results'
+     * @cfg {String} errorText = ''Unable to retrieve results'
      * @markdown
      * The text to use in the status container when a request returns with an error.
      */
-    errorText: 'Impossible de récupérer les résultats',
+    errorText: '検索できません',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -50,7 +50,7 @@ $.fn.ajaxSelectPicker.locale['fr-FR'] = {
      * @markdown
      * The text to use for the search input placeholder attribute.
      */
-    searchPlaceholder: 'Rechercher...',
+    searchPlaceholder: '検索する',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -58,7 +58,7 @@ $.fn.ajaxSelectPicker.locale['fr-FR'] = {
      * @markdown
      * The text used in the status container when it is initialized.
      */
-    statusInitialized: 'Commencer à taper une recherche',
+    statusInitialized: '選択肢を入力',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -66,7 +66,7 @@ $.fn.ajaxSelectPicker.locale['fr-FR'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusNoResults: 'Aucun résultat',
+    statusNoResults: '見つかりません',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -74,7 +74,7 @@ $.fn.ajaxSelectPicker.locale['fr-FR'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Recherche en cours...',
+    statusSearching: '検索中...',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -82,7 +82,7 @@ $.fn.ajaxSelectPicker.locale['fr-FR'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusTooShort: 'Entrez plus de caractères'
+    statusTooShort: '入力文字数不足'
 };
-$.fn.ajaxSelectPicker.locale.fr = $.fn.ajaxSelectPicker.locale['fr-FR'];
+$.fn.ajaxSelectPicker.locale.ja = $.fn.ajaxSelectPicker.locale['ja-JP'];
 })(jQuery);

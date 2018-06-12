@@ -1,4 +1,4 @@
-# Ajax Bootstrap Select [![GitHub version](https://badge.fury.io/gh/truckingsim%2FAjax-Bootstrap-Select.svg)](http://badge.fury.io/gh/truckingsim%2FAjax-Bootstrap-Select) [![Build Status](https://travis-ci.org/truckingsim/Ajax-Bootstrap-Select.svg)](https://travis-ci.org/truckingsim/Ajax-Bootstrap-Select) [![CDNJS](https://img.shields.io/cdnjs/v/ajax-bootstrap-select.svg)](https://cdnjs.com/libraries/ajax-bootstrap-select) [![Gitter](https://badges.gitter.im/truckingsim/Ajax-Bootstrap-Select.svg)](https://gitter.im/truckingsim/Ajax-Bootstrap-Select?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+# Ajax Bootstrap Select [![GitHub version](https://badge.fury.io/gh/truckingsim%2FAjax-Bootstrap-Select.svg)](http://badge.fury.io/gh/truckingsim%2FAjax-Bootstrap-Select) [![Build Status](https://travis-ci.org/truckingsim/Ajax-Bootstrap-Select.svg)](https://travis-ci.org/truckingsim/Ajax-Bootstrap-Select) [![CDNJS](https://img.shields.io/cdnjs/v/ajax-bootstrap-select.svg)](https://cdnjs.com/libraries/ajax-bootstrap-select) [![Gitter](https://badges.gitter.im/truckingsim/Ajax-Bootstrap-Select.svg)](https://gitter.im/truckingsim/Ajax-Bootstrap-Select?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftruckingsim%2FAjax-Bootstrap-Select.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftruckingsim%2FAjax-Bootstrap-Select?ref=badge_shield)
 
 
 
@@ -508,7 +508,7 @@ $('.select-picker')
 ***
 
 ## License
-Copyright (c) 2017 Adam Heim, contributors.  
+Copyright (c) 2018 Adam Heim, contributors.  
 Released under the MIT license
 
 [Bootstrap 3.2.0+]: http://getbootstrap.com/getting-started/#download
@@ -520,3 +520,6 @@ Released under the MIT license
 
 [jQuery 1.9+]: http://jquery.com/download/
 [jQuery]: http://jquery.com
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ftruckingsim%2FAjax-Bootstrap-Select.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Ftruckingsim%2FAjax-Bootstrap-Select?ref=badge_large)

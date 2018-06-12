@@ -52,6 +52,11 @@ var AjaxBootstrapSelectRequest = function (plugin) {
     // current search query.
     this.plugin.replaceValue(this.options.data, '{{{q}}}', this.plugin.query);
 
+    // Allow the url to be dynamically generated if passed as function.
+    if (this.options.url && $.isFunction(this.options.url)) {
+        this.options.url = this.options.url.apply(this);
+    }
+
     // Invoke the AJAX request.
     this.jqXHR = $.ajax(this.options);
 };

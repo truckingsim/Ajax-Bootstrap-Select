@@ -353,7 +353,7 @@ AjaxBootstrapSelectList.prototype.setStatus = function (status) {
         // options list is longer than the maxHeight set on the dropdown
         var maxHeight = this.$status.parent('.dropdown-menu').css('maxHeight');
         this.$status.parent('.dropdown-menu').css({
-            maxHeight: parseInt(maxHeight) + this.$status.outerHeight() + 'px'
+            maxHeight: parseInt(maxHeight, 10) + this.$status.outerHeight() + 'px'
         });
     }
     else {

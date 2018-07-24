@@ -312,12 +312,6 @@ AjaxBootstrapSelect.prototype.init = function () {
             plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
             return;
         }
-		
-        // Don't process if below minimum query length
-        if (query.length < plugin.options.minLength) {
-            plugin.list.setStatus(plugin.t('statusTooShort'));
-            return;
-        }
 
         // Clear out any existing timer.
         clearTimeout(requestDelayTimer);
@@ -333,6 +327,12 @@ AjaxBootstrapSelect.prototype.init = function () {
             if (!plugin.options.emptyRequest) {
                 return;
             }
+        }
+
+        // Don't process if below minimum query length
+        if (query.length < plugin.options.minLength) {
+            plugin.list.setStatus(plugin.t('statusTooShort'));
+            return;
         }
 
         // Store the query.

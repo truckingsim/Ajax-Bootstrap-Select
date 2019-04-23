@@ -99,7 +99,7 @@ module.exports = function (grunt) {
         ' * @author <%= pkg.author.name %> - <%= pkg.author.url %>\n' +
         '<%= pkg.homepage ? " * @link " + pkg.homepage + "\\n" : "" %>' +
         ' * @copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
-        ' * @license Released under the <%= _.pluck(pkg.licenses, "type").join(", ") %> license.\n *\n' +
+        ' * @license Released under the <%= _.map(pkg.licenses, "type").join(", ") %> license.\n *\n' +
         ' * Contributors:' +
         '<% _.forEach(pkg.contributors, function(contributor) {%>\n *   <%= contributor.name %> - <%= contributor.url %><% }); %>\n *\n' +
         ' * Last build: <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT Z") %>\n' +

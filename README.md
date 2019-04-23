@@ -508,7 +508,7 @@ $('.select-picker')
 ***
 
 ## License
-Copyright (c) 2018 Adam Heim, contributors.  
+Copyright (c) 2019 Adam Heim, contributors.  
 Released under the MIT license
 
 [Bootstrap 3.2.0+]: http://getbootstrap.com/getting-started/#download

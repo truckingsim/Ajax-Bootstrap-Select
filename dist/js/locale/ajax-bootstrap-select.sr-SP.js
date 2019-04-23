@@ -16,17 +16,17 @@
  */
 !(function ($) {
 /*!
- * Russian translation for the "ru-RU" and "ru" language codes.
- * Bercut Stray <bercut497@gmail.com>
+ * Serbian translation for the "sr-SP" and "sr" language codes.
+ * Miroslav Maksimovic <miroslavmaksimovic95@gmail.com>
  */
-$.fn.ajaxSelectPicker.locale['ru-RU'] = {
+$.fn.ajaxSelectPicker.locale['sr-SP'] = {
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
      * @markdown
      * The text to use for the label of the option group when currently selected options are preserved.
      */
-    currentlySelected: 'Выбрано',
+    currentlySelected: 'Trenutno izabrano',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -34,7 +34,7 @@ $.fn.ajaxSelectPicker.locale['ru-RU'] = {
      * @markdown
      * The text to use as the title for the select element when there are no items to display.
      */
-    emptyTitle: 'Выделите и начните печатать',
+    emptyTitle: 'Izaberite i pocnite kucati',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -42,7 +42,7 @@ $.fn.ajaxSelectPicker.locale['ru-RU'] = {
      * @markdown
      * The text to use in the status container when a request returns with an error.
      */
-    errorText: 'Невозможно получить результат',
+    errorText: 'Nemoguce dobiti rezultate',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -50,7 +50,7 @@ $.fn.ajaxSelectPicker.locale['ru-RU'] = {
      * @markdown
      * The text to use for the search input placeholder attribute.
      */
-    searchPlaceholder: 'Искать...',
+    searchPlaceholder: 'Pretrazi...',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -58,7 +58,7 @@ $.fn.ajaxSelectPicker.locale['ru-RU'] = {
      * @markdown
      * The text used in the status container when it is initialized.
      */
-    statusInitialized: 'Начните печатать запрос для поиска',
+    statusInitialized: 'Pocnite kucati kljucnu rijec',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -66,7 +66,7 @@ $.fn.ajaxSelectPicker.locale['ru-RU'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusNoResults: 'Нет результатов',
+    statusNoResults: 'Nema rezultata',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -74,7 +74,7 @@ $.fn.ajaxSelectPicker.locale['ru-RU'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Поиск...',
+    statusSearching: 'Trazim...',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -82,7 +82,7 @@ $.fn.ajaxSelectPicker.locale['ru-RU'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusTooShort: 'Введите еще несколько символов'
+    statusTooShort: 'Molimo unesite vise znakova'
 };
-$.fn.ajaxSelectPicker.locale.ru = $.fn.ajaxSelectPicker.locale['ru-RU'];
+$.fn.ajaxSelectPicker.locale.ru = $.fn.ajaxSelectPicker.locale['sr-SP'];
 })(jQuery);

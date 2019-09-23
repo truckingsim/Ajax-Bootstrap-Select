@@ -133,7 +133,10 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
         }
 
         // Set various properties.
-        $option.val(item.value).text(item.text).attr('title', item.text);
+        $option.val(item.value).text(item.text);
+        if (item.title) {
+            $option.attr('title', item.title);
+        }
         if (item['class'].length) {
             $option.attr('class', item['class']);
         }

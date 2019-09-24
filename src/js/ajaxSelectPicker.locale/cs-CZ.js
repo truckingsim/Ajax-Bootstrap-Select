@@ -1,8 +1,10 @@
 /*!
  * Czech translation for the "cs-CZ" and "cs" language codes.
  * Martin Brettschneider <martin.brettschneider@gmail.com>
+ * @preserve
  */
 $.fn.ajaxSelectPicker.locale['cs-CZ'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

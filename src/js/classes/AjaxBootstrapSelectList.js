@@ -1,3 +1,4 @@
+// eslint-disable-next-line valid-jsdoc
 /**
  * @class AjaxBootstrapSelectList
  *   Maintains the select options and selectpicker menu.
@@ -127,7 +128,7 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
         var $option = $('<option/>').appendTo(item.preserved ? $preserved : $select);
 
         // Detect dividers.
-        if (item.hasOwnProperty('divider')) {
+        if (Object.prototype.hasOwnProperty.call(item, 'divider')) {
             $option.attr('data-divider', 'true');
             continue;
         }
@@ -156,7 +157,7 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
 
         // Add data attributes.
         for (a in item.data) {
-            if (item.data.hasOwnProperty(a)) {
+            if (Object.prototype.hasOwnProperty.call(item.data, a)) {
                 $option.attr('data-' + a, item.data[a]);
             }
         }
@@ -228,7 +229,7 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     else if (
         this.title ||
         (
-            this.selectedTextFormat !== 'static' && 
+            this.selectedTextFormat !== 'static' &&
             this.selectedTextFormat !== this.plugin.selectpicker.options.selectedTextFormat
         )
     ) {
@@ -268,7 +269,7 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
             item = selected[i];
             // Typecast the value for the seenValues array. Array indexOf
             // searches are type sensitive.
-            if (item.hasOwnProperty('value') && seenValues.indexOf(item.value + '') === -1) {
+            if (Object.prototype.hasOwnProperty.call(item, 'value') && seenValues.indexOf(item.value + '') === -1) {
                 seenValues.push(item.value + '');
                 processedData.push(item);
             }

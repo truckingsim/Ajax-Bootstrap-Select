@@ -11,7 +11,8 @@ module.exports = function (grunt) {
 
     var parseLink = function (link) {
         if (link) {
-            var anchor, title, prefix = '', internal = link.match(/({@link (\$\.fn\.ajaxSelectPicker\.(?:defaults|locale)|AjaxBootstrapSelect(?:List|Request)?)#?([^\s]*)\s?([^}]*)})/);
+            var anchor, title, prefix = '',
+                internal = link.match(/({@link (\$\.fn\.ajaxSelectPicker\.(?:defaults|locale)|AjaxBootstrapSelect(?:List|Request)?)#?([^\s]*)\s?([^}]*)})/);
             if (internal) {
                 title = internal[4] ? internal[4] : internal[3];
                 if (internal[2] === '$.fn.ajaxSelectPicker.defaults') {
@@ -52,11 +53,11 @@ module.exports = function (grunt) {
                 var index = line.indexOf(pattern);
                 if (index !== -1 && index <= (type.length + 4)) {
                     line = line.split('')
-                    .splice((index + pattern.length), line.length)
-                    .join('');
+                        .splice((index + pattern.length), line.length)
+                        .join('');
                 }
                 line = line.replace(new RegExp('^\\s+?@' + type + '\\s+'), '')
-                .replace(/\\s+$/, '');
+                    .replace(/\\s+$/, '');
                 if (line.match(new RegExp('.*@' + type + '\\s*$'))) {
                     return;
                 }
@@ -71,7 +72,7 @@ module.exports = function (grunt) {
 
     var parsers = {
         cfg: function (i, line, block) {
-            var matches = line.match(/(?:\{([^\}]+)\})?\s?([a-zA-Z0-9_]+)(?:\s?=\s?(.*))?\s?(\(required\))?/);
+            var matches = line.match(/(?:\{([^}]+)\})?\s?([a-zA-Z0-9_]+)(?:\s?=\s?(.*))?\s?(\(required\))?/);
             var deprecated = block.match(/@deprecated (.*)/) || [];
             var member = block.match(/@member (.*)/) || [];
             var prefix = '';
@@ -105,17 +106,17 @@ module.exports = function (grunt) {
         _: require('lodash'),
 
         banner: '/*!\n' +
-        ' * <%= pkg.title || pkg.name %>\n *\n' +
-        ' * <%= pkg.description %>\n *\n' +
-        ' * @version <%= pkg.version %>\n' +
-        ' * @author <%= pkg.author.name %> - <%= pkg.author.url %>\n' +
-        '<%= pkg.homepage ? " * @link " + pkg.homepage + "\\n" : "" %>' +
-        ' * @copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
-        ' * @license Released under the <%= _.map(pkg.licenses, "type").join(", ") %> license.\n *\n' +
-        ' * Contributors:' +
-        '<% _.forEach(pkg.contributors, function(contributor) {%>\n *   <%= contributor.name %> - <%= contributor.url %><% }); %>\n *\n' +
-        ' * Last build: <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT Z") %>\n' +
-        ' */\n',
+            ' * <%= pkg.title || pkg.name %>\n *\n' +
+            ' * <%= pkg.description %>\n *\n' +
+            ' * @version <%= pkg.version %>\n' +
+            ' * @author <%= pkg.author.name %> - <%= pkg.author.url %>\n' +
+            '<%= pkg.homepage ? " * @link " + pkg.homepage + "\\n" : "" %>' +
+            ' * @copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
+            ' * @license Released under the <%= _.map(pkg.licenses, "type").join(", ") %> license.\n *\n' +
+            ' * Contributors:' +
+            '<% _.forEach(pkg.contributors, function(contributor) {%>\n *   <%= contributor.name %> - <%= contributor.url %><% }); %>\n *\n' +
+            ' * Last build: <%= grunt.template.today("yyyy-mm-dd h:MM:ss TT Z") %>\n' +
+            ' */\n',
         pkg: pkg,
         clean: {
             locale: ['dist/js/locale/*'],

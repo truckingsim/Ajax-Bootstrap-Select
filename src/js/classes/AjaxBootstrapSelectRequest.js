@@ -1,3 +1,4 @@
+// eslint-disable-next-line valid-jsdoc
 /**
  * @class AjaxBootstrapSelectRequest
  *   Instantiates a new jQuery.ajax request for the current query.
@@ -190,13 +191,13 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Processing item:', item);
         if ($.isPlainObject(item)) {
             // Check if item is a divider. If so, ignore all other data.
-            if (item.hasOwnProperty('divider') || (item.hasOwnProperty('data') && $.isPlainObject(item.data) && item.data.divider)) {
+            if (Object.prototype.hasOwnProperty.call(item, 'divider') || (Object.prototype.hasOwnProperty.call(item, 'data') && $.isPlainObject(item.data) && item.data.divider)) {
                 this.plugin.log(this.plugin.LOG_DEBUG, 'Item is a divider, ignoring provided data.');
                 filteredData.push({divider: true});
             }
             // Ensure item has a "value" and is unique.
             else {
-                if (item.hasOwnProperty('value')) {
+                if (Object.prototype.hasOwnProperty.call(item, 'value')) {
                     // Typecast the value for the seenValues array. Array
                     // indexOf searches are type sensitive.
                     if (seenValues.indexOf(item.value + '') === -1) {

@@ -3,6 +3,7 @@
  * Arjen Ruiterkamp <arjenruiterkamp@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale['nl-NL'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

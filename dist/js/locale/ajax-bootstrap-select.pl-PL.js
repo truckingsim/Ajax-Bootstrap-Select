@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2019-04-23 12:18:55 PM EDT
+ * Last build: 2019-09-24 9:36:53 AM CDT
  */
 !(function ($) {
 /*!
@@ -20,6 +20,7 @@
  * Robert Jaros <rjaros@treksoft.pl>
  */
 $.fn.ajaxSelectPicker.locale['pl-PL'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -76,7 +77,7 @@ $.fn.ajaxSelectPicker.locale['pl-PL'] = {
      */
     statusSearching: 'Szukam...',
 
-	/**
+    /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} statusTooShort = 'Please enter more characters'
      * @markdown

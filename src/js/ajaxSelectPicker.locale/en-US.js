@@ -18,6 +18,7 @@
  * Mark Carver <mark.carver@me.com>
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -74,7 +75,7 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      */
     statusSearching: 'Searching...',
 
-	/**
+    /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} statusTooShort = 'Please enter more characters'
      * @markdown

@@ -3,6 +3,7 @@
  * Miroslav Maksimovic <miroslavmaksimovic95@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale['sr-SP'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

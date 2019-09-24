@@ -3,6 +3,7 @@
  * Jo JungLae <ubermenschjo@google.com>
  */
 $.fn.ajaxSelectPicker.locale['ko-KR'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

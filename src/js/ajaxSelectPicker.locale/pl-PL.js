@@ -3,6 +3,7 @@
  * Robert Jaros <rjaros@treksoft.pl>
  */
 $.fn.ajaxSelectPicker.locale['pl-PL'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -59,7 +60,7 @@ $.fn.ajaxSelectPicker.locale['pl-PL'] = {
      */
     statusSearching: 'Szukam...',
 
-	/**
+    /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} statusTooShort = 'Please enter more characters'
      * @markdown

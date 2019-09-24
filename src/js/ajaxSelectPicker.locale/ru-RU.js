@@ -3,6 +3,7 @@
  * Bercut Stray <bercut497@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale['ru-RU'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

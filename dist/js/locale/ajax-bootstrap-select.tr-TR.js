@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2019-04-23 12:18:55 PM EDT
+ * Last build: 2019-09-24 9:36:53 AM CDT
  */
 !(function ($) {
 /*!
@@ -20,6 +20,7 @@
  * Burak Çakırel <burakcakirel@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale['tr-TR'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -75,14 +76,17 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * The text to use in the status container when a request is being initiated.
      */
     statusSearching: 'Aranıyor...',
-	
-	/**
+
+    /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} statusTooShort = 'Please enter more characters'
      * @markdown
      * The text used in the status container when the request returns no results.
      */
     statusTooShort: 'Lütfen daha fazla karakter girin'
+
+
 };
+
 $.fn.ajaxSelectPicker.locale.tr = $.fn.ajaxSelectPicker.locale['tr-TR'];
 })(jQuery);

@@ -12,7 +12,7 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2019-04-23 12:18:55 PM EDT
+ * Last build: 2019-09-24 9:36:53 AM CDT
  */
 !(function ($) {
 /*
@@ -35,6 +35,7 @@
  * Mark Carver <mark.carver@me.com>
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -91,7 +92,7 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      */
     statusSearching: 'Searching...',
 
-	/**
+    /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} statusTooShort = 'Please enter more characters'
      * @markdown

@@ -508,7 +508,7 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
  */
 AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     langCode = langCode || this.options.langCode;
-    if (this.locale[langCode] && this.locale[langCode].hasOwnProperty(key)) {
+    if (this.locale[langCode] && Object.prototype.hasOwnProperty.call(this.locale[langCode], key)) {
         return this.locale[langCode][key];
     }
     this.log(this.LOG_WARNING, 'Unknown translation key:', key);

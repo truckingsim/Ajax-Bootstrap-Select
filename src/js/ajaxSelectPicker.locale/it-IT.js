@@ -3,6 +3,7 @@
  * Luca Longo <l.longo@ambita.it>
  */
 $.fn.ajaxSelectPicker.locale['it-IT'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

@@ -7,6 +7,7 @@
  * @property {Object} defaults
  */
 $.fn.ajaxSelectPicker.defaults = {
+
     /**
      * @member $.fn.ajaxSelectPicker.defaults
      * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#preprocessData}.
@@ -39,7 +40,7 @@ $.fn.ajaxSelectPicker.defaults = {
         }
     },
 
-	/**
+    /**
  	 * @member $.fn.ajaxSelectPicker.defaults
 	 * @cfg {Number} minLength = 0
 	 * @markdown

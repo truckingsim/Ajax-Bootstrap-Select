@@ -12,14 +12,16 @@
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2019-04-23 12:18:55 PM EDT
+ * Last build: 2019-09-24 9:36:53 AM CDT
  */
 !(function ($) {
 /*!
  * Czech translation for the "cs-CZ" and "cs" language codes.
  * Martin Brettschneider <martin.brettschneider@gmail.com>
+ * @preserve
  */
 $.fn.ajaxSelectPicker.locale['cs-CZ'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

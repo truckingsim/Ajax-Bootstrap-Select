@@ -50,7 +50,6 @@ var AjaxBootstrapSelectList = function (plugin) {
     var initial_options = [];
     var initial_options_cache = [];
     plugin.$element.find('option').each(function () {
-
         var $option = $(this);
         var value = $option.attr('value');
         initial_options.push({

@@ -96,7 +96,7 @@ var AjaxBootstrapSelect = function (element, options) {
             from: 'debug',
             to: function (map) {
                 var _options = {};
-                _options.log = Boolean(plugin.options[map.from]) ? plugin.LOG_DEBUG : 0;
+                _options.log = !!plugin.options[map.from];
                 plugin.options = $.extend(true, {}, plugin.options, _options);
                 delete plugin.options[map.from];
                 plugin.log(plugin.LOG_WARNING, 'Deprecated option "' + map.from + '". Update code to use:', _options);
@@ -312,12 +312,6 @@ AjaxBootstrapSelect.prototype.init = function () {
             plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
             return;
         }
-		
-        // Don't process if below minimum query length
-        if (query.length < plugin.options.minLength) {
-            plugin.list.setStatus(plugin.t('statusTooShort'));
-            return;
-        }
 
         // Clear out any existing timer.
         clearTimeout(requestDelayTimer);
@@ -333,6 +327,12 @@ AjaxBootstrapSelect.prototype.init = function () {
             if (!plugin.options.emptyRequest) {
                 return;
             }
+        }
+
+        // Don't process if below minimum query length
+        if (query.length < plugin.options.minLength) {
+            plugin.list.setStatus(plugin.t('statusTooShort'));
+            return;
         }
 
         // Store the query.
@@ -371,18 +371,14 @@ AjaxBootstrapSelect.prototype.init = function () {
 /**
  * Wrapper function for logging messages to window.console.
  *
- * @param  {Number} type
- * The type of message to log. Must be one of:
- *
- * - AjaxBootstrapSelect.LOG_ERROR
- * - AjaxBootstrapSelect.LOG_WARNING
- * - AjaxBootstrapSelect.LOG_INFO
- * - AjaxBootstrapSelect.LOG_DEBUG
- *
- * @param {String|Object|*...} message
+ * @param {Number} type
+ *   The type of message to log. Must be one of:
+ *   - AjaxBootstrapSelect.LOG_ERROR
+ *   - AjaxBootstrapSelect.LOG_WARNING
+ *   - AjaxBootstrapSelect.LOG_INFO
+ *   - AjaxBootstrapSelect.LOG_DEBUG
+ * @param {String|Object|*} message
  *   The message(s) to log. Multiple arguments can be passed.
- *
- * @return {void}
  */
 AjaxBootstrapSelect.prototype.log = function (type, message) {
     if (window.console && this.options.log) {
@@ -507,12 +503,12 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
  * @param {String} [langCode]
  *   Overrides the currently set {@link $.fn.ajaxSelectPicker.defaults#langCode langCode} option.
  *
- * @return
+ * @return {String}
  *   The translated string.
  */
 AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     langCode = langCode || this.options.langCode;
-    if (this.locale[langCode] && this.locale[langCode].hasOwnProperty(key)) {
+    if (this.locale[langCode] && Object.prototype.hasOwnProperty.call(this.locale[langCode], key)) {
         return this.locale[langCode][key];
     }
     this.log(this.LOG_WARNING, 'Unknown translation key:', key);

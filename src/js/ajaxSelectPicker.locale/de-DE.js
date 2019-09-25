@@ -3,6 +3,7 @@
  * Tobias Weichart <tobias.weichart@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale['de-DE'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -59,7 +60,7 @@ $.fn.ajaxSelectPicker.locale['de-DE'] = {
      */
     statusSearching: 'Suche...',
 
-     /**
+    /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} statusTooShort = 'Please enter more characters'
      * @markdown

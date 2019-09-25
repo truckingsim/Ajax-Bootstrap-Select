@@ -3,6 +3,7 @@
  * Luan Fonseca <luanfonceca@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale['pt-BR'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

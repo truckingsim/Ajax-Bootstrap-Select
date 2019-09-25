@@ -2,9 +2,9 @@
   "name": "ajax-bootstrap-select",
   "title": "Ajax Bootstrap Select",
   "description": "Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "author": {
     "name": "Adam Heim",
@@ -40,23 +40,24 @@
     }
   },
   "devDependencies": {
-    "commitizen": "^2.9.6",
-    "cz-conventional-changelog": "^2.0.0",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
     "grunt": "^1.0.1",
-    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-cssmin": "^1.0.1",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-less": "^1.4.0",
-    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-cssmin": "^3.0.0",
+    "grunt-contrib-less": "^2.0.0",
+    "grunt-contrib-uglify": "^4.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-dss": "git+https://github.com/markcarver/grunt-dss.git",
-    "grunt-html2md": "^1.2.0",
-    "grunt-jsdoc": "^2.1.0",
+    "grunt-eslint": "^22.0.0",
+    "grunt-html2md": "^2.0.0",
+    "grunt-jsdoc": "^2.4.0",
     "grunt-jsduck": "^1.0.1",
     "grunt-update-json": "git+https://github.com/AndreasPizsa/grunt-update-json.git#e7958d970a5bea85d8153112962ec4ba4315ed37",
-    "grunt-verb": "^0.2.4"
+    "grunt-verb": "^0.2.4",
+    "lodash": "^4.17.15"
   },
   "main": "dist/js/ajax-bootstrap-select.js"
 }

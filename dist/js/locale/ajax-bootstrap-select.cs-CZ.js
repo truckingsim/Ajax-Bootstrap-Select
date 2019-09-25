@@ -1,8 +1,26 @@
 /*!
- * Turkish translation for the "tr-TR" and "tr" language codes.
- * Burak Çakırel <burakcakirel@gmail.com>
+ * Ajax Bootstrap Select
+ *
+ * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
+ *
+ * @version 1.4.5
+ * @author Adam Heim - https://github.com/truckingsim
+ * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
+ * @copyright 2019 Adam Heim
+ * @license Released under the MIT license.
+ *
+ * Contributors:
+ *   Mark Carver - https://github.com/markcarver
+ *
+ * Last build: 2019-09-24 9:36:53 AM CDT
  */
-$.fn.ajaxSelectPicker.locale['tr-TR'] = {
+!(function ($) {
+/*!
+ * Czech translation for the "cs-CZ" and "cs" language codes.
+ * Martin Brettschneider <martin.brettschneider@gmail.com>
+ * @preserve
+ */
+$.fn.ajaxSelectPicker.locale['cs-CZ'] = {
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -10,7 +28,7 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * @markdown
      * The text to use for the label of the option group when currently selected options are preserved.
      */
-    currentlySelected: 'Seçili olanlar',
+    currentlySelected: 'Aktuálně vybrané',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -18,7 +36,7 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * @markdown
      * The text to use as the title for the select element when there are no items to display.
      */
-    emptyTitle: 'Seç ve yazmaya başla',
+    emptyTitle: 'Vyberte a začněte psát',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -26,7 +44,7 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * @markdown
      * The text to use in the status container when a request returns with an error.
      */
-    errorText: 'Sonuçlar alınamadı',
+    errorText: 'Výsledky nelze načíst',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -34,7 +52,7 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * @markdown
      * The text to use for the search input placeholder attribute.
      */
-    searchPlaceholder: 'Ara...',
+    searchPlaceholder: 'Vyhledat...',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -42,7 +60,7 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * @markdown
      * The text used in the status container when it is initialized.
      */
-    statusInitialized: 'Arama için yazmaya başla',
+    statusInitialized: 'Začněte psát hledaný výraz',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -50,7 +68,7 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusNoResults: 'Sonuç yok',
+    statusNoResults: 'Žádné výsledky',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -58,7 +76,7 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * @markdown
      * The text to use in the status container when a request is being initiated.
      */
-    statusSearching: 'Aranıyor...',
+    statusSearching: 'Vyhledávání...',
 
     /**
      * @member $.fn.ajaxSelectPicker.locale
@@ -66,9 +84,7 @@ $.fn.ajaxSelectPicker.locale['tr-TR'] = {
      * @markdown
      * The text used in the status container when the request returns no results.
      */
-    statusTooShort: 'Lütfen daha fazla karakter girin'
-
-
+    statusTooShort: 'Zadejte více znaků'
 };
-
-$.fn.ajaxSelectPicker.locale.tr = $.fn.ajaxSelectPicker.locale['tr-TR'];
+$.fn.ajaxSelectPicker.locale.cs = $.fn.ajaxSelectPicker.locale['cs-CZ'];
+})(jQuery);

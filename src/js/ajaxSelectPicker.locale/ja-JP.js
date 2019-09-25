@@ -3,6 +3,7 @@
  * Haginaga <haginaga@unetworks.jp>
  */
 $.fn.ajaxSelectPicker.locale['ja-JP'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

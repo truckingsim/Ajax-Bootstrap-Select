@@ -3,6 +3,7 @@
  * Bastien (https://github.com/lisurc)
  */
 $.fn.ajaxSelectPicker.locale['fr-FR'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

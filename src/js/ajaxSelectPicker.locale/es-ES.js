@@ -3,6 +3,7 @@
  * Diomedes Domínguez <diomedes.domimnguez@gmail.com>
  */
 $.fn.ajaxSelectPicker.locale["es-ES"] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'

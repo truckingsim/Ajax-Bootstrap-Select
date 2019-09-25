@@ -1,3 +1,4 @@
+// eslint-disable-next-line valid-jsdoc
 /**
  * @class AjaxBootstrapSelectRequest
  *   Instantiates a new jQuery.ajax request for the current query.
@@ -62,7 +63,7 @@ var AjaxBootstrapSelectRequest = function (plugin) {
 };
 
 /**
- * @event
+ * @event beforeSend
  * A callback that can be used to modify the jqXHR object before it is sent.
  *
  * Use this to set custom headers, etc. Returning false will cancel the request.
@@ -70,8 +71,6 @@ var AjaxBootstrapSelectRequest = function (plugin) {
  *
  * @param {jqXHR} jqXHR
  *   The jQuery wrapped XMLHttpRequest object.
- *
- * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
     // Destroy the list currently there.
@@ -80,20 +79,18 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
     // Set the status accordingly.
     this.plugin.list.setStatus(this.plugin.t('statusSearching'));
 
-    //this.plugin.list.refresh();
+    // this.plugin.list.refresh();
 };
 
 /**
- * @event
- * The "complete" callback for the request.
+ * @event complete
+ *   The "complete" callback for the request.
  *
  * @param {jqXHR} jqXHR
  *   The jQuery wrapped XMLHttpRequest object.
  * @param {String} status
  *   A string categorizing the status of the request: "success", "notmodified",
  *   "error", "timeout", "abort", or "parsererror".
- *
- * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
     // Only continue if actual results and not an aborted state.
@@ -115,8 +112,8 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
 };
 
 /**
- * @event
- * The "error" callback for the request.
+ * @event error
+ *   The "error" callback for the request.
  *
  * @param {jqXHR} jqXHR
  *   The jQuery wrapped XMLHttpRequest object.
@@ -128,8 +125,6 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
  *   An optional exception object, if one occurred. When an HTTP error occurs,
  *   error receives the textual portion of the HTTP status, such as "Not Found"
  *   or "Internal Server Error."
- *
- * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
     if (status !== 'abort') {
@@ -196,13 +191,13 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Processing item:', item);
         if ($.isPlainObject(item)) {
             // Check if item is a divider. If so, ignore all other data.
-            if (item.hasOwnProperty('divider') || (item.hasOwnProperty('data') && $.isPlainObject(item.data) && item.data.divider)) {
+            if (Object.prototype.hasOwnProperty.call(item, 'divider') || (Object.prototype.hasOwnProperty.call(item, 'data') && $.isPlainObject(item.data) && item.data.divider)) {
                 this.plugin.log(this.plugin.LOG_DEBUG, 'Item is a divider, ignoring provided data.');
                 filteredData.push({divider: true});
             }
             // Ensure item has a "value" and is unique.
             else {
-                if (item.hasOwnProperty('value')) {
+                if (Object.prototype.hasOwnProperty.call(item, 'value')) {
                     // Typecast the value for the seenValues array. Array
                     // indexOf searches are type sensitive.
                     if (seenValues.indexOf(item.value + '') === -1) {
@@ -252,8 +247,8 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
 };
 
 /**
- * @event
- * The "success" callback for the request.
+ * @event success
+ *   The "success" callback for the request.
  *
  * @param {Object} data
  *   The data returned from the server, formatted according to the dataType
@@ -262,8 +257,6 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
  *   A string describing the status.
  * @param {jqXHR} jqXHR
  *   The jQuery wrapped XMLHttpRequest object.
- *
- * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
     // Only process data if an Array or Object.

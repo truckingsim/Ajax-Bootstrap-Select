@@ -3,16 +3,16 @@
  *
  * Extends existing [Bootstrap Select] implementations by adding the ability to search via AJAX requests as you type. Originally for CROSCON.
  *
- * @version 1.4.4
+ * @version 1.4.5
  * @author Adam Heim - https://github.com/truckingsim
  * @link https://github.com/truckingsim/Ajax-Bootstrap-Select
- * @copyright 2018 Adam Heim
+ * @copyright 2019 Adam Heim
  * @license Released under the MIT license.
  *
  * Contributors:
  *   Mark Carver - https://github.com/markcarver
  *
- * Last build: 2018-06-12 11:53:57 AM EDT
+ * Last build: 2019-09-24 9:36:54 AM CDT
  */
 !(function ($, window) {
 
@@ -114,7 +114,7 @@ var AjaxBootstrapSelect = function (element, options) {
             from: 'debug',
             to: function (map) {
                 var _options = {};
-                _options.log = Boolean(plugin.options[map.from]) ? plugin.LOG_DEBUG : 0;
+                _options.log = !!plugin.options[map.from];
                 plugin.options = $.extend(true, {}, plugin.options, _options);
                 delete plugin.options[map.from];
                 plugin.log(plugin.LOG_WARNING, 'Deprecated option "' + map.from + '". Update code to use:', _options);
@@ -330,12 +330,6 @@ AjaxBootstrapSelect.prototype.init = function () {
             plugin.log(plugin.LOG_DEBUG, 'Key ignored.');
             return;
         }
-		
-        // Don't process if below minimum query length
-        if (query.length < plugin.options.minLength) {
-            plugin.list.setStatus(plugin.t('statusTooShort'));
-            return;
-        }
 
         // Clear out any existing timer.
         clearTimeout(requestDelayTimer);
@@ -351,6 +345,12 @@ AjaxBootstrapSelect.prototype.init = function () {
             if (!plugin.options.emptyRequest) {
                 return;
             }
+        }
+
+        // Don't process if below minimum query length
+        if (query.length < plugin.options.minLength) {
+            plugin.list.setStatus(plugin.t('statusTooShort'));
+            return;
         }
 
         // Store the query.
@@ -389,18 +389,14 @@ AjaxBootstrapSelect.prototype.init = function () {
 /**
  * Wrapper function for logging messages to window.console.
  *
- * @param  {Number} type
- * The type of message to log. Must be one of:
- *
- * - AjaxBootstrapSelect.LOG_ERROR
- * - AjaxBootstrapSelect.LOG_WARNING
- * - AjaxBootstrapSelect.LOG_INFO
- * - AjaxBootstrapSelect.LOG_DEBUG
- *
- * @param {String|Object|*...} message
+ * @param {Number} type
+ *   The type of message to log. Must be one of:
+ *   - AjaxBootstrapSelect.LOG_ERROR
+ *   - AjaxBootstrapSelect.LOG_WARNING
+ *   - AjaxBootstrapSelect.LOG_INFO
+ *   - AjaxBootstrapSelect.LOG_DEBUG
+ * @param {String|Object|*} message
  *   The message(s) to log. Multiple arguments can be passed.
- *
- * @return {void}
  */
 AjaxBootstrapSelect.prototype.log = function (type, message) {
     if (window.console && this.options.log) {
@@ -525,12 +521,12 @@ AjaxBootstrapSelect.prototype.replaceValue = function (obj, needle, value, optio
  * @param {String} [langCode]
  *   Overrides the currently set {@link $.fn.ajaxSelectPicker.defaults#langCode langCode} option.
  *
- * @return
+ * @return {String}
  *   The translated string.
  */
 AjaxBootstrapSelect.prototype.t = function (key, langCode) {
     langCode = langCode || this.options.langCode;
-    if (this.locale[langCode] && this.locale[langCode].hasOwnProperty(key)) {
+    if (this.locale[langCode] && Object.prototype.hasOwnProperty.call(this.locale[langCode], key)) {
         return this.locale[langCode][key];
     }
     this.log(this.LOG_WARNING, 'Unknown translation key:', key);
@@ -547,6 +543,7 @@ AjaxBootstrapSelect.prototype.t = function (key, langCode) {
  */
 window.AjaxBootstrapSelect = window.AjaxBootstrapSelect || AjaxBootstrapSelect;
 
+// eslint-disable-next-line valid-jsdoc
 /**
  * @class AjaxBootstrapSelectList
  *   Maintains the select options and selectpicker menu.
@@ -596,7 +593,7 @@ var AjaxBootstrapSelectList = function (plugin) {
 
     // Save initial options
     var initial_options = [];
-    plugin.$element.find('option').each(function() {
+    plugin.$element.find('option').each(function () {
         var $option = $(this);
         var value = $option.attr('value');
         initial_options.push({
@@ -608,7 +605,7 @@ var AjaxBootstrapSelectList = function (plugin) {
             selected: !!$option.attr('selected')
         });
     });
-    this.cacheSet(/*query=*/'', initial_options);
+    this.cacheSet(/* query=*/'', initial_options);
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
@@ -676,13 +673,16 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
         var $option = $('<option/>').appendTo(item.preserved ? $preserved : $select);
 
         // Detect dividers.
-        if (item.hasOwnProperty('divider')) {
+        if (Object.prototype.hasOwnProperty.call(item, 'divider')) {
             $option.attr('data-divider', 'true');
             continue;
         }
 
         // Set various properties.
-        $option.val(item.value).text(item.text).attr('title', item.text);
+        $option.val(item.value).text(item.text);
+        if (item.title) {
+            $option.attr('title', item.title);
+        }
         if (item['class'].length) {
             $option.attr('class', item['class']);
         }
@@ -702,7 +702,7 @@ AjaxBootstrapSelectList.prototype.build = function (data) {
 
         // Add data attributes.
         for (a in item.data) {
-            if (item.data.hasOwnProperty(a)) {
+            if (Object.prototype.hasOwnProperty.call(item.data, a)) {
                 $option.attr('data-' + a, item.data[a]);
             }
         }
@@ -742,8 +742,6 @@ AjaxBootstrapSelectList.prototype.cacheGet = function (key, defaultValue) {
  *   The identifier name of the data to store.
  * @param {*} value
  *   The value of the data to store.
- *
- * @return {void}
  */
 AjaxBootstrapSelectList.prototype.cacheSet = function (key, value) {
     this.cache[key] = value;
@@ -761,6 +759,9 @@ AjaxBootstrapSelectList.prototype.destroy = function () {
 
 /**
  * Refreshes the select list.
+ *
+ * @param {Boolean} triggerChange
+ *   Flag indicating whether the "change" event should be triggered.
  */
 AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     // Remove unnecessary "min-height" from selectpicker.
@@ -773,7 +774,7 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     else if (
         this.title ||
         (
-            this.selectedTextFormat !== 'static' && 
+            this.selectedTextFormat !== 'static' &&
             this.selectedTextFormat !== this.plugin.selectpicker.options.selectedTextFormat
         )
     ) {
@@ -784,9 +785,9 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
     this.plugin.selectpicker.findLis();
 
     // Only trigger change event when specified.
-    if(triggerChange){
-      this.plugin.log(this.plugin.LOG_DEBUG, 'Triggering Change');
-      this.plugin.$element.trigger('change.$');
+    if (triggerChange) {
+        this.plugin.log(this.plugin.LOG_DEBUG, 'Triggering Change');
+        this.plugin.$element.trigger('change.$');
     }
     this.plugin.log(this.plugin.LOG_DEBUG, 'Refreshed select list.');
 };
@@ -799,8 +800,6 @@ AjaxBootstrapSelectList.prototype.refresh = function (triggerChange) {
  *
  * @param {Array} data
  *   The data array to process.
- *
- * @returns {void}
  */
 AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
     var i, l, item, output = '', processedData = [], selected = [], seenValues = [];
@@ -815,7 +814,7 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
             item = selected[i];
             // Typecast the value for the seenValues array. Array indexOf
             // searches are type sensitive.
-            if (item.hasOwnProperty('value') && seenValues.indexOf(item.value + '') === -1) {
+            if (Object.prototype.hasOwnProperty.call(item, 'value') && seenValues.indexOf(item.value + '') === -1) {
                 seenValues.push(item.value + '');
                 processedData.push(item);
             }
@@ -854,8 +853,6 @@ AjaxBootstrapSelectList.prototype.restore = function () {
 
 /**
  * Restores the previous title of the select element.
- *
- * @return {void}
  */
 AjaxBootstrapSelectList.prototype.restoreTitle = function () {
     if (!this.plugin.request) {
@@ -874,8 +871,7 @@ AjaxBootstrapSelectList.prototype.restoreTitle = function () {
  * Sets a new title on the select element.
  *
  * @param {String} title
- *
- * @return {void}
+ *   The title to set.
  */
 AjaxBootstrapSelectList.prototype.setTitle = function (title) {
     if (!this.plugin.request) {
@@ -890,8 +886,6 @@ AjaxBootstrapSelectList.prototype.setTitle = function (title) {
  *
  * @param {String} [status]
  *   The new status to set, if empty it will hide it.
- *
- * @return {void}
  */
 AjaxBootstrapSelectList.prototype.setStatus = function (status) {
     status = status || '';
@@ -913,6 +907,7 @@ AjaxBootstrapSelectList.prototype.setStatus = function (status) {
  */
 window.AjaxBootstrapSelectList = window.AjaxBootstrapSelectList || AjaxBootstrapSelectList;
 
+// eslint-disable-next-line valid-jsdoc
 /**
  * @class AjaxBootstrapSelectRequest
  *   Instantiates a new jQuery.ajax request for the current query.
@@ -977,7 +972,7 @@ var AjaxBootstrapSelectRequest = function (plugin) {
 };
 
 /**
- * @event
+ * @event beforeSend
  * A callback that can be used to modify the jqXHR object before it is sent.
  *
  * Use this to set custom headers, etc. Returning false will cancel the request.
@@ -985,8 +980,6 @@ var AjaxBootstrapSelectRequest = function (plugin) {
  *
  * @param {jqXHR} jqXHR
  *   The jQuery wrapped XMLHttpRequest object.
- *
- * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
     // Destroy the list currently there.
@@ -995,20 +988,18 @@ AjaxBootstrapSelectRequest.prototype.beforeSend = function (jqXHR) {
     // Set the status accordingly.
     this.plugin.list.setStatus(this.plugin.t('statusSearching'));
 
-    //this.plugin.list.refresh();
+    // this.plugin.list.refresh();
 };
 
 /**
- * @event
- * The "complete" callback for the request.
+ * @event complete
+ *   The "complete" callback for the request.
  *
  * @param {jqXHR} jqXHR
  *   The jQuery wrapped XMLHttpRequest object.
  * @param {String} status
  *   A string categorizing the status of the request: "success", "notmodified",
  *   "error", "timeout", "abort", or "parsererror".
- *
- * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
     // Only continue if actual results and not an aborted state.
@@ -1030,8 +1021,8 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
 };
 
 /**
- * @event
- * The "error" callback for the request.
+ * @event error
+ *   The "error" callback for the request.
  *
  * @param {jqXHR} jqXHR
  *   The jQuery wrapped XMLHttpRequest object.
@@ -1043,8 +1034,6 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
  *   An optional exception object, if one occurred. When an HTTP error occurs,
  *   error receives the textual portion of the HTTP status, such as "Not Found"
  *   or "Internal Server Error."
- *
- * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.error = function (jqXHR, status, error) {
     if (status !== 'abort') {
@@ -1111,13 +1100,13 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
         this.plugin.log(this.plugin.LOG_DEBUG, 'Processing item:', item);
         if ($.isPlainObject(item)) {
             // Check if item is a divider. If so, ignore all other data.
-            if (item.hasOwnProperty('divider') || (item.hasOwnProperty('data') && $.isPlainObject(item.data) && item.data.divider)) {
+            if (Object.prototype.hasOwnProperty.call(item, 'divider') || (Object.prototype.hasOwnProperty.call(item, 'data') && $.isPlainObject(item.data) && item.data.divider)) {
                 this.plugin.log(this.plugin.LOG_DEBUG, 'Item is a divider, ignoring provided data.');
                 filteredData.push({divider: true});
             }
             // Ensure item has a "value" and is unique.
             else {
-                if (item.hasOwnProperty('value')) {
+                if (Object.prototype.hasOwnProperty.call(item, 'value')) {
                     // Typecast the value for the seenValues array. Array
                     // indexOf searches are type sensitive.
                     if (seenValues.indexOf(item.value + '') === -1) {
@@ -1167,8 +1156,8 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
 };
 
 /**
- * @event
- * The "success" callback for the request.
+ * @event success
+ *   The "success" callback for the request.
  *
  * @param {Object} data
  *   The data returned from the server, formatted according to the dataType
@@ -1177,8 +1166,6 @@ AjaxBootstrapSelectRequest.prototype.process = function (data) {
  *   A string describing the status.
  * @param {jqXHR} jqXHR
  *   The jQuery wrapped XMLHttpRequest object.
- *
- * @return {void}
  */
 AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
     // Only process data if an Array or Object.
@@ -1203,9 +1190,9 @@ AjaxBootstrapSelectRequest.prototype.success = function (data, status, jqXHR) {
  */
 window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBootstrapSelectRequest;
 
+// eslint-disable-next-line valid-jsdoc
 /**
  * @class $.fn.ajaxSelectPicker
- * @chainable
  *
  * The jQuery plugin definition.
  *
@@ -1214,7 +1201,9 @@ window.AjaxBootstrapSelectRequest = window.AjaxBootstrapSelectRequest || AjaxBoo
  * @param {Object} options
  *   The {@link $.fn.ajaxSelectPicker.defaults options} to pass to the plugin.
  *
- * @returns {jQuery}
+ * @return {jQuery}
+ *
+ * @chainable
  */
 $.fn.ajaxSelectPicker = function (options) {
     return this.each(function () {
@@ -1227,8 +1216,9 @@ $.fn.ajaxSelectPicker = function (options) {
 /**
  * The locale object containing string translations.
  *
- * See: {@link $.fn.ajaxSelectPicker.locale}
  * @type {Object}
+ *
+ * @see {@link $.fn.ajaxSelectPicker.locale}
  */
 $.fn.ajaxSelectPicker.locale = {};
 
@@ -1241,6 +1231,7 @@ $.fn.ajaxSelectPicker.locale = {};
  * @property {Object} defaults
  */
 $.fn.ajaxSelectPicker.defaults = {
+
     /**
      * @member $.fn.ajaxSelectPicker.defaults
      * @deprecated Since version `1.2.0`, see: {@link $.fn.ajaxSelectPicker.defaults#preprocessData}.
@@ -1273,7 +1264,7 @@ $.fn.ajaxSelectPicker.defaults = {
         }
     },
 
-	/**
+    /**
  	 * @member $.fn.ajaxSelectPicker.defaults
 	 * @cfg {Number} minLength = 0
 	 * @markdown
@@ -1548,6 +1539,7 @@ $.fn.ajaxSelectPicker.defaults = {
  * Mark Carver <mark.carver@me.com>
  */
 $.fn.ajaxSelectPicker.locale['en-US'] = {
+
     /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} currentlySelected = 'Currently Selected'
@@ -1604,7 +1596,7 @@ $.fn.ajaxSelectPicker.locale['en-US'] = {
      */
     statusSearching: 'Searching...',
 
-	/**
+    /**
      * @member $.fn.ajaxSelectPicker.locale
      * @cfg {String} statusTooShort = 'Please enter more characters'
      * @markdown

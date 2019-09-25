@@ -1,6 +1,6 @@
+// eslint-disable-next-line valid-jsdoc
 /**
  * @class $.fn.ajaxSelectPicker
- * @chainable
  *
  * The jQuery plugin definition.
  *
@@ -9,7 +9,9 @@
  * @param {Object} options
  *   The {@link $.fn.ajaxSelectPicker.defaults options} to pass to the plugin.
  *
- * @returns {jQuery}
+ * @return {jQuery}
+ *
+ * @chainable
  */
 $.fn.ajaxSelectPicker = function (options) {
     return this.each(function () {
@@ -22,7 +24,8 @@ $.fn.ajaxSelectPicker = function (options) {
 /**
  * The locale object containing string translations.
  *
- * See: {@link $.fn.ajaxSelectPicker.locale}
  * @type {Object}
+ *
+ * @see {@link $.fn.ajaxSelectPicker.locale}
  */
 $.fn.ajaxSelectPicker.locale = {};

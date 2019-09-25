@@ -56,7 +56,7 @@ var AjaxBootstrapSelectList = function (plugin) {
             text: $option.text(),
             'class': $option.attr('class') || '',
             data: $option.data() || {},
-            preserved:  !!$option.attr('selected'),
+            preserved: plugin.options.preserveSelected,
             selected: !!$option.attr('selected')
         });
         initial_options_cache.push({

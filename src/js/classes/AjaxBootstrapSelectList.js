@@ -48,6 +48,7 @@ var AjaxBootstrapSelectList = function (plugin) {
 
     // Save initial options
     var initial_options = [];
+    var initial_options_cache = [];
     plugin.$element.find('option').each(function () {
         var $option = $(this);
         var value = $option.attr('value');
@@ -59,12 +60,23 @@ var AjaxBootstrapSelectList = function (plugin) {
             preserved: plugin.options.preserveSelected,
             selected: !!$option.attr('selected')
         });
+        initial_options_cache.push({
+            value: value,
+            text: $option.text(),
+            'class': $option.attr('class') || '',
+            data: $option.data() || {},
+            preserved: false,
+            selected: false
+        });
     });
-    this.cacheSet(/* query=*/'', initial_options);
+    this.cacheSet(/* query=*/'', initial_options_cache);
 
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
         that.selected = initial_options;
+        if (that.selected) {
+            that.replaceOptions();
+        }
         plugin.$element.on('change.abs.preserveSelected', function (e) {
             var $selected = plugin.$element.find(':selected');
             that.selected = [];
@@ -282,7 +294,12 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
 
     // Build the option output.
     if (data.length) {
-        output = this.plugin.list.build(data);
+        if (this.plugin.list !== undefined) {
+            output = this.plugin.list.build(data);
+        }
+        else {
+            output = this.build(data);
+        }
     }
 
     // Replace the options.

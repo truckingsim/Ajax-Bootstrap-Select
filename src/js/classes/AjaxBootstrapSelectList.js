@@ -74,7 +74,7 @@ var AjaxBootstrapSelectList = function (plugin) {
     // Preserve selected options.
     if (plugin.options.preserveSelected) {
         that.selected = initial_options;
-        if(that.selected) {
+        if (that.selected) {
             that.replaceOptions();
         }
         plugin.$element.on('change.abs.preserveSelected', function (e) {
@@ -294,7 +294,7 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
 
     // Build the option output.
     if (data.length) {
-        if(this.plugin.list !== undefined) {
+        if (this.plugin.list !== undefined) {
             output = this.plugin.list.build(data);
         }
         else {

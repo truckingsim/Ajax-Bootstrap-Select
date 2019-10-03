@@ -287,6 +287,12 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
 
     // Replace the options.
     this.plugin.$element.html(output);
+
+    // Collapse dropdown after large search results
+    this.plugin.$element.nextAll('.dropdown-menu')
+        .find('ul.dropdown-menu.inner')
+        .css({ margin: 0 });
+
     this.refresh();
     this.plugin.log(this.plugin.LOG_DEBUG, 'Replaced options with data:', data);
 };

@@ -346,6 +346,13 @@ AjaxBootstrapSelectList.prototype.setStatus = function (status) {
     status = status || '';
     if (status.length) {
         this.$status.html(status).show();
+
+        // Add status' height to dropdown maxHeight to prevent obfuscation when
+        // options list is longer than the maxHeight set on the dropdown
+        var maxHeight = this.$status.parent('.dropdown-menu').css('maxHeight');
+        this.$status.parent('.dropdown-menu').css({
+            maxHeight: parseInt(maxHeight, 10) + this.$status.outerHeight() + 'px'
+        });
     }
     else {
         this.$status.html('').hide();

@@ -104,7 +104,6 @@ AjaxBootstrapSelectRequest.prototype.complete = function (jqXHR, status) {
                 this.plugin.list.destroy();
                 this.plugin.list.setStatus(this.plugin.t('statusNoResults'));
                 this.plugin.log(this.plugin.LOG_INFO, 'No results were returned.');
-                return;
             }
         }
         this.plugin.list.refresh(true);

@@ -292,5 +292,13 @@ $.fn.ajaxSelectPicker.defaults = {
      */
     templates: {
         status: '<div class="status"></div>'
-    }
+    },
+
+    /**
+     * @member $.fn.ajaxSelectPicker.defaults
+     * @cfg {Boolean} triggerChange = false
+     * @markdown
+     * Trigger change event when specified.
+     */
+    triggerChange: false
 };

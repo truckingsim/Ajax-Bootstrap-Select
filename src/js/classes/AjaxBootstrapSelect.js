@@ -241,7 +241,7 @@ var AjaxBootstrapSelect = function (element, options) {
      * @type {AjaxBootstrapSelectList}
      */
     this.list = new window.AjaxBootstrapSelectList(this);
-    this.list.refresh();
+    this.list.refresh(this.options.triggerChange);
 
     // We need for selectpicker to be attached first. Putting the init in a
     // setTimeout is the easiest way to ensure this.

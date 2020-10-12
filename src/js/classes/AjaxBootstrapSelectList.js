@@ -287,7 +287,7 @@ AjaxBootstrapSelectList.prototype.replaceOptions = function (data) {
 
     // Replace the options.
     this.plugin.$element.html(output);
-    this.refresh();
+    this.list.refresh(this.plugin.options.triggerChange);
     this.plugin.log(this.plugin.LOG_DEBUG, 'Replaced options with data:', data);
 };
 
